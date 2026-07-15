@@ -180,6 +180,7 @@
         <script src="../vendors/fontawesome/all.min.js"></script>
         <script src="../vendors/lodash/lodash.min.js"></script>
         <script src="../vendors/list.js/list.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.min.js"></script>
         <script src="../assets/js/theme.js"></script>
   </body>
 

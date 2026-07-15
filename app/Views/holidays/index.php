@@ -17,13 +17,13 @@
                   <option value="Archive">Archive</option>
                 </select><button class="btn btn-falcon-default btn-sm ms-2" type="button">Apply</button></div>
             </div>
-            <div id="table-simple-pagination-replace-element"><button class="btn btn-falcon-default btn-sm" type="button"><span class="fas fa-plus" data-fa-transform="shrink-3 down-2"></span><span class="d-none d-sm-inline-block ms-1">New</span></button><button class="btn btn-falcon-default btn-sm mx-2" type="button"><span class="fas fa-filter" data-fa-transform="shrink-3 down-2"></span><span class="d-none d-sm-inline-block ms-1">Filter</span></button><button class="btn btn-falcon-default btn-sm" type="button"><span class="fas fa-external-link-alt" data-fa-transform="shrink-3 down-2"></span><span class="d-none d-sm-inline-block ms-1">Export</span></button></div>
+            <div id="table-simple-pagination-replace-element"><button class="btn btn-falcon-default btn-sm" type="button"><span class="fas fa-plus" data-fa-transform="shrink-3 down-2"></span><span class="d-none d-sm-inline-block ms-1">New</span></button><button class="btn btn-falcon-default btn-sm mx-2" type="button"><span class="fas fa-filter" data-fa-transform="shrink-3 down-2"></span><span class="d-none d-sm-inline-block ms-1">Filter</span></button><div class="btn-group" role="group"><button id="export-excel" class="btn btn-falcon-default btn-sm" type="button" title="Export to Excel"><span class="fas fa-file-excel" data-fa-transform="shrink-3 down-2"></span><span class="d-none d-sm-inline-block ms-1">Excel</span></button><button id="export-csv" class="btn btn-falcon-default btn-sm" type="button" title="Export to CSV"><span class="fas fa-file-csv" data-fa-transform="shrink-3 down-2"></span><span class="d-none d-sm-inline-block ms-1">CSV</span></button></div></div>
           </div>
         </div>
       </div>
       
       <div class="card-body px-0 pt-0">
-        <table class="table table-sm mb-0 overflow-hidden data-table fs-10" data-datatables='{"responsive":false,"pagingType":"simple","lengthChange":true,"pageLength":10,"searching":true,"bDeferRender":true,"serverSide":false,"language":{"info":"_START_ to _END_ Items of _TOTAL_"}}'>
+        <table id="holidays-table" class="table table-sm mb-0 overflow-hidden data-table fs-10">
           <thead class="bg-200">
             <tr>
               <th class="text-900 no-sort white-space-nowrap" data-orderable="false">
@@ -146,3 +146,93 @@
     </div>
   </div>
 </div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.min.js"></script>
+<script>
+// DataTables Export to Excel and CSV
+document.addEventListener('DOMContentLoaded', function() {
+  // Initialize DataTables with configuration
+  var table = $('#holidays-table').DataTable({
+    responsive: false,
+    pagingType: 'simple',
+    lengthChange: true,
+    pageLength: 10,
+    searching: true,
+    bDeferRender: true,
+    serverSide: false,
+    language: {
+      info: '_START_ to _END_ Items of _TOTAL_'
+    }
+  });
+
+  // Export to Excel
+  document.getElementById('export-excel').addEventListener('click', function() {
+    if (typeof XLSX === 'undefined') {
+      alert('Excel library is loading. Please try again in a moment.');
+      return;
+    }
+    
+    // Get headers - only from columns without no-sort class
+    var headers = [];
+    var columnsToExport = [];
+    $('#holidays-table thead th').each(function(index) {
+      if (!$(this).hasClass('no-sort')) {
+        headers.push($(this).text().trim());
+        columnsToExport.push(index);
+      }
+    });
+    
+    // Get visible rows only (respects search filter)
+    var data = [];
+    table.rows({ search: 'applied' }).every(function() {
+      var row = [];
+      var $cells = $(this.node()).find('td');
+      columnsToExport.forEach(function(colIndex) {
+        row.push($cells.eq(colIndex).text().trim());
+      });
+      data.push(row);
+    });
+    
+    // Create and download Excel file
+    var ws = XLSX.utils.aoa_to_sheet([headers, ...data]);
+    var wb = XLSX.utils.book_new();
+    XLSX.utils.book_append_sheet(wb, ws, 'Holidays');
+    XLSX.writeFile(wb, 'holidays_' + new Date().toISOString().split('T')[0] + '.xlsx');
+  });
+
+  // Export to CSV
+  document.getElementById('export-csv').addEventListener('click', function() {
+    // Get headers - only from columns without no-sort class
+    var headers = [];
+    var columnsToExport = [];
+    $('#holidays-table thead th').each(function(index) {
+      if (!$(this).hasClass('no-sort')) {
+        headers.push('"' + $(this).text().trim().replace(/"/g, '""') + '"');
+        columnsToExport.push(index);
+      }
+    });
+    
+    var csv = [headers.join(',')];
+    
+    // Get visible rows only (respects search filter)
+    table.rows({ search: 'applied' }).every(function() {
+      var row = [];
+      var $cells = $(this.node()).find('td');
+      columnsToExport.forEach(function(colIndex) {
+        var text = $cells.eq(colIndex).text().trim();
+        row.push('"' + text.replace(/"/g, '""') + '"');
+      });
+      csv.push(row.join(','));
+    });
+    
+    // Create and download CSV file
+    var csvContent = csv.join('\n');
+    var blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+    var link = document.createElement('a');
+    var url = URL.createObjectURL(blob);
+    link.setAttribute('href', url);
+    link.setAttribute('download', 'holidays_' + new Date().toISOString().split('T')[0] + '.csv');
+    link.click();
+  });
+});
+</script>
