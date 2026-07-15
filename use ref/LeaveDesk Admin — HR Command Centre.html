@@ -1,0 +1,2493 @@
+<!DOCTYPE html>
+<!-- saved from url=(0070)file:///C:/Users/faith/Downloads/YOUTUBE%20%20(1)/leavedesk-admin.html -->
+<html lang="en" data-theme="dark"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>LeaveDesk Admin — HR Command Centre</title>
+<link href="file:///C:/bootstrap.min.css" rel="stylesheet">
+<link href="file:///C:/font/bootstrap-icons.min.css" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Mona+Sans:ital,wdth,wght@0,75..125,200..900;1,75..125,200..900&amp;family=JetBrains+Mono:wght@400;500;600;700&amp;display=swap" rel="stylesheet">
+<script src="file:///C:/apexcharts.min.js"></script>
+<style>
+/* ═══════════════════════════════════════════════════════════════
+   DESIGN TOKENS — GitHub-inspired with HR warmth
+═══════════════════════════════════════════════════════════════ */
+[data-theme="light"] {
+  --canvas:     #F6F8FA;
+  --surface:    #FFFFFF;
+  --surface2:   #F6F8FA;
+  --surface3:   #EFF1F3;
+  --bd:         #D0D7DE;
+  --bd-m:       #BEC5CC;
+  --t1:         #1F2328;
+  --t2:         #656D76;
+  --t3:         #818B98;
+  --t4:         #AFB8C1;
+  --sb:         #161B22;
+  --sb-b:       rgba(255,255,255,0.08);
+  --sb-t:       rgba(255,255,255,0.48);
+  --sb-th:      rgba(255,255,255,0.88);
+  --sb-hover:   rgba(255,255,255,0.07);
+  --sb-active:  rgba(255,255,255,0.1);
+  --sb-accent:  #2F81F7;
+  --sb-lbl:     rgba(255,255,255,0.2);
+  --accent:     #0969DA;
+  --accent-bg:  #DDF4FF;
+  --accent-b:   #54AEFF;
+  --ok:         #1A7F37;  --ok-bg:    #DAFBE1;  --ok-b:    #4AC26B;
+  --warn:       #9A6700;  --warn-bg:  #FFF8C5;  --warn-b:  #D4A72C;
+  --err:        #CF222E;  --err-bg:   #FFEBE9;  --err-b:   #FF8182;
+  --purple:     #8250DF;  --purple-bg:#FBEFFF;  --purple-b:#D8B4FE;
+  --orange:     #BC4C00;  --orange-bg:#FFF1E5;  --orange-b:#FFA657;
+  --pink:       #BF3989;  --pink-bg:  #FFEFF7;  --pink-b:  #F778BA;
+  --shadow-xs:  0 1px 0 rgba(27,31,36,0.04);
+  --shadow-s:   0 1px 3px rgba(27,31,36,0.07),0 1px 2px rgba(27,31,36,0.04);
+  --shadow-m:   0 3px 12px rgba(27,31,36,0.1),0 1px 3px rgba(27,31,36,0.06);
+  --shadow-l:   0 8px 30px rgba(27,31,36,0.12),0 2px 8px rgba(27,31,36,0.06);
+  --input-bg:   #F6F8FA;
+  --modal-bg:   #FFFFFF;
+  --toggle-off: #D0D7DE;
+  --code-bg:    #F6F8FA;
+  --scrl:       #D0D7DE;
+}
+[data-theme="dark"] {
+  --canvas:     #0D1117;
+  --surface:    #161B22;
+  --surface2:   #1C2128;
+  --surface3:   #272E38;
+  --bd:         #30363D;
+  --bd-m:       #3D444D;
+  --t1:         #E6EDF3;
+  --t2:         #9198A1;
+  --t3:         #656D76;
+  --t4:         #3D444D;
+  --sb:         #010409;
+  --sb-b:       rgba(255,255,255,0.07);
+  --sb-t:       rgba(255,255,255,0.4);
+  --sb-th:      rgba(255,255,255,0.85);
+  --sb-hover:   rgba(255,255,255,0.06);
+  --sb-active:  rgba(47,129,247,0.15);
+  --sb-accent:  #2F81F7;
+  --sb-lbl:     rgba(255,255,255,0.18);
+  --accent:     #4493F8;  --accent-bg:  rgba(68,147,248,0.1);  --accent-b: rgba(68,147,248,0.3);
+  --ok:         #3FB950;  --ok-bg:    rgba(63,185,80,0.1);   --ok-b:    rgba(63,185,80,0.3);
+  --warn:       #D29922;  --warn-bg:  rgba(210,153,34,0.1);  --warn-b:  rgba(210,153,34,0.3);
+  --err:        #F85149;  --err-bg:   rgba(248,81,73,0.1);   --err-b:   rgba(248,81,73,0.3);
+  --purple:     #A371F7;  --purple-bg:rgba(163,113,247,0.1); --purple-b:rgba(163,113,247,0.3);
+  --orange:     #E3B341;  --orange-bg:rgba(227,179,65,0.1);  --orange-b:rgba(227,179,65,0.3);
+  --pink:       #F778BA;  --pink-bg:  rgba(247,120,186,0.1); --pink-b:  rgba(247,120,186,0.3);
+  --shadow-xs:  0 1px 0 rgba(0,0,0,0.2);
+  --shadow-s:   0 1px 3px rgba(0,0,0,0.4),0 1px 2px rgba(0,0,0,0.3);
+  --shadow-m:   0 3px 12px rgba(0,0,0,0.45),0 1px 4px rgba(0,0,0,0.3);
+  --shadow-l:   0 8px 30px rgba(0,0,0,0.55),0 2px 8px rgba(0,0,0,0.3);
+  --input-bg:   #1C2128;
+  --modal-bg:   #161B22;
+  --toggle-off: #30363D;
+  --code-bg:    #1C2128;
+  --scrl:       #30363D;
+}
+
+/* ═══ RESET ═══════════════════════════════════════════════════ */
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth}
+body{font-family:'Mona Sans',system-ui,sans-serif;background:var(--canvas);color:var(--t1);min-height:100vh;transition:background .25s,color .25s;-webkit-font-smoothing:antialiased;font-feature-settings:"cv02","cv03","cv04","cv11"}
+::-webkit-scrollbar{width:6px;height:6px}
+::-webkit-scrollbar-track{background:transparent}
+::-webkit-scrollbar-thumb{background:var(--scrl);border-radius:3px}
+.mono{font-family:'JetBrains Mono',monospace}
+
+/* ═══ SIDEBAR ════════════════════════════════════════════════ */
+.sidebar{
+  width:260px;background:var(--sb);position:fixed;left:0;top:0;bottom:0;
+  display:flex;flex-direction:column;z-index:500;
+  transition:background .25s,transform .3s;overflow:hidden;
+}
+.sb-stripe{position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,#238636,#2F81F7,#8250DF,#BF3989)}
+.sb-head{padding:20px 16px 14px;border-bottom:1px solid var(--sb-b);flex-shrink:0}
+.sb-logo{display:flex;align-items:center;gap:11px}
+.sb-logo-mark{
+  width:36px;height:36px;background:#161B22;border:1px solid rgba(255,255,255,0.1);
+  border-radius:8px;display:flex;align-items:center;justify-content:center;
+  font-size:18px;flex-shrink:0;position:relative;overflow:hidden;
+}
+.sb-logo-mark::after{content:'';position:absolute;inset:0;background:linear-gradient(135deg,rgba(35,134,54,0.3),rgba(47,129,247,0.3));border-radius:8px}
+.sb-logo-name{font-size:15px;font-weight:700;color:#E6EDF3;letter-spacing:-.2px}
+.sb-logo-sub{font-size:10.5px;color:rgba(255,255,255,0.28);margin-top:1px;letter-spacing:.3px;text-transform:uppercase}
+.sb-admin-chip{
+  margin:12px 14px 0;padding:10px 12px;
+  background:rgba(255,255,255,0.05);border:1px solid var(--sb-b);
+  border-radius:9px;display:flex;align-items:center;gap:9px;flex-shrink:0;
+}
+.sb-admin-av{
+  width:32px;height:32px;border-radius:7px;
+  background:linear-gradient(135deg,#238636,#2F81F7);
+  display:flex;align-items:center;justify-content:center;
+  font-size:12px;font-weight:700;color:#fff;flex-shrink:0;
+  font-family:'JetBrains Mono',monospace;
+}
+.sb-admin-nm{font-size:12.5px;font-weight:600;color:rgba(255,255,255,0.85);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.sb-admin-role{font-size:10.5px;color:rgba(255,255,255,0.36);margin-top:1px}
+.sb-nav{padding:10px 8px;flex:1;overflow-y:auto;overflow-x:hidden}
+.sb-nav::-webkit-scrollbar{width:0}
+.sb-lbl{font-size:9.5px;font-weight:700;letter-spacing:1.4px;text-transform:uppercase;color:var(--sb-lbl);padding:11px 10px 5px;margin-top:3px}
+.sb-link{
+  display:flex;align-items:center;gap:9px;padding:8px 10px;border-radius:7px;
+  color:var(--sb-t);font-size:13px;font-weight:500;
+  cursor:pointer;border:none;background:none;width:100%;text-align:left;
+  transition:background .12s,color .12s;margin-bottom:1px;
+  position:relative;
+}
+.sb-link i{font-size:15px;flex-shrink:0;width:18px;text-align:center}
+.sb-link:hover{background:var(--sb-hover);color:var(--sb-th)}
+.sb-link.active{background:var(--sb-active);color:#fff;font-weight:600}
+.sb-link.active::before{content:'';position:absolute;left:0;top:50%;transform:translateY(-50%);width:3px;height:18px;background:var(--sb-accent);border-radius:0 2px 2px 0}
+.sb-badge{margin-left:auto;font-size:10px;font-weight:700;background:var(--err);color:#fff;border-radius:20px;padding:1px 7px;flex-shrink:0;min-width:20px;text-align:center}
+.sb-badge.green{background:var(--ok)}
+.sb-badge.blue{background:var(--accent)}
+.sb-foot{padding:12px 14px;border-top:1px solid var(--sb-b);flex-shrink:0}
+/* BIG visible toggle */
+.theme-sw-row{
+  display:flex;align-items:center;justify-content:space-between;
+  padding:10px 12px;background:rgba(255,255,255,0.06);border:1.5px solid rgba(255,255,255,0.1);
+  border-radius:9px;cursor:pointer;user-select:none;transition:all .2s;
+}
+.theme-sw-row:hover{background:rgba(255,255,255,0.1);border-color:rgba(255,255,255,0.18)}
+.theme-sw-left{display:flex;align-items:center;gap:8px;font-size:12.5px;font-weight:600;color:rgba(255,255,255,0.68)}
+.theme-sw-left i{font-size:15px}
+.sw{width:44px;height:24px;border-radius:12px;background:var(--toggle-off);border:2px solid rgba(255,255,255,0.12);position:relative;transition:background .3s,border-color .3s;flex-shrink:0}
+.sw.on{background:#238636;border-color:#238636}
+.sw::after{content:'';position:absolute;width:16px;height:16px;background:#fff;border-radius:50%;top:2px;left:2px;transition:transform .3s cubic-bezier(.4,0,.2,1);box-shadow:0 1px 3px rgba(0,0,0,0.35)}
+.sw.on::after{transform:translateX(20px)}
+
+/* ═══ MAIN ════════════════════════════════════════════════════ */
+.main{margin-left:260px;min-height:100vh;display:flex;flex-direction:column;background:var(--canvas);transition:background .25s}
+.topbar{
+  height:56px;padding:0 24px;background:var(--surface);border-bottom:1px solid var(--bd);
+  display:flex;align-items:center;justify-content:space-between;
+  position:sticky;top:0;z-index:400;box-shadow:var(--shadow-xs);
+  transition:background .25s,border-color .25s;flex-shrink:0;
+}
+.tb-left{display:flex;align-items:center;gap:12px}
+.tb-page-title{font-size:14px;font-weight:700;color:var(--t1)}
+.tb-breadcrumb{font-size:12px;color:var(--t3);display:flex;align-items:center;gap:4px}
+.tb-right{display:flex;align-items:center;gap:8px}
+.icon-btn{
+  width:34px;height:34px;border-radius:7px;border:1px solid var(--bd);
+  background:var(--surface);color:var(--t2);display:flex;align-items:center;justify-content:center;
+  font-size:15px;cursor:pointer;transition:all .14s;position:relative;
+}
+.icon-btn:hover{background:var(--surface2);color:var(--t1);border-color:var(--bd-m)}
+.notif-pip{position:absolute;top:5px;right:6px;width:7px;height:7px;border-radius:50%;background:var(--err);border:1.5px solid var(--surface)}
+.gh-btn{
+  display:inline-flex;align-items:center;gap:6px;padding:5px 14px;
+  font-size:13px;font-weight:600;border-radius:7px;cursor:pointer;
+  transition:all .14s;font-family:'Mona Sans',sans-serif;border:1px solid;white-space:nowrap;
+}
+.gh-btn-primary{background:var(--accent);color:#fff;border-color:rgba(0,0,0,0.1);box-shadow:0 1px 0 rgba(0,0,0,0.1),inset 0 1px 0 rgba(255,255,255,0.12)}
+.gh-btn-primary:hover{filter:brightness(.92);transform:translateY(-1px)}
+.gh-btn-default{background:var(--surface);color:var(--t1);border-color:var(--bd);box-shadow:var(--shadow-xs)}
+.gh-btn-default:hover{background:var(--surface2);border-color:var(--bd-m)}
+.gh-btn-danger{background:var(--err-bg);color:var(--err);border-color:var(--err-b)}
+.gh-btn-danger:hover{background:var(--err);color:#fff}
+.gh-btn-success{background:var(--ok-bg);color:var(--ok);border-color:var(--ok-b)}
+.gh-btn-success:hover{background:var(--ok);color:#fff}
+.gh-btn-sm{padding:4px 10px;font-size:12px}
+
+/* ═══ CONTENT ════════════════════════════════════════════════ */
+.content{padding:24px;flex:1}
+.sec{display:none}.sec.active{display:block}
+
+/* ═══ GH CARDS ═══════════════════════════════════════════════ */
+.gh-card{background:var(--surface);border:1px solid var(--bd);border-radius:10px;box-shadow:var(--shadow-xs);overflow:hidden;transition:background .25s,border-color .25s}
+.gh-card-hd{padding:14px 18px;border-bottom:1px solid var(--bd);display:flex;align-items:center;justify-content:space-between;gap:10px}
+.gh-card-title{font-size:13.5px;font-weight:700;color:var(--t1);display:flex;align-items:center;gap:7px}
+.gh-card-title .ci{font-size:15px;color:var(--t3)}
+
+/* ═══ KPI CARDS ══════════════════════════════════════════════ */
+.kpi-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:12px;margin-bottom:20px}
+.kpi{
+  background:var(--surface);border:1px solid var(--bd);border-radius:10px;
+  padding:16px 18px;position:relative;overflow:hidden;transition:all .2s;
+}
+.kpi::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:var(--kc)}
+.kpi:hover{box-shadow:var(--shadow-m);border-color:var(--bd-m)}
+.kpi-label{font-size:11.5px;color:var(--t2);font-weight:500;margin-bottom:6px;display:flex;align-items:center;gap:6px}
+.kpi-label i{font-size:13px;color:var(--kc)}
+.kpi-val{font-family:'JetBrains Mono',monospace;font-size:28px;font-weight:700;color:var(--t1);line-height:1}
+.kpi-sub{font-size:11px;color:var(--t3);margin-top:5px;display:flex;align-items:center;gap:4px}
+.kpi-sub.pos{color:var(--ok)} .kpi-sub.neg{color:var(--err)} .kpi-sub.warn{color:var(--warn)}
+.kpi-sparkline{margin-top:10px}
+
+/* ═══ STATUS LABELS ══════════════════════════════════════════ */
+.label{display:inline-flex;align-items:center;gap:4px;font-size:11.5px;font-weight:600;padding:2px 9px;border-radius:20px;white-space:nowrap;border:1px solid}
+.label::before{content:'';width:5px;height:5px;border-radius:50%;background:currentColor}
+.l-open   {background:var(--ok-bg);    color:var(--ok);    border-color:var(--ok-b)}
+.l-pending{background:var(--warn-bg);  color:var(--warn);  border-color:var(--warn-b)}
+.l-closed {background:var(--surface2); color:var(--t3);    border-color:var(--bd)}
+.l-reject {background:var(--err-bg);   color:var(--err);   border-color:var(--err-b)}
+.l-info   {background:var(--accent-bg);color:var(--accent);border-color:var(--accent-b)}
+.l-purple {background:var(--purple-bg);color:var(--purple);border-color:var(--purple-b)}
+.l-orange {background:var(--orange-bg);color:var(--orange);border-color:var(--orange-b)}
+.l-pink   {background:var(--pink-bg);  color:var(--pink);  border-color:var(--pink-b)}
+
+/* ═══ TABLE ══════════════════════════════════════════════════ */
+.gh-table{width:100%;border-collapse:collapse}
+.gh-table thead th{font-size:11px;font-weight:700;letter-spacing:.6px;text-transform:uppercase;color:var(--t2);padding:10px 14px;background:var(--surface2);border-bottom:1px solid var(--bd);white-space:nowrap;text-align:left}
+.gh-table tbody td{padding:12px 14px;font-size:13px;color:var(--t2);border-bottom:1px solid var(--bd);vertical-align:middle}
+.gh-table tbody tr:last-child td{border-bottom:none}
+.gh-table tbody tr:hover{background:var(--surface2)}
+.gh-table tbody tr{transition:background .1s}
+.tbl-wrap{overflow-x:auto}
+.tbl-ref{font-family:'JetBrains Mono',monospace;font-size:11.5px;font-weight:600;color:var(--accent)}
+
+/* ═══ FILTER BAR ════════════════════════════════════════════ */
+.fbar{display:flex;align-items:center;gap:8px;padding:12px 16px;border-bottom:1px solid var(--bd);flex-wrap:wrap}
+.fchip{padding:4px 12px;border-radius:20px;font-size:12px;font-weight:600;cursor:pointer;border:1px solid var(--bd);background:var(--surface);color:var(--t2);transition:all .12s;font-family:'Mona Sans',sans-serif}
+.fchip:hover{border-color:var(--bd-m);color:var(--t1)}
+.fchip.active{background:var(--accent);color:#fff;border-color:var(--accent)}
+.searchbox{display:flex;align-items:center;gap:6px;padding:6px 11px;border-radius:7px;border:1px solid var(--bd);background:var(--input-bg);transition:border-color .15s}
+.searchbox:focus-within{border-color:var(--accent);box-shadow:0 0 0 3px rgba(9,105,218,0.1)}
+.searchbox i{color:var(--t3);font-size:13px;flex-shrink:0}
+.searchbox input{border:none;background:none;outline:none;font-size:13px;color:var(--t1);width:180px;font-family:'Mona Sans',sans-serif}
+.searchbox input::placeholder{color:var(--t3)}
+
+/* ═══ EMPLOYEE GRID ════════════════════════════════════════ */
+.emp-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:12px;padding:18px}
+.emp-card{
+  background:var(--surface);border:1px solid var(--bd);border-radius:10px;
+  padding:18px;transition:all .18s;cursor:pointer;position:relative;overflow:hidden;
+}
+.emp-card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:var(--ec);transition:height .2s}
+.emp-card:hover{box-shadow:var(--shadow-m);border-color:var(--bd-m);transform:translateY(-1px)}
+.emp-card:hover::before{height:3px}
+.emp-av{
+  width:44px;height:44px;border-radius:10px;margin-bottom:12px;
+  display:flex;align-items:center;justify-content:center;
+  font-family:'JetBrains Mono',monospace;font-size:14px;font-weight:700;color:#fff;
+}
+.emp-nm{font-size:13.5px;font-weight:700;color:var(--t1);margin-bottom:3px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.emp-role{font-size:12px;color:var(--t3);margin-bottom:10px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.emp-meta{display:flex;align-items:center;justify-content:space-between;margin-top:10px}
+.emp-bal{font-family:'JetBrains Mono',monospace;font-size:13px;font-weight:700;color:var(--t1)}
+.emp-dept-chip{font-size:10.5px;font-weight:700;padding:2px 7px;border-radius:4px}
+
+/* ═══ FORM ═══════════════════════════════════════════════════ */
+.form-section{background:var(--surface);border:1px solid var(--bd);border-radius:10px;overflow:hidden;margin-bottom:14px}
+.fs-hd{padding:13px 18px;border-bottom:1px solid var(--bd);display:flex;align-items:center;gap:9px;background:var(--surface2)}
+.fs-ic{width:28px;height:28px;border-radius:6px;background:var(--accent-bg);color:var(--accent);display:flex;align-items:center;justify-content:center;font-size:13px;flex-shrink:0}
+.fs-title{font-size:13px;font-weight:700;color:var(--t1)}
+.fs-bd{padding:18px}
+.form-row{display:grid;grid-template-columns:1fr 1fr;gap:13px;margin-bottom:13px}
+.form-row.tri{grid-template-columns:1fr 1fr 1fr}
+.fg{margin-bottom:13px}.fg:last-child{margin-bottom:0}
+.fl{display:block;font-size:12px;font-weight:700;color:var(--t2);margin-bottom:5px;letter-spacing:.1px}
+.fi{
+  width:100%;padding:7px 11px;background:var(--input-bg);border:1px solid var(--bd);
+  border-radius:7px;font-size:13px;color:var(--t1);font-family:'Mona Sans',sans-serif;
+  transition:border-color .14s,box-shadow .14s;outline:none;
+}
+.fi:focus{border-color:var(--accent);box-shadow:0 0 0 3px rgba(9,105,218,0.1)}
+.fi::placeholder{color:var(--t3)}
+textarea.fi{resize:vertical;min-height:80px}
+select.fi option{background:var(--surface);color:var(--t1)}
+
+/* ═══ CALENDAR ══════════════════════════════════════════════ */
+.cal-hd{display:flex;align-items:center;justify-content:space-between;padding:14px 20px;border-bottom:1px solid var(--bd)}
+.cal-month{font-size:16px;font-weight:700;color:var(--t1)}
+.cal-nav-btn{width:32px;height:32px;border-radius:7px;border:1px solid var(--bd);background:var(--surface);color:var(--t2);display:flex;align-items:center;justify-content:center;font-size:13px;cursor:pointer;transition:all .12s}
+.cal-nav-btn:hover{background:var(--surface2);color:var(--t1)}
+.cal-grid-body{padding:14px 18px}
+.cal-dow{display:grid;grid-template-columns:repeat(7,1fr);margin-bottom:4px}
+.cal-dow span{text-align:center;font-size:10px;font-weight:700;color:var(--t3);text-transform:uppercase;letter-spacing:.5px;padding:4px}
+.cal-days{display:grid;grid-template-columns:repeat(7,1fr);gap:2px}
+.cd{aspect-ratio:1;border-radius:7px;display:flex;align-items:center;justify-content:center;font-size:12.5px;color:var(--t2);font-weight:500;position:relative;cursor:default}
+.cd.om{color:var(--t4)} .cd.tod{background:var(--accent);color:#fff;font-weight:700}
+.cd.app{background:var(--ok-bg);color:var(--ok);font-weight:600}
+.cd.pnd{background:var(--warn-bg);color:var(--warn);font-weight:600}
+.cd.hol{background:var(--purple-bg);color:var(--purple);font-weight:600}
+.cd.wkn{color:var(--t4);background:var(--surface2)}
+.cal-leg{display:flex;gap:14px;padding:0 18px 14px;flex-wrap:wrap}
+.leg{display:flex;align-items:center;gap:5px;font-size:11.5px;color:var(--t3)}
+.leg-dot{width:10px;height:10px;border-radius:3px}
+
+/* ═══ ACTIVITY FEED ════════════════════════════════════════ */
+.activity-item{display:flex;gap:11px;padding:11px 0;border-bottom:1px solid var(--bd)}
+.activity-item:last-child{border-bottom:none}
+.act-dot{width:28px;height:28px;border-radius:50%;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:12px;margin-top:2px}
+.act-body{flex:1}
+.act-text{font-size:12.5px;color:var(--t2);line-height:1.5}
+.act-text strong{color:var(--t1)}
+.act-time{font-size:11px;color:var(--t3);margin-top:2px;font-family:'JetBrains Mono',monospace}
+
+/* ═══ TIMELINE ══════════════════════════════════════════════ */
+.tl-item{display:flex;gap:11px;padding-bottom:16px;position:relative}
+.tl-item:not(:last-child)::before{content:'';position:absolute;left:14px;top:28px;bottom:0;width:1px;background:var(--bd)}
+.tl-dot{width:28px;height:28px;border-radius:50%;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:12px;border:1.5px solid var(--bd);background:var(--surface2);z-index:1;position:relative}
+.tl-con{flex:1;padding-top:3px}
+.tl-title{font-size:13px;font-weight:600;color:var(--t1)}
+.tl-sub{font-size:11.5px;color:var(--t3);margin-top:2px}
+
+/* ═══ PROGRESS ═════════════════════════════════════════════ */
+.prog-row{display:flex;align-items:center;gap:10px;padding:7px 0;border-bottom:1px solid var(--bd)}
+.prog-row:last-child{border-bottom:none}
+.prog-lbl{font-size:12.5px;color:var(--t2);flex:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.prog-bar-wrap{flex:2;height:6px;background:var(--surface2);border-radius:4px;overflow:hidden}
+.prog-bar{height:100%;border-radius:4px;transition:width .5s ease}
+.prog-val{font-family:'JetBrains Mono',monospace;font-size:12px;font-weight:600;color:var(--t1);min-width:28px;text-align:right}
+
+/* ═══ AUDIT LOG ════════════════════════════════════════════ */
+.audit-row{display:flex;align-items:flex-start;gap:12px;padding:10px 0;border-bottom:1px solid var(--bd)}
+.audit-row:last-child{border-bottom:none}
+.audit-icon{width:30px;height:30px;border-radius:7px;display:flex;align-items:center;justify-content:center;font-size:13px;flex-shrink:0;margin-top:1px}
+.audit-msg{font-size:12.5px;color:var(--t2);line-height:1.5;flex:1}
+.audit-msg strong{color:var(--t1);font-weight:700}
+.audit-msg code{font-family:'JetBrains Mono',monospace;font-size:11.5px;background:var(--code-bg);padding:1px 5px;border-radius:4px;color:var(--t1);border:1px solid var(--bd)}
+.audit-ts{font-family:'JetBrains Mono',monospace;font-size:11px;color:var(--t3);flex-shrink:0;margin-top:2px}
+
+/* ═══ DEPT CARDS ═══════════════════════════════════════════ */
+.dept-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:12px;padding:18px}
+.dept-card{background:var(--surface);border:1px solid var(--bd);border-radius:10px;padding:18px;transition:all .18s;cursor:pointer;position:relative}
+.dept-card:hover{box-shadow:var(--shadow-m);border-color:var(--bd-m)}
+.dept-icon{width:42px;height:42px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:20px;margin-bottom:12px}
+.dept-name{font-size:14px;font-weight:700;color:var(--t1);margin-bottom:4px}
+.dept-count{font-size:12px;color:var(--t3);margin-bottom:12px}
+.dept-stats{display:flex;gap:14px}
+.dept-stat-val{font-family:'JetBrains Mono',monospace;font-size:16px;font-weight:700;color:var(--t1);display:block}
+.dept-stat-lbl{font-size:10.5px;color:var(--t3)}
+
+/* ═══ APPROVAL MODAL CONTENT ══════════════════════════════ */
+.modal-content{background:var(--modal-bg);border:1px solid var(--bd-m);border-radius:12px;color:var(--t1);box-shadow:var(--shadow-l)}
+.modal-header{border-bottom:1px solid var(--bd);padding:18px 22px}
+.modal-title{font-size:15px;font-weight:700;color:var(--t1)}
+.modal-footer{border-top:1px solid var(--bd);padding:14px 22px}
+
+/* ═══ TOAST ════════════════════════════════════════════════ */
+#toast-zone{position:fixed;bottom:22px;right:22px;z-index:9999;display:flex;flex-direction:column;gap:8px}
+.toast-gh{
+  background:var(--surface);border:1px solid var(--bd-m);border-radius:9px;
+  padding:11px 15px;box-shadow:var(--shadow-l);
+  display:flex;align-items:center;gap:10px;
+  font-size:13px;font-weight:500;color:var(--t1);min-width:280px;
+  animation:toastIn .3s ease;
+}
+.toast-gh::before{width:10px;height:10px;border-radius:50%;background:currentColor;flex-shrink:0;content:''}
+@keyframes toastIn{from{transform:translateY(10px);opacity:0}to{transform:translateY(0);opacity:1}}
+
+/* ═══ SETTINGS ROWS ════════════════════════════════════════ */
+.set-row{display:flex;align-items:center;justify-content:space-between;padding:13px 0;border-bottom:1px solid var(--bd)}
+.set-row:last-child{border-bottom:none}
+.set-l{font-size:13.5px;font-weight:600;color:var(--t1)}
+.set-s{font-size:12px;color:var(--t3);margin-top:2px}
+.inline-sw{width:40px;height:22px;border-radius:11px;background:var(--toggle-off);border:2px solid rgba(0,0,0,0.1);position:relative;transition:all .3s;cursor:pointer;flex-shrink:0}
+.inline-sw.on{background:var(--accent);border-color:var(--accent)}
+.inline-sw::after{content:'';position:absolute;width:14px;height:14px;background:#fff;border-radius:50%;top:2px;left:2px;transition:transform .3s cubic-bezier(.4,0,.2,1);box-shadow:0 1px 3px rgba(0,0,0,.3)}
+.inline-sw.on::after{transform:translateX(18px)}
+
+/* ═══ CHIP GROUPS ══════════════════════════════════════════ */
+.chip-group{display:flex;gap:6px;flex-wrap:wrap}
+.chip{font-size:11px;font-weight:700;padding:2px 8px;border-radius:5px;border:1px solid}
+
+/* ═══ EMPTY STATE ══════════════════════════════════════════ */
+.empty{text-align:center;padding:52px 20px}
+.empty i{font-size:36px;color:var(--t4);display:block;margin-bottom:10px}
+.empty h5{font-size:15px;font-weight:700;color:var(--t2);margin-bottom:5px}
+.empty p{font-size:13px;color:var(--t3)}
+
+/* ═══ LAYOUT HELPERS ═══════════════════════════════════════ */
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.g3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px}
+.g2l{display:grid;grid-template-columns:1.6fr 1fr;gap:14px}
+.g2r{display:grid;grid-template-columns:2fr 1fr;gap:14px}
+.stack{display:flex;flex-direction:column;gap:14px}
+.mt{margin-top:14px}
+/* Fade-up */
+.fu{animation:fu .35s ease both}
+.d1{animation-delay:.04s}.d2{animation-delay:.08s}.d3{animation-delay:.12s}.d4{animation-delay:.18s}
+@keyframes fu{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+
+/* ═══ PROFILE PANEL ════════════════════════════════════════ */
+.side-panel{position:fixed;right:0;top:0;bottom:0;width:380px;background:var(--surface);border-left:1px solid var(--bd);z-index:600;transform:translateX(100%);transition:transform .3s cubic-bezier(.4,0,.2,1);overflow-y:auto;box-shadow:var(--shadow-l)}
+.side-panel.open{transform:translateX(0)}
+.sp-overlay{position:fixed;inset:0;background:rgba(0,0,0,0.4);z-index:599;opacity:0;pointer-events:none;transition:opacity .3s}
+.sp-overlay.show{opacity:1;pointer-events:all}
+
+/* Reports page */
+.rpt-option{background:var(--surface);border:1px solid var(--bd);border-radius:10px;padding:18px;cursor:pointer;transition:all .18s;display:flex;gap:14px;align-items:flex-start}
+.rpt-option:hover{box-shadow:var(--shadow-m);border-color:var(--bd-m)}
+.rpt-ic{width:42px;height:42px;border-radius:9px;display:flex;align-items:center;justify-content:center;font-size:19px;flex-shrink:0}
+.rpt-title{font-size:13.5px;font-weight:700;color:var(--t1);margin-bottom:3px}
+.rpt-desc{font-size:12px;color:var(--t3);line-height:1.5}
+
+/* Tab strip */
+.tab-strip{display:flex;border-bottom:1px solid var(--bd);padding:0 18px}
+.tab-item{padding:10px 14px;font-size:13px;font-weight:600;color:var(--t2);cursor:pointer;border-bottom:2px solid transparent;margin-bottom:-1px;transition:all .14s;white-space:nowrap}
+.tab-item:hover{color:var(--t1)}
+.tab-item.active{color:var(--accent);border-bottom-color:var(--accent)}
+.tab-content{display:none}.tab-content.active{display:block}
+
+@media(max-width:1200px){.kpi-grid{grid-template-columns:repeat(3,1fr)}.g2l,.g2r{grid-template-columns:1fr}}
+@media(max-width:900px){.sidebar{transform:translateX(-100%)}.main{margin-left:0}.kpi-grid{grid-template-columns:repeat(2,1fr)}.g2,.g3{grid-template-columns:1fr}.form-row{grid-template-columns:1fr}}
+@media(max-width:600px){.kpi-grid{grid-template-columns:1fr}.emp-grid{grid-template-columns:1fr}.dept-grid{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+
+<!-- ═════════════ SIDEBAR ═════════════════════════════════ -->
+<aside class="sidebar">
+  <div class="sb-stripe"></div>
+  <div class="sb-head">
+    <div class="sb-logo">
+      <div class="sb-logo-mark">🗂️</div>
+      <div>
+        <div class="sb-logo-name">LeaveDesk</div>
+        <div class="sb-logo-sub">Admin Console</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="sb-admin-chip">
+    <div class="sb-admin-av">HR</div>
+    <div style="min-width:0">
+      <div class="sb-admin-nm">Hannah Reyes</div>
+      <div class="sb-admin-role">HR Administrator</div>
+    </div>
+  </div>
+
+  <nav class="sb-nav">
+    <div class="sb-lbl">Overview</div>
+    <button class="sb-link active" onclick="go(&#39;dashboard&#39;,this)"><i class="bi bi-grid-fill"></i>Dashboard</button>
+    <button class="sb-link" onclick="go(&#39;requests&#39;,this)">
+      <i class="bi bi-inbox-fill"></i>Leave Requests
+      <span class="sb-badge" id="sb-pending-cnt">4</span>
+    </button>
+    <button class="sb-link" onclick="go(&#39;employees&#39;,this)"><i class="bi bi-people-fill"></i>Employees</button>
+    <button class="sb-link" onclick="go(&#39;calendar&#39;,this)"><i class="bi bi-calendar3"></i>Org Calendar</button>
+    <div class="sb-lbl">Management</div>
+    <button class="sb-link" onclick="go(&#39;departments&#39;,this)"><i class="bi bi-diagram-3-fill"></i>Departments</button>
+    <button class="sb-link" onclick="go(&#39;analytics&#39;,this)"><i class="bi bi-bar-chart-line-fill"></i>Analytics</button>
+    <button class="sb-link" onclick="go(&#39;reports&#39;,this)"><i class="bi bi-file-earmark-bar-graph-fill"></i>Reports</button>
+    <div class="sb-lbl">System</div>
+    <button class="sb-link" onclick="go(&#39;audit&#39;,this)"><i class="bi bi-clock-history"></i>Audit Log</button>
+    <button class="sb-link" onclick="go(&#39;holidays&#39;,this)"><i class="bi bi-flag-fill"></i>Holidays</button>
+    <button class="sb-link" onclick="go(&#39;settings&#39;,this)"><i class="bi bi-gear-fill"></i>Settings</button>
+  </nav>
+
+  <div class="sb-foot">
+    <div class="theme-sw-row" onclick="toggleTheme()">
+      <div class="theme-sw-left"><i class="bi bi-moon-stars-fill" id="th-icon"></i><span id="th-label">Dark Mode</span></div>
+      <div class="sw" id="main-sw" style=""></div>
+    </div>
+  </div>
+</aside>
+
+<!-- ═════════════ MAIN ════════════════════════════════════ -->
+<div class="main">
+  <header class="topbar">
+    <div class="tb-left">
+      <div class="tb-page-title" id="pg-title">Dashboard</div>
+      <div class="tb-breadcrumb"><i class="bi bi-chevron-right" style="font-size:10px"></i><span id="pg-sub" style="font-size:12px;color:var(--t3)">Overview of all leave activity</span></div>
+    </div>
+    <div class="tb-right">
+      <div class="icon-btn" onclick="toast(&#39;2 new notifications&#39;,&#39;warn&#39;)"><i class="bi bi-bell-fill"></i><div class="notif-pip"></div></div>
+      <div class="icon-btn" onclick="toast(&#39;Synced with payroll system&#39;,&#39;ok&#39;)"><i class="bi bi-arrow-repeat"></i></div>
+      <button class="gh-btn gh-btn-default gh-btn-sm" onclick="exportCSV()"><i class="bi bi-download"></i>Export</button>
+      <button class="gh-btn gh-btn-primary gh-btn-sm" onclick="go(&#39;requests&#39;,null);setF(&#39;pending&#39;,null)"><i class="bi bi-check2-circle"></i>Review Queue</button>
+    </div>
+  </header>
+
+  <div class="content">
+
+  <!-- ═══════════ DASHBOARD ══════════════════════════════ -->
+  <section class="sec active" id="sec-dashboard">
+
+    <!-- KPIs -->
+    <div class="kpi-grid fu">
+      <div class="kpi" style="--kc:#0969DA">
+        <div class="kpi-label"><i class="bi bi-people-fill"></i>Total Employees</div>
+        <div class="kpi-val" id="kpi-emp">14</div>
+        <div class="kpi-sub pos"><i class="bi bi-arrow-up-short"></i>+3 this month</div>
+      </div>
+      <div class="kpi" style="--kc:#CF222E">
+        <div class="kpi-label"><i class="bi bi-hourglass-split"></i>Pending Approvals</div>
+        <div class="kpi-val" id="kpi-pend">4</div>
+        <div class="kpi-sub warn" id="kpi-pend-sub"><i class="bi bi-clock"></i>4 need review</div>
+      </div>
+      <div class="kpi" style="--kc:#1A7F37">
+        <div class="kpi-label"><i class="bi bi-person-check-fill"></i>On Leave Today</div>
+        <div class="kpi-val" id="kpi-today">1</div>
+        <div class="kpi-sub neutral"><i class="bi bi-calendar-day"></i>Active leaves</div>
+      </div>
+      <div class="kpi" style="--kc:#8250DF">
+        <div class="kpi-label"><i class="bi bi-calendar-check-fill"></i>Approved This Month</div>
+        <div class="kpi-val" id="kpi-month">11</div>
+        <div class="kpi-sub pos"><i class="bi bi-check2-all"></i>Total days</div>
+      </div>
+      <div class="kpi" style="--kc:#BC4C00">
+        <div class="kpi-label"><i class="bi bi-x-circle-fill"></i>Rejected / Cancelled</div>
+        <div class="kpi-val" id="kpi-rej">1</div>
+        <div class="kpi-sub neg"><i class="bi bi-dash"></i>This year</div>
+      </div>
+    </div>
+
+    <div class="g2l fu d1">
+      <!-- Approval queue -->
+      <div class="gh-card">
+        <div class="gh-card-hd">
+          <div class="gh-card-title"><i class="bi bi-inbox-fill ci"></i>Pending Approval Queue</div>
+          <button class="gh-btn gh-btn-default gh-btn-sm" onclick="go(&#39;requests&#39;,null)">View All</button>
+        </div>
+        <div id="dash-queue"><div style="overflow-x:auto"><table class="gh-table"><thead><tr><th>EMPLOYEE</th><th>TYPE</th><th>PERIOD</th><th>DAYS</th><th>ACTIONS</th></tr></thead><tbody>
+    <tr>
+      <td><div style="display:flex;align-items:center;gap:8px">
+        <div style="width:28px;height:28px;border-radius:7px;background:#8250DF;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;color:#fff;flex-shrink:0">JO</div>
+        <div><div style="font-size:13px;font-weight:600;color:var(--t1)">James Okonkwo</div><div style="font-size:11px;color:var(--t3)">Engineering</div></div>
+      </div></td>
+      <td><span class="label" style="background:#0969DA18;color:#0969DA;border-color:#0969DA40"><i class="bi bi-sun-fill"></i>Annual Leave</span></td>
+      <td style="font-size:12.5px;white-space:nowrap">21 Apr 2026 → 25 Apr 2026</td>
+      <td><span class="mono" style="font-size:13px;font-weight:700">5</span></td>
+      <td><div style="display:flex;gap:5px">
+        <button class="gh-btn gh-btn-success gh-btn-sm" onclick="startAction(&#39;LD-2026-030&#39;,&#39;approve&#39;)"><i class="bi bi-check-lg"></i>Approve</button>
+        <button class="gh-btn gh-btn-danger gh-btn-sm" onclick="startAction(&#39;LD-2026-030&#39;,&#39;reject&#39;)"><i class="bi bi-x-lg"></i>Reject</button>
+      </div></td>
+    </tr><tr>
+      <td><div style="display:flex;align-items:center;gap:8px">
+        <div style="width:28px;height:28px;border-radius:7px;background:#BC4C00;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;color:#fff;flex-shrink:0">PP</div>
+        <div><div style="font-size:13px;font-weight:600;color:var(--t1)">Priya Patel</div><div style="font-size:11px;color:var(--t3)">Product &amp; Design</div></div>
+      </div></td>
+      <td><span class="label" style="background:#CF222E18;color:#CF222E;border-color:#CF222E40"><i class="bi bi-heart-pulse-fill"></i>Sick Leave</span></td>
+      <td style="font-size:12.5px;white-space:nowrap">14 Apr 2026 → 16 Apr 2026</td>
+      <td><span class="mono" style="font-size:13px;font-weight:700">3</span></td>
+      <td><div style="display:flex;gap:5px">
+        <button class="gh-btn gh-btn-success gh-btn-sm" onclick="startAction(&#39;LD-2026-029&#39;,&#39;approve&#39;)"><i class="bi bi-check-lg"></i>Approve</button>
+        <button class="gh-btn gh-btn-danger gh-btn-sm" onclick="startAction(&#39;LD-2026-029&#39;,&#39;reject&#39;)"><i class="bi bi-x-lg"></i>Reject</button>
+      </div></td>
+    </tr><tr>
+      <td><div style="display:flex;align-items:center;gap:8px">
+        <div style="width:28px;height:28px;border-radius:7px;background:#9A6700;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;color:#fff;flex-shrink:0">DK</div>
+        <div><div style="font-size:13px;font-weight:600;color:var(--t1)">David Kim</div><div style="font-size:11px;color:var(--t3)">Engineering</div></div>
+      </div></td>
+      <td><span class="label" style="background:#0969DA18;color:#0969DA;border-color:#0969DA40"><i class="bi bi-sun-fill"></i>Annual Leave</span></td>
+      <td style="font-size:12.5px;white-space:nowrap">29 Apr 2026 → 01 May 2026</td>
+      <td><span class="mono" style="font-size:13px;font-weight:700">3</span></td>
+      <td><div style="display:flex;gap:5px">
+        <button class="gh-btn gh-btn-success gh-btn-sm" onclick="startAction(&#39;LD-2026-028&#39;,&#39;approve&#39;)"><i class="bi bi-check-lg"></i>Approve</button>
+        <button class="gh-btn gh-btn-danger gh-btn-sm" onclick="startAction(&#39;LD-2026-028&#39;,&#39;reject&#39;)"><i class="bi bi-x-lg"></i>Reject</button>
+      </div></td>
+    </tr><tr>
+      <td><div style="display:flex;align-items:center;gap:8px">
+        <div style="width:28px;height:28px;border-radius:7px;background:#BF3989;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;color:#fff;flex-shrink:0">YT</div>
+        <div><div style="font-size:13px;font-weight:600;color:var(--t1)">Yuki Tanaka</div><div style="font-size:11px;color:var(--t3)">Engineering</div></div>
+      </div></td>
+      <td><span class="label" style="background:#8250DF18;color:#8250DF;border-color:#8250DF40"><i class="bi bi-book-half"></i>Study Leave</span></td>
+      <td style="font-size:12.5px;white-space:nowrap">28 Apr 2026 → 28 Apr 2026</td>
+      <td><span class="mono" style="font-size:13px;font-weight:700">1</span></td>
+      <td><div style="display:flex;gap:5px">
+        <button class="gh-btn gh-btn-success gh-btn-sm" onclick="startAction(&#39;LD-2026-025&#39;,&#39;approve&#39;)"><i class="bi bi-check-lg"></i>Approve</button>
+        <button class="gh-btn gh-btn-danger gh-btn-sm" onclick="startAction(&#39;LD-2026-025&#39;,&#39;reject&#39;)"><i class="bi bi-x-lg"></i>Reject</button>
+      </div></td>
+    </tr>
+  </tbody></table></div></div>
+      </div>
+
+      <!-- Activity feed -->
+      <div class="stack">
+        <div class="gh-card">
+          <div class="gh-card-hd"><div class="gh-card-title"><i class="bi bi-activity ci"></i>Recent Activity</div></div>
+          <div style="padding:4px 14px 6px" id="dash-activity"><div class="activity-item">
+    <div class="act-dot" style="background:var(--ok-bg);color:var(--ok)"><i class="bi bi-check-circle-fill"></i></div>
+    <div class="act-body"><div class="act-text"><strong>Alex Chen</strong> approved annual leave for <strong>Michael Torres</strong></div><div class="act-time">2m ago</div></div>
+  </div><div class="activity-item">
+    <div class="act-dot" style="background:var(--accent-bg);color:var(--accent)"><i class="bi bi-person-plus-fill"></i></div>
+    <div class="act-body"><div class="act-text"><strong>Hannah Reyes</strong> added employee <strong>Isabel Martins</strong></div><div class="act-time">1h ago</div></div>
+  </div><div class="activity-item">
+    <div class="act-dot" style="background:var(--err-bg);color:var(--err)"><i class="bi bi-x-circle-fill"></i></div>
+    <div class="act-body"><div class="act-text"><strong>Lisa Wang</strong> rejected leave request <code class="mono">LD-2026-018</code></div><div class="act-time">3h ago</div></div>
+  </div><div class="activity-item">
+    <div class="act-dot" style="background:var(--warn-bg);color:var(--warn)"><i class="bi bi-file-earmark-plus"></i></div>
+    <div class="act-body"><div class="act-text"><strong>David Kim</strong> submitted new annual leave request</div><div class="act-time">5h ago</div></div>
+  </div><div class="activity-item">
+    <div class="act-dot" style="background:var(--purple-bg);color:var(--purple)"><i class="bi bi-arrow-repeat"></i></div>
+    <div class="act-body"><div class="act-text">System synced leave balances with payroll</div><div class="act-time">8h ago</div></div>
+  </div><div class="activity-item">
+    <div class="act-dot" style="background:var(--orange-bg);color:var(--orange)"><i class="bi bi-flag-fill"></i></div>
+    <div class="act-body"><div class="act-text">Public holiday <strong>Good Friday</strong> added for April 2026</div><div class="act-time">1d ago</div></div>
+  </div></div>
+        </div>
+        <div class="gh-card">
+          <div class="gh-card-hd"><div class="gh-card-title"><i class="bi bi-building ci"></i>By Department</div></div>
+          <div style="padding:12px 16px" id="dept-prog"><div class="prog-row">
+    <div class="prog-lbl">Marketing</div>
+    <div class="prog-bar-wrap"><div class="prog-bar" style="width:100%;background:#BC4C00"></div></div>
+    <div class="prog-val">65</div>
+  </div><div class="prog-row">
+    <div class="prog-lbl">Product &amp; Design</div>
+    <div class="prog-bar-wrap"><div class="prog-bar" style="width:35%;background:#0969DA"></div></div>
+    <div class="prog-val">23</div>
+  </div><div class="prog-row">
+    <div class="prog-lbl">Engineering</div>
+    <div class="prog-bar-wrap"><div class="prog-bar" style="width:18%;background:#1A7F37"></div></div>
+    <div class="prog-val">12</div>
+  </div><div class="prog-row">
+    <div class="prog-lbl">Finance</div>
+    <div class="prog-bar-wrap"><div class="prog-bar" style="width:6%;background:#8250DF"></div></div>
+    <div class="prog-val">4</div>
+  </div><div class="prog-row">
+    <div class="prog-lbl">Sales</div>
+    <div class="prog-bar-wrap"><div class="prog-bar" style="width:5%;background:#9A6700"></div></div>
+    <div class="prog-val">3</div>
+  </div><div class="prog-row">
+    <div class="prog-lbl">HR</div>
+    <div class="prog-bar-wrap"><div class="prog-bar" style="width:3%;background:#CF222E"></div></div>
+    <div class="prog-val">2</div>
+  </div><div class="prog-row">
+    <div class="prog-lbl">Operations</div>
+    <div class="prog-bar-wrap"><div class="prog-bar" style="width:0%;background:#BF3989"></div></div>
+    <div class="prog-val">0</div>
+  </div></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Charts -->
+    <div class="g2 mt fu d2">
+      <div class="gh-card">
+        <div class="gh-card-hd"><div class="gh-card-title"><i class="bi bi-bar-chart-fill ci"></i>Leave Volume — Last 12 Months</div></div>
+        <div style="padding:14px"><div id="ch-monthly"></div></div>
+      </div>
+      <div class="gh-card">
+        <div class="gh-card-hd"><div class="gh-card-title"><i class="bi bi-pie-chart-fill ci"></i>Leave Type Distribution</div></div>
+        <div style="padding:14px"><div id="ch-donut"></div></div>
+      </div>
+    </div>
+
+    <!-- Team on leave -->
+    <div class="gh-card mt fu d3">
+      <div class="gh-card-hd">
+        <div class="gh-card-title"><i class="bi bi-people ci"></i>Employees Currently on Leave</div>
+        <span class="label l-open" id="on-leave-count">1 active</span>
+      </div>
+      <div class="tbl-wrap">
+        <table class="gh-table" id="on-leave-table">
+          <thead><tr><th>EMPLOYEE</th><th>DEPARTMENT</th><th>TYPE</th><th>FROM</th><th>TO</th><th>DAYS</th><th>STATUS</th></tr></thead>
+          <tbody id="on-leave-tbody"><tr>
+    <td><div style="display:flex;align-items:center;gap:8px">
+      <div style="width:28px;height:28px;border-radius:6px;background:#0969DA;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;color:#fff">SJ</div>
+      <span style="font-size:13px;font-weight:600;color:var(--t1)">Sarah Johnson</span>
+    </div></td>
+    <td>Product &amp; Design</td>
+    <td><span class="label" style="background:#0969DA18;color:#0969DA;border-color:#0969DA40">Annual Leave</span></td>
+    <td>22 Apr 2026</td><td>24 Apr 2026</td>
+    <td><span class="mono" style="font-weight:700">3</span></td>
+    <td><span class="label l-open">Active</span></td>
+  </tr></tbody>
+        </table>
+      </div>
+    </div>
+
+  </section>
+
+  <!-- ═══════════ LEAVE REQUESTS ═══════════════════════════ -->
+  <section class="sec" id="sec-requests">
+    <div class="gh-card">
+      <div class="fbar">
+        <button class="fchip active" onclick="setF(&#39;all&#39;,this)">All</button>
+        <button class="fchip" onclick="setF(&#39;pending&#39;,this)">Pending</button>
+        <button class="fchip" onclick="setF(&#39;approved&#39;,this)">Approved</button>
+        <button class="fchip" onclick="setF(&#39;rejected&#39;,this)">Rejected</button>
+        <button class="fchip" onclick="setF(&#39;cancelled&#39;,this)">Cancelled</button>
+        <div style="display:flex;gap:7px;margin-left:auto;align-items:center;flex-wrap:wrap">
+          <div class="searchbox"><i class="bi bi-search"></i><input type="text" id="req-q" placeholder="Search employee, ref, type…" oninput="renderReqTable()"></div>
+          <select class="fi" style="width:auto;padding:5px 10px;font-size:12px" id="req-dept-f" onchange="renderReqTable()"><option value="">All Departments</option><option value="Engineering">Engineering</option><option value="Finance">Finance</option><option value="HR">HR</option><option value="Marketing">Marketing</option><option value="Operations">Operations</option><option value="Product &amp; Design">Product &amp; Design</option><option value="Sales">Sales</option></select>
+          <button class="gh-btn gh-btn-default gh-btn-sm" onclick="exportCSV()"><i class="bi bi-download"></i>Export</button>
+        </div>
+      </div>
+      <!-- Bulk action bar -->
+      <div id="bulk-bar" style="display:none;padding:8px 16px;background:var(--accent-bg);border-bottom:1px solid var(--accent-b);display:flex;align-items:center;gap:10px">
+        <span style="font-size:12.5px;font-weight:600;color:var(--accent)" id="bulk-cnt">0 selected</span>
+        <button class="gh-btn gh-btn-success gh-btn-sm" onclick="bulkApprove()"><i class="bi bi-check2-all"></i>Approve All</button>
+        <button class="gh-btn gh-btn-danger gh-btn-sm" onclick="bulkReject()"><i class="bi bi-x-lg"></i>Reject All</button>
+        <button class="gh-btn gh-btn-default gh-btn-sm" onclick="clearSel()">Clear</button>
+      </div>
+      <div class="tbl-wrap">
+        <table class="gh-table">
+          <thead><tr>
+            <th style="width:32px"><input type="checkbox" id="sel-all" onchange="togAll(this)"></th>
+            <th>REF #</th><th>EMPLOYEE</th><th>DEPT</th><th>TYPE</th><th>FROM</th><th>TO</th><th>DAYS</th><th>APPLIED</th><th>STATUS</th><th>ACTIONS</th>
+          </tr></thead>
+          <tbody id="req-tbody"><tr>
+    <td><input type="checkbox" onchange="togSel(&#39;LD-2026-031&#39;,this)"></td>
+    <td><span class="tbl-ref">LD-2026-031</span></td>
+    <td><div style="display:flex;align-items:center;gap:8px">
+      <div style="width:26px;height:26px;border-radius:6px;background:#0969DA;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;color:#fff;flex-shrink:0">SJ</div>
+      <button style="background:none;border:none;font-size:13px;font-weight:600;color:var(--accent);cursor:pointer;padding:0;text-align:left" onclick="openEmpPanel(&#39;E001&#39;)">Sarah Johnson</button>
+    </div></td>
+    <td style="font-size:12.5px">Product &amp; Design</td>
+    <td><span class="label" style="background:#0969DA18;color:#0969DA;border-color:#0969DA40;font-size:11px"><i class="bi bi-sun-fill"></i>Annual Leave</span></td>
+    <td style="font-size:12.5px;white-space:nowrap">22 Apr 2026</td>
+    <td style="font-size:12.5px;white-space:nowrap">24 Apr 2026</td>
+    <td><span class="mono" style="font-weight:700;font-size:13px">3</span></td>
+    <td style="font-size:12px;color:var(--t3);white-space:nowrap">14 Apr 2026</td>
+    <td><span class="label l-open">Approved</span></td>
+    <td><div style="display:flex;gap:4px;flex-wrap:nowrap">
+      <button class="gh-btn gh-btn-default gh-btn-sm" onclick="openReqPanel(&#39;LD-2026-031&#39;)"><i class="bi bi-eye"></i></button>
+      
+    </div></td>
+  </tr><tr>
+    <td><input type="checkbox" onchange="togSel(&#39;LD-2026-030&#39;,this)"></td>
+    <td><span class="tbl-ref">LD-2026-030</span></td>
+    <td><div style="display:flex;align-items:center;gap:8px">
+      <div style="width:26px;height:26px;border-radius:6px;background:#8250DF;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;color:#fff;flex-shrink:0">JO</div>
+      <button style="background:none;border:none;font-size:13px;font-weight:600;color:var(--accent);cursor:pointer;padding:0;text-align:left" onclick="openEmpPanel(&#39;E004&#39;)">James Okonkwo</button>
+    </div></td>
+    <td style="font-size:12.5px">Engineering</td>
+    <td><span class="label" style="background:#0969DA18;color:#0969DA;border-color:#0969DA40;font-size:11px"><i class="bi bi-sun-fill"></i>Annual Leave</span></td>
+    <td style="font-size:12.5px;white-space:nowrap">21 Apr 2026</td>
+    <td style="font-size:12.5px;white-space:nowrap">25 Apr 2026</td>
+    <td><span class="mono" style="font-weight:700;font-size:13px">5</span></td>
+    <td style="font-size:12px;color:var(--t3);white-space:nowrap">10 Apr 2026</td>
+    <td><span class="label l-pending">Pending</span></td>
+    <td><div style="display:flex;gap:4px;flex-wrap:nowrap">
+      <button class="gh-btn gh-btn-default gh-btn-sm" onclick="openReqPanel(&#39;LD-2026-030&#39;)"><i class="bi bi-eye"></i></button>
+      
+      <button class="gh-btn gh-btn-success gh-btn-sm" onclick="startAction(&#39;LD-2026-030&#39;,&#39;approve&#39;)"><i class="bi bi-check-lg"></i></button>
+      <button class="gh-btn gh-btn-danger gh-btn-sm" onclick="startAction(&#39;LD-2026-030&#39;,&#39;reject&#39;)"><i class="bi bi-x-lg"></i></button>
+    </div></td>
+  </tr><tr>
+    <td><input type="checkbox" onchange="togSel(&#39;LD-2026-029&#39;,this)"></td>
+    <td><span class="tbl-ref">LD-2026-029</span></td>
+    <td><div style="display:flex;align-items:center;gap:8px">
+      <div style="width:26px;height:26px;border-radius:6px;background:#BC4C00;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;color:#fff;flex-shrink:0">PP</div>
+      <button style="background:none;border:none;font-size:13px;font-weight:600;color:var(--accent);cursor:pointer;padding:0;text-align:left" onclick="openEmpPanel(&#39;E003&#39;)">Priya Patel</button>
+    </div></td>
+    <td style="font-size:12.5px">Product &amp; Design</td>
+    <td><span class="label" style="background:#CF222E18;color:#CF222E;border-color:#CF222E40;font-size:11px"><i class="bi bi-heart-pulse-fill"></i>Sick Leave</span></td>
+    <td style="font-size:12.5px;white-space:nowrap">14 Apr 2026</td>
+    <td style="font-size:12.5px;white-space:nowrap">16 Apr 2026</td>
+    <td><span class="mono" style="font-weight:700;font-size:13px">3</span></td>
+    <td style="font-size:12px;color:var(--t3);white-space:nowrap">14 Apr 2026</td>
+    <td><span class="label l-pending">Pending</span></td>
+    <td><div style="display:flex;gap:4px;flex-wrap:nowrap">
+      <button class="gh-btn gh-btn-default gh-btn-sm" onclick="openReqPanel(&#39;LD-2026-029&#39;)"><i class="bi bi-eye"></i></button>
+      
+      <button class="gh-btn gh-btn-success gh-btn-sm" onclick="startAction(&#39;LD-2026-029&#39;,&#39;approve&#39;)"><i class="bi bi-check-lg"></i></button>
+      <button class="gh-btn gh-btn-danger gh-btn-sm" onclick="startAction(&#39;LD-2026-029&#39;,&#39;reject&#39;)"><i class="bi bi-x-lg"></i></button>
+    </div></td>
+  </tr><tr>
+    <td><input type="checkbox" onchange="togSel(&#39;LD-2026-028&#39;,this)"></td>
+    <td><span class="tbl-ref">LD-2026-028</span></td>
+    <td><div style="display:flex;align-items:center;gap:8px">
+      <div style="width:26px;height:26px;border-radius:6px;background:#9A6700;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;color:#fff;flex-shrink:0">DK</div>
+      <button style="background:none;border:none;font-size:13px;font-weight:600;color:var(--accent);cursor:pointer;padding:0;text-align:left" onclick="openEmpPanel(&#39;E007&#39;)">David Kim</button>
+    </div></td>
+    <td style="font-size:12.5px">Engineering</td>
+    <td><span class="label" style="background:#0969DA18;color:#0969DA;border-color:#0969DA40;font-size:11px"><i class="bi bi-sun-fill"></i>Annual Leave</span></td>
+    <td style="font-size:12.5px;white-space:nowrap">29 Apr 2026</td>
+    <td style="font-size:12.5px;white-space:nowrap">01 May 2026</td>
+    <td><span class="mono" style="font-weight:700;font-size:13px">3</span></td>
+    <td style="font-size:12px;color:var(--t3);white-space:nowrap">15 Apr 2026</td>
+    <td><span class="label l-pending">Pending</span></td>
+    <td><div style="display:flex;gap:4px;flex-wrap:nowrap">
+      <button class="gh-btn gh-btn-default gh-btn-sm" onclick="openReqPanel(&#39;LD-2026-028&#39;)"><i class="bi bi-eye"></i></button>
+      
+      <button class="gh-btn gh-btn-success gh-btn-sm" onclick="startAction(&#39;LD-2026-028&#39;,&#39;approve&#39;)"><i class="bi bi-check-lg"></i></button>
+      <button class="gh-btn gh-btn-danger gh-btn-sm" onclick="startAction(&#39;LD-2026-028&#39;,&#39;reject&#39;)"><i class="bi bi-x-lg"></i></button>
+    </div></td>
+  </tr><tr>
+    <td><input type="checkbox" onchange="togSel(&#39;LD-2026-027&#39;,this)"></td>
+    <td><span class="tbl-ref">LD-2026-027</span></td>
+    <td><div style="display:flex;align-items:center;gap:8px">
+      <div style="width:26px;height:26px;border-radius:6px;background:#CF222E;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;color:#fff;flex-shrink:0">SR</div>
+      <button style="background:none;border:none;font-size:13px;font-weight:600;color:var(--accent);cursor:pointer;padding:0;text-align:left" onclick="openEmpPanel(&#39;E006&#39;)">Sofia Reyes</button>
+    </div></td>
+    <td style="font-size:12.5px">Marketing</td>
+    <td><span class="label" style="background:#BF398918;color:#BF3989;border-color:#BF398940;font-size:11px"><i class="bi bi-person-hearts"></i>Maternity/Pat.</span></td>
+    <td style="font-size:12.5px;white-space:nowrap">04 May 2026</td>
+    <td style="font-size:12.5px;white-space:nowrap">31 Jul 2026</td>
+    <td><span class="mono" style="font-weight:700;font-size:13px">60</span></td>
+    <td style="font-size:12px;color:var(--t3);white-space:nowrap">01 Apr 2026</td>
+    <td><span class="label l-open">Approved</span></td>
+    <td><div style="display:flex;gap:4px;flex-wrap:nowrap">
+      <button class="gh-btn gh-btn-default gh-btn-sm" onclick="openReqPanel(&#39;LD-2026-027&#39;)"><i class="bi bi-eye"></i></button>
+      
+    </div></td>
+  </tr><tr>
+    <td><input type="checkbox" onchange="togSel(&#39;LD-2026-026&#39;,this)"></td>
+    <td><span class="tbl-ref">LD-2026-026</span></td>
+    <td><div style="display:flex;align-items:center;gap:8px">
+      <div style="width:26px;height:26px;border-radius:6px;background:#EA580C;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;color:#fff;flex-shrink:0">NR</div>
+      <button style="background:none;border:none;font-size:13px;font-weight:600;color:var(--accent);cursor:pointer;padding:0;text-align:left" onclick="openEmpPanel(&#39;E012&#39;)">Nadia Rousseau</button>
+    </div></td>
+    <td style="font-size:12.5px">Sales</td>
+    <td><span class="label" style="background:#0969DA18;color:#0969DA;border-color:#0969DA40;font-size:11px"><i class="bi bi-sun-fill"></i>Annual Leave</span></td>
+    <td style="font-size:12.5px;white-space:nowrap">08 Apr 2026</td>
+    <td style="font-size:12.5px;white-space:nowrap">10 Apr 2026</td>
+    <td><span class="mono" style="font-weight:700;font-size:13px">3</span></td>
+    <td style="font-size:12px;color:var(--t3);white-space:nowrap">04 Apr 2026</td>
+    <td><span class="label l-open">Approved</span></td>
+    <td><div style="display:flex;gap:4px;flex-wrap:nowrap">
+      <button class="gh-btn gh-btn-default gh-btn-sm" onclick="openReqPanel(&#39;LD-2026-026&#39;)"><i class="bi bi-eye"></i></button>
+      
+    </div></td>
+  </tr><tr>
+    <td><input type="checkbox" onchange="togSel(&#39;LD-2026-025&#39;,this)"></td>
+    <td><span class="tbl-ref">LD-2026-025</span></td>
+    <td><div style="display:flex;align-items:center;gap:8px">
+      <div style="width:26px;height:26px;border-radius:6px;background:#BF3989;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;color:#fff;flex-shrink:0">YT</div>
+      <button style="background:none;border:none;font-size:13px;font-weight:600;color:var(--accent);cursor:pointer;padding:0;text-align:left" onclick="openEmpPanel(&#39;E005&#39;)">Yuki Tanaka</button>
+    </div></td>
+    <td style="font-size:12.5px">Engineering</td>
+    <td><span class="label" style="background:#8250DF18;color:#8250DF;border-color:#8250DF40;font-size:11px"><i class="bi bi-book-half"></i>Study Leave</span></td>
+    <td style="font-size:12.5px;white-space:nowrap">28 Apr 2026</td>
+    <td style="font-size:12.5px;white-space:nowrap">28 Apr 2026</td>
+    <td><span class="mono" style="font-weight:700;font-size:13px">1</span></td>
+    <td style="font-size:12px;color:var(--t3);white-space:nowrap">15 Apr 2026</td>
+    <td><span class="label l-pending">Pending</span></td>
+    <td><div style="display:flex;gap:4px;flex-wrap:nowrap">
+      <button class="gh-btn gh-btn-default gh-btn-sm" onclick="openReqPanel(&#39;LD-2026-025&#39;)"><i class="bi bi-eye"></i></button>
+      
+      <button class="gh-btn gh-btn-success gh-btn-sm" onclick="startAction(&#39;LD-2026-025&#39;,&#39;approve&#39;)"><i class="bi bi-check-lg"></i></button>
+      <button class="gh-btn gh-btn-danger gh-btn-sm" onclick="startAction(&#39;LD-2026-025&#39;,&#39;reject&#39;)"><i class="bi bi-x-lg"></i></button>
+    </div></td>
+  </tr><tr>
+    <td><input type="checkbox" onchange="togSel(&#39;LD-2026-024&#39;,this)"></td>
+    <td><span class="tbl-ref">LD-2026-024</span></td>
+    <td><div style="display:flex;align-items:center;gap:8px">
+      <div style="width:26px;height:26px;border-radius:6px;background:#1A7F37;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;color:#fff;flex-shrink:0">MT</div>
+      <button style="background:none;border:none;font-size:13px;font-weight:600;color:var(--accent);cursor:pointer;padding:0;text-align:left" onclick="openEmpPanel(&#39;E002&#39;)">Michael Torres</button>
+    </div></td>
+    <td style="font-size:12.5px">Product &amp; Design</td>
+    <td><span class="label" style="background:#0969DA18;color:#0969DA;border-color:#0969DA40;font-size:11px"><i class="bi bi-sun-fill"></i>Annual Leave</span></td>
+    <td style="font-size:12.5px;white-space:nowrap">07 Apr 2026</td>
+    <td style="font-size:12.5px;white-space:nowrap">11 Apr 2026</td>
+    <td><span class="mono" style="font-weight:700;font-size:13px">5</span></td>
+    <td style="font-size:12px;color:var(--t3);white-space:nowrap">28 Mar 2026</td>
+    <td><span class="label l-open">Approved</span></td>
+    <td><div style="display:flex;gap:4px;flex-wrap:nowrap">
+      <button class="gh-btn gh-btn-default gh-btn-sm" onclick="openReqPanel(&#39;LD-2026-024&#39;)"><i class="bi bi-eye"></i></button>
+      
+    </div></td>
+  </tr><tr>
+    <td><input type="checkbox" onchange="togSel(&#39;LD-2026-023&#39;,this)"></td>
+    <td><span class="tbl-ref">LD-2026-023</span></td>
+    <td><div style="display:flex;align-items:center;gap:8px">
+      <div style="width:26px;height:26px;border-radius:6px;background:#0EA5E9;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;color:#fff;flex-shrink:0">AN</div>
+      <button style="background:none;border:none;font-size:13px;font-weight:600;color:var(--accent);cursor:pointer;padding:0;text-align:left" onclick="openEmpPanel(&#39;E008&#39;)">Amara Nkosi</button>
+    </div></td>
+    <td style="font-size:12.5px">Finance</td>
+    <td><span class="label" style="background:#9A670018;color:#9A6700;border-color:#9A670040;font-size:11px"><i class="bi bi-heart-fill"></i>Compassionate</span></td>
+    <td style="font-size:12.5px;white-space:nowrap">20 Mar 2026</td>
+    <td style="font-size:12.5px;white-space:nowrap">20 Mar 2026</td>
+    <td><span class="mono" style="font-weight:700;font-size:13px">1</span></td>
+    <td style="font-size:12px;color:var(--t3);white-space:nowrap">20 Mar 2026</td>
+    <td><span class="label l-open">Approved</span></td>
+    <td><div style="display:flex;gap:4px;flex-wrap:nowrap">
+      <button class="gh-btn gh-btn-default gh-btn-sm" onclick="openReqPanel(&#39;LD-2026-023&#39;)"><i class="bi bi-eye"></i></button>
+      
+    </div></td>
+  </tr><tr>
+    <td><input type="checkbox" onchange="togSel(&#39;LD-2026-022&#39;,this)"></td>
+    <td><span class="tbl-ref">LD-2026-022</span></td>
+    <td><div style="display:flex;align-items:center;gap:8px">
+      <div style="width:26px;height:26px;border-radius:6px;background:#0D9488;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;color:#fff;flex-shrink:0">LF</div>
+      <button style="background:none;border:none;font-size:13px;font-weight:600;color:var(--accent);cursor:pointer;padding:0;text-align:left" onclick="openEmpPanel(&#39;E009&#39;)">Lucas Ferreira</button>
+    </div></td>
+    <td style="font-size:12.5px">Engineering</td>
+    <td><span class="label" style="background:#0969DA18;color:#0969DA;border-color:#0969DA40;font-size:11px"><i class="bi bi-sun-fill"></i>Annual Leave</span></td>
+    <td style="font-size:12.5px;white-space:nowrap">23 Mar 2026</td>
+    <td style="font-size:12.5px;white-space:nowrap">27 Mar 2026</td>
+    <td><span class="mono" style="font-weight:700;font-size:13px">5</span></td>
+    <td style="font-size:12px;color:var(--t3);white-space:nowrap">14 Mar 2026</td>
+    <td><span class="label l-open">Approved</span></td>
+    <td><div style="display:flex;gap:4px;flex-wrap:nowrap">
+      <button class="gh-btn gh-btn-default gh-btn-sm" onclick="openReqPanel(&#39;LD-2026-022&#39;)"><i class="bi bi-eye"></i></button>
+      
+    </div></td>
+  </tr><tr>
+    <td><input type="checkbox" onchange="togSel(&#39;LD-2026-021&#39;,this)"></td>
+    <td><span class="tbl-ref">LD-2026-021</span></td>
+    <td><div style="display:flex;align-items:center;gap:8px">
+      <div style="width:26px;height:26px;border-radius:6px;background:#F43F5E;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;color:#fff;flex-shrink:0">TA</div>
+      <button style="background:none;border:none;font-size:13px;font-weight:600;color:var(--accent);cursor:pointer;padding:0;text-align:left" onclick="openEmpPanel(&#39;E011&#39;)">Tom Adeyemi</button>
+    </div></td>
+    <td style="font-size:12.5px">Marketing</td>
+    <td><span class="label" style="background:#0969DA18;color:#0969DA;border-color:#0969DA40;font-size:11px"><i class="bi bi-sun-fill"></i>Annual Leave</span></td>
+    <td style="font-size:12.5px;white-space:nowrap">09 Mar 2026</td>
+    <td style="font-size:12.5px;white-space:nowrap">13 Mar 2026</td>
+    <td><span class="mono" style="font-weight:700;font-size:13px">5</span></td>
+    <td style="font-size:12px;color:var(--t3);white-space:nowrap">28 Feb 2026</td>
+    <td><span class="label l-open">Approved</span></td>
+    <td><div style="display:flex;gap:4px;flex-wrap:nowrap">
+      <button class="gh-btn gh-btn-default gh-btn-sm" onclick="openReqPanel(&#39;LD-2026-021&#39;)"><i class="bi bi-eye"></i></button>
+      
+    </div></td>
+  </tr><tr>
+    <td><input type="checkbox" onchange="togSel(&#39;LD-2026-020&#39;,this)"></td>
+    <td><span class="tbl-ref">LD-2026-020</span></td>
+    <td><div style="display:flex;align-items:center;gap:8px">
+      <div style="width:26px;height:26px;border-radius:6px;background:#047857;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;color:#fff;flex-shrink:0">IM</div>
+      <button style="background:none;border:none;font-size:13px;font-weight:600;color:var(--accent);cursor:pointer;padding:0;text-align:left" onclick="openEmpPanel(&#39;E014&#39;)">Isabel Martins</button>
+    </div></td>
+    <td style="font-size:12.5px">Engineering</td>
+    <td><span class="label" style="background:#CF222E18;color:#CF222E;border-color:#CF222E40;font-size:11px"><i class="bi bi-heart-pulse-fill"></i>Sick Leave</span></td>
+    <td style="font-size:12.5px;white-space:nowrap">05 Mar 2026</td>
+    <td style="font-size:12.5px;white-space:nowrap">06 Mar 2026</td>
+    <td><span class="mono" style="font-weight:700;font-size:13px">2</span></td>
+    <td style="font-size:12px;color:var(--t3);white-space:nowrap">05 Mar 2026</td>
+    <td><span class="label l-open">Approved</span></td>
+    <td><div style="display:flex;gap:4px;flex-wrap:nowrap">
+      <button class="gh-btn gh-btn-default gh-btn-sm" onclick="openReqPanel(&#39;LD-2026-020&#39;)"><i class="bi bi-eye"></i></button>
+      
+    </div></td>
+  </tr><tr>
+    <td><input type="checkbox" onchange="togSel(&#39;LD-2026-019&#39;,this)"></td>
+    <td><span class="tbl-ref">LD-2026-019</span></td>
+    <td><div style="display:flex;align-items:center;gap:8px">
+      <div style="width:26px;height:26px;border-radius:6px;background:#0969DA;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;color:#fff;flex-shrink:0">SJ</div>
+      <button style="background:none;border:none;font-size:13px;font-weight:600;color:var(--accent);cursor:pointer;padding:0;text-align:left" onclick="openEmpPanel(&#39;E001&#39;)">Sarah Johnson</button>
+    </div></td>
+    <td style="font-size:12.5px">Product &amp; Design</td>
+    <td><span class="label" style="background:#CF222E18;color:#CF222E;border-color:#CF222E40;font-size:11px"><i class="bi bi-heart-pulse-fill"></i>Sick Leave</span></td>
+    <td style="font-size:12.5px;white-space:nowrap">18 Feb 2026</td>
+    <td style="font-size:12.5px;white-space:nowrap">19 Feb 2026</td>
+    <td><span class="mono" style="font-weight:700;font-size:13px">2</span></td>
+    <td style="font-size:12px;color:var(--t3);white-space:nowrap">18 Feb 2026</td>
+    <td><span class="label l-open">Approved</span></td>
+    <td><div style="display:flex;gap:4px;flex-wrap:nowrap">
+      <button class="gh-btn gh-btn-default gh-btn-sm" onclick="openReqPanel(&#39;LD-2026-019&#39;)"><i class="bi bi-eye"></i></button>
+      
+    </div></td>
+  </tr><tr>
+    <td><input type="checkbox" onchange="togSel(&#39;LD-2026-018&#39;,this)"></td>
+    <td><span class="tbl-ref">LD-2026-018</span></td>
+    <td><div style="display:flex;align-items:center;gap:8px">
+      <div style="width:26px;height:26px;border-radius:6px;background:#8250DF;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;color:#fff;flex-shrink:0">JO</div>
+      <button style="background:none;border:none;font-size:13px;font-weight:600;color:var(--accent);cursor:pointer;padding:0;text-align:left" onclick="openEmpPanel(&#39;E004&#39;)">James Okonkwo</button>
+    </div></td>
+    <td style="font-size:12.5px">Engineering</td>
+    <td><span class="label" style="background:#0969DA18;color:#0969DA;border-color:#0969DA40;font-size:11px"><i class="bi bi-sun-fill"></i>Annual Leave</span></td>
+    <td style="font-size:12.5px;white-space:nowrap">02 Feb 2026</td>
+    <td style="font-size:12.5px;white-space:nowrap">06 Feb 2026</td>
+    <td><span class="mono" style="font-weight:700;font-size:13px">5</span></td>
+    <td style="font-size:12px;color:var(--t3);white-space:nowrap">24 Jan 2026</td>
+    <td><span class="label l-reject">Rejected</span></td>
+    <td><div style="display:flex;gap:4px;flex-wrap:nowrap">
+      <button class="gh-btn gh-btn-default gh-btn-sm" onclick="openReqPanel(&#39;LD-2026-018&#39;)"><i class="bi bi-eye"></i></button>
+      
+    </div></td>
+  </tr><tr>
+    <td><input type="checkbox" onchange="togSel(&#39;LD-2026-017&#39;,this)"></td>
+    <td><span class="tbl-ref">LD-2026-017</span></td>
+    <td><div style="display:flex;align-items:center;gap:8px">
+      <div style="width:26px;height:26px;border-radius:6px;background:#6366F1;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;color:#fff;flex-shrink:0">HR</div>
+      <button style="background:none;border:none;font-size:13px;font-weight:600;color:var(--accent);cursor:pointer;padding:0;text-align:left" onclick="openEmpPanel(&#39;E010&#39;)">Hannah Reyes</button>
+    </div></td>
+    <td style="font-size:12.5px">HR</td>
+    <td><span class="label" style="background:#8250DF18;color:#8250DF;border-color:#8250DF40;font-size:11px"><i class="bi bi-book-half"></i>Study Leave</span></td>
+    <td style="font-size:12.5px;white-space:nowrap">26 Jan 2026</td>
+    <td style="font-size:12.5px;white-space:nowrap">27 Jan 2026</td>
+    <td><span class="mono" style="font-weight:700;font-size:13px">2</span></td>
+    <td style="font-size:12px;color:var(--t3);white-space:nowrap">20 Jan 2026</td>
+    <td><span class="label l-open">Approved</span></td>
+    <td><div style="display:flex;gap:4px;flex-wrap:nowrap">
+      <button class="gh-btn gh-btn-default gh-btn-sm" onclick="openReqPanel(&#39;LD-2026-017&#39;)"><i class="bi bi-eye"></i></button>
+      
+    </div></td>
+  </tr><tr>
+    <td><input type="checkbox" onchange="togSel(&#39;LD-2026-016&#39;,this)"></td>
+    <td><span class="tbl-ref">LD-2026-016</span></td>
+    <td><div style="display:flex;align-items:center;gap:8px">
+      <div style="width:26px;height:26px;border-radius:6px;background:#B45309;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;color:#fff;flex-shrink:0">AC</div>
+      <button style="background:none;border:none;font-size:13px;font-weight:600;color:var(--accent);cursor:pointer;padding:0;text-align:left" onclick="openEmpPanel(&#39;E015&#39;)">Alex Chen</button>
+    </div></td>
+    <td style="font-size:12.5px">Product &amp; Design</td>
+    <td><span class="label" style="background:#0969DA18;color:#0969DA;border-color:#0969DA40;font-size:11px"><i class="bi bi-sun-fill"></i>Annual Leave</span></td>
+    <td style="font-size:12.5px;white-space:nowrap">02 Jan 2026</td>
+    <td style="font-size:12.5px;white-space:nowrap">06 Jan 2026</td>
+    <td><span class="mono" style="font-weight:700;font-size:13px">5</span></td>
+    <td style="font-size:12px;color:var(--t3);white-space:nowrap">18 Dec 2025</td>
+    <td><span class="label l-open">Approved</span></td>
+    <td><div style="display:flex;gap:4px;flex-wrap:nowrap">
+      <button class="gh-btn gh-btn-default gh-btn-sm" onclick="openReqPanel(&#39;LD-2026-016&#39;)"><i class="bi bi-eye"></i></button>
+      
+    </div></td>
+  </tr><tr>
+    <td><input type="checkbox" onchange="togSel(&#39;LD-2025-055&#39;,this)"></td>
+    <td><span class="tbl-ref">LD-2025-055</span></td>
+    <td><div style="display:flex;align-items:center;gap:8px">
+      <div style="width:26px;height:26px;border-radius:6px;background:#1A7F37;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;color:#fff;flex-shrink:0">MT</div>
+      <button style="background:none;border:none;font-size:13px;font-weight:600;color:var(--accent);cursor:pointer;padding:0;text-align:left" onclick="openEmpPanel(&#39;E002&#39;)">Michael Torres</button>
+    </div></td>
+    <td style="font-size:12.5px">Product &amp; Design</td>
+    <td><span class="label" style="background:#0969DA18;color:#0969DA;border-color:#0969DA40;font-size:11px"><i class="bi bi-sun-fill"></i>Annual Leave</span></td>
+    <td style="font-size:12.5px;white-space:nowrap">22 Dec 2025</td>
+    <td style="font-size:12.5px;white-space:nowrap">31 Dec 2025</td>
+    <td><span class="mono" style="font-weight:700;font-size:13px">8</span></td>
+    <td style="font-size:12px;color:var(--t3);white-space:nowrap">10 Dec 2025</td>
+    <td><span class="label l-open">Approved</span></td>
+    <td><div style="display:flex;gap:4px;flex-wrap:nowrap">
+      <button class="gh-btn gh-btn-default gh-btn-sm" onclick="openReqPanel(&#39;LD-2025-055&#39;)"><i class="bi bi-eye"></i></button>
+      
+    </div></td>
+  </tr><tr>
+    <td><input type="checkbox" onchange="togSel(&#39;LD-2025-054&#39;,this)"></td>
+    <td><span class="tbl-ref">LD-2025-054</span></td>
+    <td><div style="display:flex;align-items:center;gap:8px">
+      <div style="width:26px;height:26px;border-radius:6px;background:#9A6700;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;color:#fff;flex-shrink:0">DK</div>
+      <button style="background:none;border:none;font-size:13px;font-weight:600;color:var(--accent);cursor:pointer;padding:0;text-align:left" onclick="openEmpPanel(&#39;E007&#39;)">David Kim</button>
+    </div></td>
+    <td style="font-size:12.5px">Engineering</td>
+    <td><span class="label" style="background:#0969DA18;color:#0969DA;border-color:#0969DA40;font-size:11px"><i class="bi bi-sun-fill"></i>Annual Leave</span></td>
+    <td style="font-size:12.5px;white-space:nowrap">11 Aug 2025</td>
+    <td style="font-size:12.5px;white-space:nowrap">15 Aug 2025</td>
+    <td><span class="mono" style="font-weight:700;font-size:13px">5</span></td>
+    <td style="font-size:12px;color:var(--t3);white-space:nowrap">31 Jul 2025</td>
+    <td><span class="label l-open">Approved</span></td>
+    <td><div style="display:flex;gap:4px;flex-wrap:nowrap">
+      <button class="gh-btn gh-btn-default gh-btn-sm" onclick="openReqPanel(&#39;LD-2025-054&#39;)"><i class="bi bi-eye"></i></button>
+      
+    </div></td>
+  </tr><tr>
+    <td><input type="checkbox" onchange="togSel(&#39;LD-2025-053&#39;,this)"></td>
+    <td><span class="tbl-ref">LD-2025-053</span></td>
+    <td><div style="display:flex;align-items:center;gap:8px">
+      <div style="width:26px;height:26px;border-radius:6px;background:#BC4C00;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;color:#fff;flex-shrink:0">PP</div>
+      <button style="background:none;border:none;font-size:13px;font-weight:600;color:var(--accent);cursor:pointer;padding:0;text-align:left" onclick="openEmpPanel(&#39;E003&#39;)">Priya Patel</button>
+    </div></td>
+    <td style="font-size:12.5px">Product &amp; Design</td>
+    <td><span class="label" style="background:#0969DA18;color:#0969DA;border-color:#0969DA40;font-size:11px"><i class="bi bi-sun-fill"></i>Annual Leave</span></td>
+    <td style="font-size:12.5px;white-space:nowrap">16 Jun 2025</td>
+    <td style="font-size:12.5px;white-space:nowrap">20 Jun 2025</td>
+    <td><span class="mono" style="font-weight:700;font-size:13px">5</span></td>
+    <td style="font-size:12px;color:var(--t3);white-space:nowrap">10 Jun 2025</td>
+    <td><span class="label l-closed">Cancelled</span></td>
+    <td><div style="display:flex;gap:4px;flex-wrap:nowrap">
+      <button class="gh-btn gh-btn-default gh-btn-sm" onclick="openReqPanel(&#39;LD-2025-053&#39;)"><i class="bi bi-eye"></i></button>
+      
+    </div></td>
+  </tr><tr>
+    <td><input type="checkbox" onchange="togSel(&#39;LD-2025-052&#39;,this)"></td>
+    <td><span class="tbl-ref">LD-2025-052</span></td>
+    <td><div style="display:flex;align-items:center;gap:8px">
+      <div style="width:26px;height:26px;border-radius:6px;background:#0EA5E9;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;color:#fff;flex-shrink:0">AN</div>
+      <button style="background:none;border:none;font-size:13px;font-weight:600;color:var(--accent);cursor:pointer;padding:0;text-align:left" onclick="openEmpPanel(&#39;E008&#39;)">Amara Nkosi</button>
+    </div></td>
+    <td style="font-size:12.5px">Finance</td>
+    <td><span class="label" style="background:#CF222E18;color:#CF222E;border-color:#CF222E40;font-size:11px"><i class="bi bi-heart-pulse-fill"></i>Sick Leave</span></td>
+    <td style="font-size:12.5px;white-space:nowrap">07 May 2025</td>
+    <td style="font-size:12.5px;white-space:nowrap">09 May 2025</td>
+    <td><span class="mono" style="font-weight:700;font-size:13px">3</span></td>
+    <td style="font-size:12px;color:var(--t3);white-space:nowrap">07 May 2025</td>
+    <td><span class="label l-open">Approved</span></td>
+    <td><div style="display:flex;gap:4px;flex-wrap:nowrap">
+      <button class="gh-btn gh-btn-default gh-btn-sm" onclick="openReqPanel(&#39;LD-2025-052&#39;)"><i class="bi bi-eye"></i></button>
+      
+    </div></td>
+  </tr></tbody>
+        </table>
+      </div>
+      <div id="req-empty" class="empty" style="display:none"><i class="bi bi-inbox"></i><h5>No requests found</h5><p>Adjust filters to see results.</p></div>
+      <div style="padding:10px 16px;border-top:1px solid var(--bd);display:flex;align-items:center;justify-content:space-between">
+        <span style="font-size:12px;color:var(--t3)" id="req-total-lbl">Showing 20 of 20 records</span>
+        <div style="display:flex;gap:6px">
+          <button class="gh-btn gh-btn-default gh-btn-sm" onclick="toast(&#39;Previous page&#39;,&#39;info&#39;)"><i class="bi bi-chevron-left"></i></button>
+          <span style="font-size:12px;color:var(--t2);padding:4px 8px">Page 1 of 1</span>
+          <button class="gh-btn gh-btn-default gh-btn-sm" onclick="toast(&#39;Next page&#39;,&#39;info&#39;)"><i class="bi bi-chevron-right"></i></button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════ EMPLOYEES ══════════════════════════════ -->
+  <section class="sec" id="sec-employees">
+    <div class="gh-card">
+      <div class="fbar">
+        <div class="searchbox" style="flex:1;max-width:280px"><i class="bi bi-search"></i><input type="text" id="emp-q" placeholder="Search employees…" oninput="renderEmployees()"></div>
+        <select class="fi" style="width:auto;padding:5px 10px;font-size:12px" id="emp-dept-f" onchange="renderEmployees()"><option value="">All Departments</option><option value="Engineering">Engineering</option><option value="Finance">Finance</option><option value="HR">HR</option><option value="Marketing">Marketing</option><option value="Operations">Operations</option><option value="Product &amp; Design">Product &amp; Design</option><option value="Sales">Sales</option></select>
+        <select class="fi" style="width:auto;padding:5px 10px;font-size:12px" id="emp-status-f" onchange="renderEmployees()">
+          <option value="">All Status</option>
+          <option value="active">Active</option>
+          <option value="inactive">Inactive</option>
+        </select>
+        <div style="margin-left:auto;display:flex;gap:7px">
+          <button class="gh-btn gh-btn-default gh-btn-sm" onclick="toggleEmpView()"><i class="bi bi-list-ul" id="emp-view-ic"></i>List View</button>
+          <button class="gh-btn gh-btn-primary gh-btn-sm" onclick="openAddEmp()"><i class="bi bi-plus-lg"></i>Add Employee</button>
+        </div>
+      </div>
+      <div id="emp-container"><div class="emp-grid"><div class="emp-card" style="--ec:#0969DA" onclick="openEmpPanel(&#39;E001&#39;)">
+        <div class="emp-av" style="background:#0969DA">SJ</div>
+        <div class="emp-nm">Sarah Johnson</div>
+        <div class="emp-role">Senior UX Designer</div>
+        <span class="label l-open" style="font-size:10.5px">Active</span>
+        <div class="emp-meta">
+          <div><div class="emp-bal" style="color:var(--ok)">17d</div><div style="font-size:10px;color:var(--t3)">Annual left</div></div>
+          <span class="emp-dept-chip" style="background:rgba(9,105,218,0.1);color:#0969DA">Product</span>
+        </div>
+      </div><div class="emp-card" style="--ec:#0969DA" onclick="openEmpPanel(&#39;E002&#39;)">
+        <div class="emp-av" style="background:#1A7F37">MT</div>
+        <div class="emp-nm">Michael Torres</div>
+        <div class="emp-role">Product Manager</div>
+        <span class="label l-open" style="font-size:10.5px">Active</span>
+        <div class="emp-meta">
+          <div><div class="emp-bal" style="color:var(--warn)">7d</div><div style="font-size:10px;color:var(--t3)">Annual left</div></div>
+          <span class="emp-dept-chip" style="background:rgba(9,105,218,0.1);color:#0969DA">Product</span>
+        </div>
+      </div><div class="emp-card" style="--ec:#0969DA" onclick="openEmpPanel(&#39;E003&#39;)">
+        <div class="emp-av" style="background:#BC4C00">PP</div>
+        <div class="emp-nm">Priya Patel</div>
+        <div class="emp-role">UX Researcher</div>
+        <span class="label l-open" style="font-size:10.5px">Active</span>
+        <div class="emp-meta">
+          <div><div class="emp-bal" style="color:var(--ok)">20d</div><div style="font-size:10px;color:var(--t3)">Annual left</div></div>
+          <span class="emp-dept-chip" style="background:rgba(9,105,218,0.1);color:#0969DA">Product</span>
+        </div>
+      </div><div class="emp-card" style="--ec:#1A7F37" onclick="openEmpPanel(&#39;E004&#39;)">
+        <div class="emp-av" style="background:#8250DF">JO</div>
+        <div class="emp-nm">James Okonkwo</div>
+        <div class="emp-role">Frontend Developer</div>
+        <span class="label l-open" style="font-size:10.5px">Active</span>
+        <div class="emp-meta">
+          <div><div class="emp-bal" style="color:var(--ok)">20d</div><div style="font-size:10px;color:var(--t3)">Annual left</div></div>
+          <span class="emp-dept-chip" style="background:rgba(26,127,55,0.1);color:#1A7F37">Engineering</span>
+        </div>
+      </div><div class="emp-card" style="--ec:#1A7F37" onclick="openEmpPanel(&#39;E005&#39;)">
+        <div class="emp-av" style="background:#BF3989">YT</div>
+        <div class="emp-nm">Yuki Tanaka</div>
+        <div class="emp-role">Data Engineer</div>
+        <span class="label l-open" style="font-size:10.5px">Active</span>
+        <div class="emp-meta">
+          <div><div class="emp-bal" style="color:var(--ok)">20d</div><div style="font-size:10px;color:var(--t3)">Annual left</div></div>
+          <span class="emp-dept-chip" style="background:rgba(26,127,55,0.1);color:#1A7F37">Engineering</span>
+        </div>
+      </div><div class="emp-card" style="--ec:#BC4C00" onclick="openEmpPanel(&#39;E006&#39;)">
+        <div class="emp-av" style="background:#CF222E">SR</div>
+        <div class="emp-nm">Sofia Reyes</div>
+        <div class="emp-role">Content Strategist</div>
+        <span class="label l-open" style="font-size:10.5px">Active</span>
+        <div class="emp-meta">
+          <div><div class="emp-bal" style="color:var(--ok)">20d</div><div style="font-size:10px;color:var(--t3)">Annual left</div></div>
+          <span class="emp-dept-chip" style="background:rgba(188,76,0,0.1);color:#BC4C00">Marketing</span>
+        </div>
+      </div><div class="emp-card" style="--ec:#1A7F37" onclick="openEmpPanel(&#39;E007&#39;)">
+        <div class="emp-av" style="background:#9A6700">DK</div>
+        <div class="emp-nm">David Kim</div>
+        <div class="emp-role">Backend Developer</div>
+        <span class="label l-open" style="font-size:10.5px">Active</span>
+        <div class="emp-meta">
+          <div><div class="emp-bal" style="color:var(--ok)">15d</div><div style="font-size:10px;color:var(--t3)">Annual left</div></div>
+          <span class="emp-dept-chip" style="background:rgba(26,127,55,0.1);color:#1A7F37">Engineering</span>
+        </div>
+      </div><div class="emp-card" style="--ec:#8250DF" onclick="openEmpPanel(&#39;E008&#39;)">
+        <div class="emp-av" style="background:#0EA5E9">AN</div>
+        <div class="emp-nm">Amara Nkosi</div>
+        <div class="emp-role">Financial Analyst</div>
+        <span class="label l-open" style="font-size:10.5px">Active</span>
+        <div class="emp-meta">
+          <div><div class="emp-bal" style="color:var(--ok)">20d</div><div style="font-size:10px;color:var(--t3)">Annual left</div></div>
+          <span class="emp-dept-chip" style="background:rgba(130,80,223,0.1);color:#8250DF">Finance</span>
+        </div>
+      </div><div class="emp-card" style="--ec:#1A7F37" onclick="openEmpPanel(&#39;E009&#39;)">
+        <div class="emp-av" style="background:#0D9488">LF</div>
+        <div class="emp-nm">Lucas Ferreira</div>
+        <div class="emp-role">DevOps Engineer</div>
+        <span class="label l-open" style="font-size:10.5px">Active</span>
+        <div class="emp-meta">
+          <div><div class="emp-bal" style="color:var(--ok)">15d</div><div style="font-size:10px;color:var(--t3)">Annual left</div></div>
+          <span class="emp-dept-chip" style="background:rgba(26,127,55,0.1);color:#1A7F37">Engineering</span>
+        </div>
+      </div><div class="emp-card" style="--ec:#CF222E" onclick="openEmpPanel(&#39;E010&#39;)">
+        <div class="emp-av" style="background:#6366F1">HR</div>
+        <div class="emp-nm">Hannah Reyes</div>
+        <div class="emp-role">HR Administrator</div>
+        <span class="label l-open" style="font-size:10.5px">Active</span>
+        <div class="emp-meta">
+          <div><div class="emp-bal" style="color:var(--ok)">25d</div><div style="font-size:10px;color:var(--t3)">Annual left</div></div>
+          <span class="emp-dept-chip" style="background:rgba(207,34,46,0.1);color:#CF222E">HR</span>
+        </div>
+      </div><div class="emp-card" style="--ec:#BC4C00" onclick="openEmpPanel(&#39;E011&#39;)">
+        <div class="emp-av" style="background:#F43F5E">TA</div>
+        <div class="emp-nm">Tom Adeyemi</div>
+        <div class="emp-role">Marketing Director</div>
+        <span class="label l-open" style="font-size:10.5px">Active</span>
+        <div class="emp-meta">
+          <div><div class="emp-bal" style="color:var(--ok)">20d</div><div style="font-size:10px;color:var(--t3)">Annual left</div></div>
+          <span class="emp-dept-chip" style="background:rgba(188,76,0,0.1);color:#BC4C00">Marketing</span>
+        </div>
+      </div><div class="emp-card" style="--ec:#9A6700" onclick="openEmpPanel(&#39;E012&#39;)">
+        <div class="emp-av" style="background:#EA580C">NR</div>
+        <div class="emp-nm">Nadia Rousseau</div>
+        <div class="emp-role">Sales Executive</div>
+        <span class="label l-open" style="font-size:10.5px">Active</span>
+        <div class="emp-meta">
+          <div><div class="emp-bal" style="color:var(--ok)">17d</div><div style="font-size:10px;color:var(--t3)">Annual left</div></div>
+          <span class="emp-dept-chip" style="background:rgba(154,103,0,0.1);color:#9A6700">Sales</span>
+        </div>
+      </div><div class="emp-card" style="--ec:#BF3989" onclick="openEmpPanel(&#39;E013&#39;)">
+        <div class="emp-av" style="background:#7C3AED">CW</div>
+        <div class="emp-nm">Chris Walters</div>
+        <div class="emp-role">Operations Manager</div>
+        <span class="label l-closed" style="font-size:10.5px">Inactive</span>
+        <div class="emp-meta">
+          <div><div class="emp-bal" style="color:var(--ok)">20d</div><div style="font-size:10px;color:var(--t3)">Annual left</div></div>
+          <span class="emp-dept-chip" style="background:rgba(191,57,137,0.1);color:#BF3989">Operations</span>
+        </div>
+      </div><div class="emp-card" style="--ec:#1A7F37" onclick="openEmpPanel(&#39;E014&#39;)">
+        <div class="emp-av" style="background:#047857">IM</div>
+        <div class="emp-nm">Isabel Martins</div>
+        <div class="emp-role">Junior Developer</div>
+        <span class="label l-open" style="font-size:10.5px">Active</span>
+        <div class="emp-meta">
+          <div><div class="emp-bal" style="color:var(--ok)">20d</div><div style="font-size:10px;color:var(--t3)">Annual left</div></div>
+          <span class="emp-dept-chip" style="background:rgba(26,127,55,0.1);color:#1A7F37">Engineering</span>
+        </div>
+      </div><div class="emp-card" style="--ec:#0969DA" onclick="openEmpPanel(&#39;E015&#39;)">
+        <div class="emp-av" style="background:#B45309">AC</div>
+        <div class="emp-nm">Alex Chen</div>
+        <div class="emp-role">Design Lead</div>
+        <span class="label l-open" style="font-size:10.5px">Active</span>
+        <div class="emp-meta">
+          <div><div class="emp-bal" style="color:var(--ok)">20d</div><div style="font-size:10px;color:var(--t3)">Annual left</div></div>
+          <span class="emp-dept-chip" style="background:rgba(9,105,218,0.1);color:#0969DA">Product</span>
+        </div>
+      </div></div></div>
+      <div id="emp-empty" class="empty" style="display:none"><i class="bi bi-people"></i><h5>No employees found</h5><p>Try adjusting search or filters.</p></div>
+    </div>
+  </section>
+
+  <!-- ═══════════ ORG CALENDAR ══════════════════════════ -->
+  <section class="sec" id="sec-calendar">
+    <div class="g2l">
+      <div class="gh-card">
+        <div class="cal-hd">
+          <button class="cal-nav-btn" onclick="calPrev()"><i class="bi bi-chevron-left"></i></button>
+          <div class="cal-month" id="cal-label">April 2026</div>
+          <button class="cal-nav-btn" onclick="calNext()"><i class="bi bi-chevron-right"></i></button>
+        </div>
+        <div class="cal-grid-body">
+          <div class="cal-dow"><span>Sun</span><span>Mon</span><span>Tue</span><span>Wed</span><span>Thu</span><span>Fri</span><span>Sat</span></div>
+          <div class="cal-days" id="cal-grid"></div>
+        </div>
+        <div class="cal-leg">
+          <div class="leg"><div class="leg-dot" style="background:var(--accent)"></div>Today</div>
+          <div class="leg"><div class="leg-dot" style="background:var(--ok-bg)"></div>Approved</div>
+          <div class="leg"><div class="leg-dot" style="background:var(--warn-bg)"></div>Pending</div>
+          <div class="leg"><div class="leg-dot" style="background:var(--purple-bg)"></div>Public Holiday</div>
+          <div class="leg"><div class="leg-dot" style="background:var(--surface2)"></div>Weekend</div>
+        </div>
+      </div>
+      <div class="stack">
+        <div class="gh-card" style="padding:16px 18px">
+          <div class="gh-card-title" style="margin-bottom:12px"><i class="bi bi-calendar-event ci"></i>Leave on Selected Month</div>
+          <div id="cal-events"></div>
+        </div>
+        <div class="gh-card" style="padding:16px 18px">
+          <div class="gh-card-title" style="margin-bottom:12px"><i class="bi bi-flag-fill ci"></i>Public Holidays 2026</div>
+          <div id="cal-holidays"></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════ DEPARTMENTS ════════════════════════════ -->
+  <section class="sec" id="sec-departments">
+    <div class="gh-card" style="margin-bottom:14px">
+      <div class="gh-card-hd">
+        <div class="gh-card-title"><i class="bi bi-diagram-3-fill ci"></i>Department Overview</div>
+        <button class="gh-btn gh-btn-primary gh-btn-sm" onclick="toast(&#39;Add department modal — wired in production&#39;,&#39;info&#39;)"><i class="bi bi-plus-lg"></i>New Department</button>
+      </div>
+      <div class="dept-grid" id="dept-grid"></div>
+    </div>
+    <div class="gh-card">
+      <div class="gh-card-hd"><div class="gh-card-title"><i class="bi bi-bar-chart-horizontal ci"></i>Leave Usage by Department</div></div>
+      <div style="padding:14px"><div id="ch-dept-bar"></div></div>
+    </div>
+  </section>
+
+  <!-- ═══════════ ANALYTICS ══════════════════════════════ -->
+  <section class="sec" id="sec-analytics">
+    <!-- Tab strip -->
+    <div class="gh-card" style="margin-bottom:14px">
+      <div class="tab-strip">
+        <div class="tab-item active" onclick="setTab(&#39;trends&#39;,this)">Trends</div>
+        <div class="tab-item" onclick="setTab(&#39;utilisation&#39;,this)">Utilisation</div>
+        <div class="tab-item" onclick="setTab(&#39;types&#39;,this)">By Type</div>
+        <div class="tab-item" onclick="setTab(&#39;employees&#39;,this)">By Employee</div>
+      </div>
+      <div class="tab-content active" id="tab-trends">
+        <div class="g2" style="padding:14px">
+          <div><div id="ch-trend-line"></div></div>
+          <div><div id="ch-trend-donut"></div></div>
+        </div>
+      </div>
+      <div class="tab-content" id="tab-utilisation">
+        <div style="padding:14px"><div id="ch-util-bar"></div></div>
+      </div>
+      <div class="tab-content" id="tab-types">
+        <div style="padding:14px"><div id="ch-type-radar"></div></div>
+      </div>
+      <div class="tab-content" id="tab-employees">
+        <div class="tbl-wrap"><table class="gh-table">
+          <thead><tr><th>EMPLOYEE</th><th>DEPT</th><th>ANNUAL TAKEN</th><th>SICK TAKEN</th><th>BALANCE LEFT</th><th>UTILISATION</th></tr></thead>
+          <tbody id="anal-emp-tbody"></tbody>
+        </table></div>
+      </div>
+    </div>
+
+    <!-- Heatmap -->
+    <div class="gh-card">
+      <div class="gh-card-hd"><div class="gh-card-title"><i class="bi bi-grid-3x3 ci"></i>Monthly Leave Heatmap (All Employees)</div></div>
+      <div style="padding:14px"><div id="ch-heatmap"></div></div>
+    </div>
+  </section>
+
+  <!-- ═══════════ REPORTS ════════════════════════════════ -->
+  <section class="sec" id="sec-reports">
+    <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:12px;margin-bottom:18px" id="rpt-options"></div>
+    <div class="gh-card">
+      <div class="gh-card-hd">
+        <div class="gh-card-title"><i class="bi bi-file-earmark-spreadsheet ci"></i>Quick Report — All Leave History</div>
+        <div style="display:flex;gap:7px">
+          <select class="fi" style="padding:4px 10px;font-size:12px;width:auto" id="rpt-year">
+            <option>2026</option><option>2025</option><option>2024</option>
+          </select>
+          <button class="gh-btn gh-btn-default gh-btn-sm" onclick="exportCSV()"><i class="bi bi-file-earmark-excel"></i>Download CSV</button>
+        </div>
+      </div>
+      <div class="tbl-wrap">
+        <table class="gh-table">
+          <thead><tr><th>REF #</th><th>EMPLOYEE</th><th>DEPT</th><th>TYPE</th><th>FROM</th><th>TO</th><th>DAYS</th><th>STATUS</th><th>APPROVED BY</th></tr></thead>
+          <tbody id="rpt-tbody"></tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════ AUDIT LOG ═══════════════════════════════ -->
+  <section class="sec" id="sec-audit">
+    <div class="gh-card">
+      <div class="fbar">
+        <div class="searchbox"><i class="bi bi-search"></i><input type="text" placeholder="Search audit events…" style="width:200px"></div>
+        <select class="fi" style="width:auto;padding:5px 10px;font-size:12px">
+          <option>All Actions</option><option>Approved</option><option>Rejected</option><option>Created</option><option>Login</option>
+        </select>
+        <select class="fi" style="width:auto;padding:5px 10px;font-size:12px">
+          <option>All Users</option><option>Hannah Reyes</option><option>Alex Chen</option>
+        </select>
+        <button class="gh-btn gh-btn-default gh-btn-sm" style="margin-left:auto" onclick="exportCSV()"><i class="bi bi-download"></i>Export Log</button>
+      </div>
+      <div style="padding:4px 16px 8px" id="audit-list"></div>
+    </div>
+  </section>
+
+  <!-- ═══════════ HOLIDAYS ════════════════════════════════ -->
+  <section class="sec" id="sec-holidays">
+    <div class="gh-card">
+      <div class="gh-card-hd">
+        <div class="gh-card-title"><i class="bi bi-flag-fill ci"></i>Public Holidays Configuration</div>
+        <button class="gh-btn gh-btn-primary gh-btn-sm" onclick="toast(&#39;Holiday added&#39;,&#39;ok&#39;)"><i class="bi bi-plus-lg"></i>Add Holiday</button>
+      </div>
+      <div class="tbl-wrap">
+        <table class="gh-table">
+          <thead><tr><th>DATE</th><th>DAY</th><th>HOLIDAY NAME</th><th>TYPE</th><th>OBSERVED</th><th>ACTIONS</th></tr></thead>
+          <tbody id="hol-tbody"></tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════ SETTINGS ═══════════════════════════════ -->
+  <section class="sec" id="sec-settings">
+    <div style="max-width:720px;display:flex;flex-direction:column;gap:16px">
+
+      <!-- Appearance -->
+      <div class="form-section">
+        <div class="fs-hd"><div class="fs-ic"><i class="bi bi-palette-fill"></i></div><div class="fs-title">Appearance &amp; Theme</div></div>
+        <div class="fs-bd">
+          <div class="set-row">
+            <div><div class="set-l">Theme Mode</div><div class="set-s">Toggle between light and dark display</div></div>
+            <div style="display:flex;align-items:center;gap:10px;cursor:pointer" onclick="toggleTheme()">
+              <span style="font-size:12.5px;font-weight:600;color:var(--t3)" id="s-th-lbl">Dark Mode</span>
+              <div class="sw" id="s-sw" style=""></div>
+            </div>
+          </div>
+          <div class="set-row">
+            <div><div class="set-l">Compact Density</div><div class="set-s">Reduce padding for more data on screen</div></div>
+            <div class="inline-sw" onclick="togInlineSw(this)"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Notifications -->
+      <div class="form-section">
+        <div class="fs-hd"><div class="fs-ic" style="background:var(--warn-bg);color:var(--warn)"><i class="bi bi-bell-fill"></i></div><div class="fs-title">Notifications</div></div>
+        <div class="fs-bd">
+          <div class="set-row"><div><div class="set-l">Email on new leave request</div><div class="set-s">Notify HR when an employee submits a request</div></div><div class="inline-sw on" onclick="togInlineSw(this)" style="background:var(--accent);border-color:var(--accent)"></div></div>
+          <div class="set-row"><div><div class="set-l">Daily digest</div><div class="set-s">Morning summary of pending items</div></div><div class="inline-sw on" onclick="togInlineSw(this)" style="background:var(--accent);border-color:var(--accent)"></div></div>
+          <div class="set-row"><div><div class="set-l">Approval deadline reminders</div><div class="set-s">Alert when a request has been pending 48+ hours</div></div><div class="inline-sw on" onclick="togInlineSw(this)" style="background:var(--accent);border-color:var(--accent)"></div></div>
+          <div class="set-row"><div><div class="set-l">Calendar sync (Google / Outlook)</div><div class="set-s">Push approved leaves to org calendar</div></div><div class="inline-sw" onclick="togInlineSw(this)"></div></div>
+        </div>
+      </div>
+
+      <!-- Leave policy config -->
+      <div class="form-section">
+        <div class="fs-hd"><div class="fs-ic" style="background:var(--ok-bg);color:var(--ok)"><i class="bi bi-sliders"></i></div><div class="fs-title">Leave Policy Configuration</div></div>
+        <div class="fs-bd">
+          <div class="form-row tri">
+            <div class="fg" style="margin-bottom:0"><label class="fl">Annual Leave (days)</label><input class="fi" type="number" value="20"></div>
+            <div class="fg" style="margin-bottom:0"><label class="fl">Sick Leave (days)</label><input class="fi" type="number" value="10"></div>
+            <div class="fg" style="margin-bottom:0"><label class="fl">Study Leave (days)</label><input class="fi" type="number" value="5"></div>
+          </div>
+          <div class="form-row tri" style="margin-top:12px">
+            <div class="fg" style="margin-bottom:0"><label class="fl">Compassionate (days)</label><input class="fi" type="number" value="5"></div>
+            <div class="fg" style="margin-bottom:0"><label class="fl">Paternity (days)</label><input class="fi" type="number" value="10"></div>
+            <div class="fg" style="margin-bottom:0"><label class="fl">Maternity (days)</label><input class="fi" type="number" value="90"></div>
+          </div>
+          <div class="form-row" style="margin-top:12px;margin-bottom:0">
+            <div class="fg" style="margin-bottom:0"><label class="fl">Min notice (working days)</label><input class="fi" type="number" value="3"></div>
+            <div class="fg" style="margin-bottom:0"><label class="fl">Carry-over limit (days)</label><input class="fi" type="number" value="10"></div>
+          </div>
+          <button class="gh-btn gh-btn-primary" style="margin-top:16px;padding:8px 20px" onclick="toast(&#39;Policy saved ✓&#39;,&#39;ok&#39;)"><i class="bi bi-check-lg"></i>Save Policy</button>
+        </div>
+      </div>
+
+      <!-- Approval workflow -->
+      <div class="form-section">
+        <div class="fs-hd"><div class="fs-ic" style="background:var(--purple-bg);color:var(--purple)"><i class="bi bi-diagram-3"></i></div><div class="fs-title">Approval Workflow</div></div>
+        <div class="fs-bd">
+          <div class="set-row"><div><div class="set-l">Two-stage approval</div><div class="set-s">Manager → HR both must approve</div></div><div class="inline-sw on" onclick="togInlineSw(this)" style="background:var(--accent);border-color:var(--accent)"></div></div>
+          <div class="set-row"><div><div class="set-l">Auto-approve sick leave ≤ 1 day</div><div class="set-s">Bypass manual approval for single-day sick leave</div></div><div class="inline-sw" onclick="togInlineSw(this)"></div></div>
+          <div class="set-row"><div><div class="set-l">Require medical cert for sick &gt; 2 days</div><div class="set-s">Block approval until document is uploaded</div></div><div class="inline-sw on" onclick="togInlineSw(this)" style="background:var(--accent);border-color:var(--accent)"></div></div>
+        </div>
+      </div>
+
+      <!-- Data -->
+      <div class="form-section">
+        <div class="fs-hd"><div class="fs-ic" style="background:var(--err-bg);color:var(--err)"><i class="bi bi-database-fill-gear"></i></div><div class="fs-title">Data &amp; Integrations</div></div>
+        <div class="fs-bd">
+          <div class="set-row"><div><div class="set-l">Export all data</div><div class="set-s">Full system backup as JSON</div></div><button class="gh-btn gh-btn-default gh-btn-sm" onclick="exportCSV()"><i class="bi bi-download"></i>Export</button></div>
+          <div class="set-row"><div><div class="set-l">Reset to demo data</div><div class="set-s">Restore original sample records</div></div><button class="gh-btn gh-btn-danger gh-btn-sm" onclick="resetData()"><i class="bi bi-arrow-counterclockwise"></i>Reset</button></div>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  </div><!-- /content -->
+</div><!-- /main -->
+
+<!-- Side Panel (Employee Profile) -->
+<div class="sp-overlay" id="sp-overlay" onclick="closePanel()"></div>
+<div class="side-panel" id="side-panel">
+  <div style="padding:18px 20px;border-bottom:1px solid var(--bd);display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;background:var(--surface);z-index:1">
+    <div style="font-size:14px;font-weight:700;color:var(--t1)">Employee Profile</div>
+    <button class="gh-btn gh-btn-default gh-btn-sm" onclick="closePanel()"><i class="bi bi-x-lg"></i></button>
+  </div>
+  <div id="panel-content" style="padding:20px">
+    <div style="text-align:center;padding-bottom:20px;border-bottom:1px solid var(--bd);margin-bottom:18px">
+      <div style="width:64px;height:64px;border-radius:14px;background:#1A7F37;display:flex;align-items:center;justify-content:center;font-family:&#39;JetBrains Mono&#39;,monospace;font-size:20px;font-weight:700;color:#fff;margin:0 auto 12px">MT</div>
+      <div style="font-size:17px;font-weight:700;color:var(--t1);margin-bottom:3px">Michael Torres</div>
+      <div style="font-size:13px;color:var(--t3);margin-bottom:8px">Product Manager</div>
+      <span class="label" style="background:rgba(9,105,218,0.1);color:#0969DA;border-color:#0969DA40">Product &amp; Design</span>
+      <span class="label l-open" style="margin-left:6px">Active</span>
+    </div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:18px">
+      
+      <div style="background:var(--surface2);border:1px solid var(--bd);border-radius:8px;padding:10px">
+        <div style="font-size:10px;color:var(--t3);font-weight:700;letter-spacing:.5px;text-transform:uppercase;margin-bottom:3px">Employee ID</div>
+        <div style="font-size:12.5px;font-weight:600;color:var(--t1)">E002</div>
+      </div>
+      <div style="background:var(--surface2);border:1px solid var(--bd);border-radius:8px;padding:10px">
+        <div style="font-size:10px;color:var(--t3);font-weight:700;letter-spacing:.5px;text-transform:uppercase;margin-bottom:3px">Start Date</div>
+        <div style="font-size:12.5px;font-weight:600;color:var(--t1)">01 Jul 2020</div>
+      </div>
+      <div style="background:var(--surface2);border:1px solid var(--bd);border-radius:8px;padding:10px">
+        <div style="font-size:10px;color:var(--t3);font-weight:700;letter-spacing:.5px;text-transform:uppercase;margin-bottom:3px">Line Manager</div>
+        <div style="font-size:12.5px;font-weight:600;color:var(--t1)">James Lee</div>
+      </div>
+      <div style="background:var(--surface2);border:1px solid var(--bd);border-radius:8px;padding:10px">
+        <div style="font-size:10px;color:var(--t3);font-weight:700;letter-spacing:.5px;text-transform:uppercase;margin-bottom:3px">Email</div>
+        <div style="font-size:12.5px;font-weight:600;color:var(--t1)">e002@company.com</div>
+      </div>
+    </div>
+    <div style="margin-bottom:18px">
+      <div style="font-size:12px;font-weight:700;color:var(--t2);margin-bottom:10px;text-transform:uppercase;letter-spacing:.5px">Leave Balance 2026</div>
+      <div style="display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:1px solid var(--bd)">
+          <i class="bi bi-sun-fill" style="color:#0969DA;font-size:14px;width:16px;text-align:center"></i>
+          <span style="font-size:12.5px;color:var(--t2);flex:1">Annual Leave</span>
+          <span class="mono" style="font-size:13px;font-weight:700;color:#0969DA">7</span>
+          <span style="font-size:11px;color:var(--t3)">/ 20</span>
+        </div><div style="display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:1px solid var(--bd)">
+          <i class="bi bi-heart-pulse-fill" style="color:#CF222E;font-size:14px;width:16px;text-align:center"></i>
+          <span style="font-size:12.5px;color:var(--t2);flex:1">Sick Leave</span>
+          <span class="mono" style="font-size:13px;font-weight:700;color:#CF222E">10</span>
+          <span style="font-size:11px;color:var(--t3)">/ 10</span>
+        </div><div style="display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:1px solid var(--bd)">
+          <i class="bi bi-heart-fill" style="color:#9A6700;font-size:14px;width:16px;text-align:center"></i>
+          <span style="font-size:12.5px;color:var(--t2);flex:1">Compassionate</span>
+          <span class="mono" style="font-size:13px;font-weight:700;color:#9A6700">∞</span>
+          
+        </div><div style="display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:1px solid var(--bd)">
+          <i class="bi bi-book-half" style="color:#8250DF;font-size:14px;width:16px;text-align:center"></i>
+          <span style="font-size:12.5px;color:var(--t2);flex:1">Study Leave</span>
+          <span class="mono" style="font-size:13px;font-weight:700;color:#8250DF">∞</span>
+          
+        </div><div style="display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:1px solid var(--bd)">
+          <i class="bi bi-person-hearts" style="color:#BF3989;font-size:14px;width:16px;text-align:center"></i>
+          <span style="font-size:12.5px;color:var(--t2);flex:1">Maternity/Pat.</span>
+          <span class="mono" style="font-size:13px;font-weight:700;color:#BF3989">∞</span>
+          
+        </div><div style="display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:1px solid var(--bd)">
+          <i class="bi bi-cash-stack" style="color:#7D8590;font-size:14px;width:16px;text-align:center"></i>
+          <span style="font-size:12.5px;color:var(--t2);flex:1">Unpaid Leave</span>
+          <span class="mono" style="font-size:13px;font-weight:700;color:#7D8590">∞</span>
+          
+        </div>
+    </div>
+    <div>
+      <div style="font-size:12px;font-weight:700;color:var(--t2);margin-bottom:10px;text-transform:uppercase;letter-spacing:.5px">Recent Requests (2)</div>
+      <div style="display:flex;align-items:center;gap:9px;padding:8px 0;border-bottom:1px solid var(--bd)">
+        <span class="label" style="background:#0969DA18;color:#0969DA;border-color:#0969DA40;font-size:10.5px">Annual Leave</span>
+        <span style="font-size:12px;color:var(--t3);flex:1">07 Apr 2026 · 5d</span>
+        <span class="label l-open" style="font-size:10.5px">Approved</span>
+      </div><div style="display:flex;align-items:center;gap:9px;padding:8px 0;border-bottom:1px solid var(--bd)">
+        <span class="label" style="background:#0969DA18;color:#0969DA;border-color:#0969DA40;font-size:10.5px">Annual Leave</span>
+        <span style="font-size:12px;color:var(--t3);flex:1">22 Dec 2025 · 8d</span>
+        <span class="label l-open" style="font-size:10.5px">Approved</span>
+      </div>
+    </div>
+    <div style="margin-top:16px;display:flex;gap:8px">
+      <button class="gh-btn gh-btn-default" style="flex:1" onclick="toast(&#39;Edit employee modal – production ready&#39;,&#39;info&#39;)"><i class="bi bi-pencil-fill"></i>Edit</button>
+      <button class="gh-btn gh-btn-danger" style="flex:1" onclick="toast(&#39;Deactivate requires confirmation&#39;,&#39;warn&#39;)"><i class="bi bi-person-x-fill"></i>Deactivate</button>
+    </div></div>
+</div>
+
+<!-- Approve / Reject Modal -->
+<div class="modal fade" id="action-modal" tabindex="-1">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="modal-action-title">Approve Leave Request</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+      </div>
+      <div class="modal-body" id="modal-action-body" style="padding:20px"></div>
+      <div class="modal-footer">
+        <button class="gh-btn gh-btn-default" data-bs-dismiss="modal">Cancel</button>
+        <button class="gh-btn gh-btn-primary" id="modal-confirm-btn" onclick="confirmAction()">Confirm</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Add Employee Modal -->
+<div class="modal fade" id="add-emp-modal" tabindex="-1">
+  <div class="modal-dialog modal-dialog-centered modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Add New Employee</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+      </div>
+      <div class="modal-body" style="padding:22px">
+        <div class="form-row">
+          <div class="fg" style="margin-bottom:0"><label class="fl">First Name *</label><input class="fi" id="ne-fname" placeholder="e.g. John"></div>
+          <div class="fg" style="margin-bottom:0"><label class="fl">Last Name *</label><input class="fi" id="ne-lname" placeholder="e.g. Smith"></div>
+        </div>
+        <div class="form-row" style="margin-top:12px">
+          <div class="fg" style="margin-bottom:0"><label class="fl">Email *</label><input class="fi" id="ne-email" type="email" placeholder="john.smith@company.com"></div>
+          <div class="fg" style="margin-bottom:0"><label class="fl">Job Title *</label><input class="fi" id="ne-title" placeholder="e.g. Software Engineer"></div>
+        </div>
+        <div class="form-row" style="margin-top:12px">
+          <div class="fg" style="margin-bottom:0"><label class="fl">Department *</label>
+            <select class="fi" id="ne-dept">
+              <option>Product &amp; Design</option><option>Engineering</option><option>Marketing</option>
+              <option>Finance</option><option>Operations</option><option>HR</option><option>Sales</option>
+            </select>
+          </div>
+          <div class="fg" style="margin-bottom:0"><label class="fl">Start Date *</label><input class="fi" id="ne-start" type="date"></div>
+        </div>
+        <div class="form-row" style="margin-top:12px">
+          <div class="fg" style="margin-bottom:0"><label class="fl">Line Manager</label><input class="fi" id="ne-mgr" placeholder="e.g. Alex Chen"></div>
+          <div class="fg" style="margin-bottom:0"><label class="fl">Employment Type</label>
+            <select class="fi" id="ne-type">
+              <option>Full-time</option><option>Part-time</option><option>Contract</option><option>Intern</option>
+            </select>
+          </div>
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button class="gh-btn gh-btn-default" data-bs-dismiss="modal">Cancel</button>
+        <button class="gh-btn gh-btn-primary" onclick="saveNewEmployee()"><i class="bi bi-person-plus-fill"></i>Add Employee</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div id="toast-zone"></div>
+
+<script src="file:///C:/bootstrap.min.js"></script>
+<script>
+/* ══════════════════════════════════════════════════════════
+   DATA
+══════════════════════════════════════════════════════════ */
+const DEPTS = {
+  'Product & Design': { color:'#0969DA', icon:'🎨', bg:'rgba(9,105,218,0.1)' },
+  'Engineering':      { color:'#1A7F37', icon:'⚙️', bg:'rgba(26,127,55,0.1)' },
+  'Marketing':        { color:'#BC4C00', icon:'📣', bg:'rgba(188,76,0,0.1)' },
+  'Finance':          { color:'#8250DF', icon:'💰', bg:'rgba(130,80,223,0.1)' },
+  'Operations':       { color:'#BF3989', icon:'🔧', bg:'rgba(191,57,137,0.1)' },
+  'HR':               { color:'#CF222E', icon:'🧑‍💼', bg:'rgba(207,34,46,0.1)' },
+  'Sales':            { color:'#9A6700', icon:'📈', bg:'rgba(154,103,0,0.1)' },
+};
+const LT = {
+  annual:        { l:'Annual Leave',    icon:'bi-sun-fill',         c:'#0969DA' },
+  sick:          { l:'Sick Leave',      icon:'bi-heart-pulse-fill', c:'#CF222E' },
+  compassionate: { l:'Compassionate',   icon:'bi-heart-fill',       c:'#9A6700' },
+  study:         { l:'Study Leave',     icon:'bi-book-half',        c:'#8250DF' },
+  maternity:     { l:'Maternity/Pat.',  icon:'bi-person-hearts',    c:'#BF3989' },
+  unpaid:        { l:'Unpaid Leave',    icon:'bi-cash-stack',       c:'#7D8590' },
+};
+const HOLIDAYS = [
+  {date:'2026-01-01',name:"New Year's Day"},{date:'2026-03-21',name:'Human Rights Day'},
+  {date:'2026-04-03',name:'Good Friday'},{date:'2026-04-06',name:'Easter Monday'},
+  {date:'2026-04-27',name:'Freedom Day'},{date:'2026-05-01',name:"Workers' Day"},
+  {date:'2026-06-16',name:'Youth Day'},{date:'2026-08-09',name:"National Women's Day"},
+  {date:'2026-09-24',name:'Heritage Day'},{date:'2026-12-16',name:'Day of Reconciliation'},
+  {date:'2026-12-25',name:'Christmas Day'},{date:'2026-12-26',name:'Day of Goodwill'},
+];
+const SAMPLE_EMP = [
+  {id:'E001',name:'Sarah Johnson',    role:'Senior UX Designer',     dept:'Product & Design', mgr:'Alex Chen',   start:'2022-03-14',status:'active', leave:{annual:7,sick:2,annual_total:20,sick_total:10}},
+  {id:'E002',name:'Michael Torres',   role:'Product Manager',        dept:'Product & Design', mgr:'James Lee',   start:'2020-07-01',status:'active', leave:{annual:12,sick:0,annual_total:20,sick_total:10}},
+  {id:'E003',name:'Priya Patel',      role:'UX Researcher',          dept:'Product & Design', mgr:'Alex Chen',   start:'2023-01-09',status:'active', leave:{annual:5,sick:3,annual_total:20,sick_total:10}},
+  {id:'E004',name:'James Okonkwo',    role:'Frontend Developer',     dept:'Engineering',      mgr:'Lisa Wang',   start:'2021-11-22',status:'active', leave:{annual:15,sick:1,annual_total:20,sick_total:10}},
+  {id:'E005',name:'Yuki Tanaka',      role:'Data Engineer',          dept:'Engineering',      mgr:'Lisa Wang',   start:'2022-06-03',status:'active', leave:{annual:10,sick:0,annual_total:20,sick_total:10}},
+  {id:'E006',name:'Sofia Reyes',      role:'Content Strategist',     dept:'Marketing',        mgr:'Tom Adeyemi', start:'2023-08-14',status:'active', leave:{annual:3,sick:5,annual_total:20,sick_total:10}},
+  {id:'E007',name:'David Kim',        role:'Backend Developer',      dept:'Engineering',      mgr:'Lisa Wang',   start:'2020-02-17',status:'active', leave:{annual:18,sick:2,annual_total:20,sick_total:10}},
+  {id:'E008',name:'Amara Nkosi',      role:'Financial Analyst',      dept:'Finance',          mgr:'Greg Obi',    start:'2021-05-30',status:'active', leave:{annual:8,sick:1,annual_total:20,sick_total:10}},
+  {id:'E009',name:'Lucas Ferreira',   role:'DevOps Engineer',        dept:'Engineering',      mgr:'Lisa Wang',   start:'2022-10-11',status:'active', leave:{annual:11,sick:0,annual_total:20,sick_total:10}},
+  {id:'E010',name:'Hannah Reyes',     role:'HR Administrator',       dept:'HR',               mgr:'Sarah Park',  start:'2019-09-02',status:'active', leave:{annual:6,sick:2,annual_total:25,sick_total:10}},
+  {id:'E011',name:'Tom Adeyemi',      role:'Marketing Director',     dept:'Marketing',        mgr:'CEO',         start:'2018-04-15',status:'active', leave:{annual:14,sick:3,annual_total:25,sick_total:10}},
+  {id:'E012',name:'Nadia Rousseau',   role:'Sales Executive',        dept:'Sales',            mgr:'Tom Adeyemi', start:'2023-03-20',status:'active', leave:{annual:4,sick:1,annual_total:20,sick_total:10}},
+  {id:'E013',name:'Chris Walters',    role:'Operations Manager',     dept:'Operations',       mgr:'CEO',         start:'2020-12-07',status:'inactive',leave:{annual:9,sick:4,annual_total:20,sick_total:10}},
+  {id:'E014',name:'Isabel Martins',   role:'Junior Developer',       dept:'Engineering',      mgr:'Lisa Wang',   start:'2024-01-15',status:'active', leave:{annual:2,sick:0,annual_total:20,sick_total:10}},
+  {id:'E015',name:'Alex Chen',        role:'Design Lead',            dept:'Product & Design', mgr:'James Lee',   start:'2019-06-10',status:'active', leave:{annual:16,sick:1,annual_total:25,sick_total:10}},
+];
+const SAMPLE_LEAVES = [
+  {id:'LD-2026-031',emp:'E001',type:'annual',    from:'2026-04-22',to:'2026-04-24',days:3, reason:'Family trip',               applied:'2026-04-14',approver:'Alex Chen',status:'approved'},
+  {id:'LD-2026-030',emp:'E004',type:'annual',    from:'2026-04-21',to:'2026-04-25',days:5, reason:'Easter break',              applied:'2026-04-10',approver:'Lisa Wang', status:'pending'},
+  {id:'LD-2026-029',emp:'E003',type:'sick',      from:'2026-04-14',to:'2026-04-16',days:3, reason:'Medical appointment',       applied:'2026-04-14',approver:'Alex Chen',status:'pending'},
+  {id:'LD-2026-028',emp:'E007',type:'annual',    from:'2026-04-29',to:'2026-05-01',days:3, reason:'Long weekend',              applied:'2026-04-15',approver:'Lisa Wang', status:'pending'},
+  {id:'LD-2026-027',emp:'E006',type:'maternity', from:'2026-05-04',to:'2026-07-31',days:60,reason:'Maternity leave',           applied:'2026-04-01',approver:'Tom Adeyemi',status:'approved'},
+  {id:'LD-2026-026',emp:'E012',type:'annual',    from:'2026-04-08',to:'2026-04-10',days:3, reason:'Personal',                  applied:'2026-04-04',approver:'Tom Adeyemi',status:'approved'},
+  {id:'LD-2026-025',emp:'E005',type:'study',     from:'2026-04-28',to:'2026-04-28',days:1, reason:'AWS certification',         applied:'2026-04-15',approver:'Lisa Wang', status:'pending'},
+  {id:'LD-2026-024',emp:'E002',type:'annual',    from:'2026-04-07',to:'2026-04-11',days:5, reason:'Holiday',                   applied:'2026-03-28',approver:'James Lee', status:'approved'},
+  {id:'LD-2026-023',emp:'E008',type:'compassionate',from:'2026-03-20',to:'2026-03-20',days:1,reason:'Bereavement',             applied:'2026-03-20',approver:'Greg Obi',  status:'approved'},
+  {id:'LD-2026-022',emp:'E009',type:'annual',    from:'2026-03-23',to:'2026-03-27',days:5, reason:'Spring break',              applied:'2026-03-14',approver:'Lisa Wang', status:'approved'},
+  {id:'LD-2026-021',emp:'E011',type:'annual',    from:'2026-03-09',to:'2026-03-13',days:5, reason:'Vacation',                  applied:'2026-02-28',approver:'CEO',       status:'approved'},
+  {id:'LD-2026-020',emp:'E014',type:'sick',      from:'2026-03-05',to:'2026-03-06',days:2, reason:'Flu',                       applied:'2026-03-05',approver:'Lisa Wang', status:'approved'},
+  {id:'LD-2026-019',emp:'E001',type:'sick',      from:'2026-02-18',to:'2026-02-19',days:2, reason:'Fever',                     applied:'2026-02-18',approver:'Alex Chen',status:'approved'},
+  {id:'LD-2026-018',emp:'E004',type:'annual',    from:'2026-02-02',to:'2026-02-06',days:5, reason:'Holiday',                   applied:'2026-01-24',approver:'Lisa Wang', status:'rejected', note:'Critical sprint.'},
+  {id:'LD-2026-017',emp:'E010',type:'study',     from:'2026-01-26',to:'2026-01-27',days:2, reason:'CIPD exam',                 applied:'2026-01-20',approver:'Sarah Park',status:'approved'},
+  {id:'LD-2026-016',emp:'E015',type:'annual',    from:'2026-01-02',to:'2026-01-06',days:5, reason:'New Year',                  applied:'2025-12-18',approver:'James Lee', status:'approved'},
+  {id:'LD-2025-055',emp:'E002',type:'annual',    from:'2025-12-22',to:'2025-12-31',days:8, reason:'Christmas',                 applied:'2025-12-10',approver:'James Lee', status:'approved'},
+  {id:'LD-2025-054',emp:'E007',type:'annual',    from:'2025-08-11',to:'2025-08-15',days:5, reason:'Summer holiday',            applied:'2025-07-31',approver:'Lisa Wang', status:'approved'},
+  {id:'LD-2025-053',emp:'E003',type:'annual',    from:'2025-06-16',to:'2025-06-20',days:5, reason:'Vacation',                  applied:'2025-06-10',approver:'Alex Chen',status:'cancelled'},
+  {id:'LD-2025-052',emp:'E008',type:'sick',      from:'2025-05-07',to:'2025-05-09',days:3, reason:'Back pain',                 applied:'2025-05-07',approver:'Greg Obi',  status:'approved'},
+];
+
+/* ══════════════════════════════════════════════════════════
+   STATE
+══════════════════════════════════════════════════════════ */
+let employees = JSON.parse(localStorage.getItem('ld_admin_emp')   || 'null') || SAMPLE_EMP.map(e=>({...e}));
+let allLeaves = JSON.parse(localStorage.getItem('ld_admin_leaves')|| 'null') || SAMPLE_LEAVES.map(l=>({...l}));
+let isDark    = localStorage.getItem('ld_admin_theme')==='dark';
+let reqFilter = 'all';
+let selLeaves = new Set();
+let calYear=2026, calMonth=3;
+let charts={};
+let empViewList = false;
+let actionModal=null, addEmpModal=null;
+let actionTarget=null, actionType=null;
+const AV_COLORS=['#0969DA','#1A7F37','#BC4C00','#8250DF','#BF3989','#CF222E','#9A6700','#0EA5E9','#0D9488','#6366F1','#F43F5E','#EA580C','#7C3AED','#047857','#B45309'];
+function saveEmp(){ localStorage.setItem('ld_admin_emp',JSON.stringify(employees)); }
+function saveLeaves(){ localStorage.setItem('ld_admin_leaves',JSON.stringify(allLeaves)); }
+function empById(id){ return employees.find(e=>e.id===id); }
+function empName(id){ const e=empById(id); return e?e.name:'Unknown'; }
+function empDept(id){ const e=empById(id); return e?e.dept:'—'; }
+function empInitials(id){ const e=empById(id); if(!e) return '?'; return e.name.split(' ').map(n=>n[0]).join('').slice(0,2).toUpperCase(); }
+function empColor(id){ const idx=employees.findIndex(e=>e.id===id); return AV_COLORS[idx%AV_COLORS.length]; }
+
+/* ══════════════════════════════════════════════════════════
+   THEME
+══════════════════════════════════════════════════════════ */
+function applyTheme(d){
+  document.documentElement.setAttribute('data-theme',d?'dark':'light');
+  ['th-icon','s-th-icon'].forEach(id=>{ const el=document.getElementById(id); if(el) el.className=d?'bi bi-moon-stars-fill':'bi bi-sun-fill'; });
+  ['th-label','s-th-lbl'].forEach(id=>{ const el=document.getElementById(id); if(el) el.textContent=d?'Dark Mode':'Light Mode'; });
+  const sw=document.getElementById('main-sw'), ssw=document.getElementById('s-sw');
+  [sw,ssw].forEach(el=>{ if(!el) return; el.classList.toggle('on',!d); el.style.background=d?'':'var(--accent)'; el.style.borderColor=d?'':'var(--accent)'; });
+  Object.values(charts).forEach(c=>{try{c.destroy()}catch(e){}});
+  charts={};
+  setTimeout(()=>{ reinitCharts(); },80);
+}
+function toggleTheme(){ isDark=!isDark; localStorage.setItem('ld_admin_theme',isDark?'dark':'light'); applyTheme(isDark); toast(isDark?'🌙 Dark mode':'☀️ Light mode','info'); }
+function togInlineSw(el){ el.classList.toggle('on'); const on=el.classList.contains('on'); el.style.background=on?'var(--accent)':''; el.style.borderColor=on?'var(--accent)':''; }
+
+/* ══════════════════════════════════════════════════════════
+   NAVIGATION
+══════════════════════════════════════════════════════════ */
+const PAGE_INFO={
+  dashboard:   {t:'Dashboard',       s:'Overview of all leave activity'},
+  requests:    {t:'Leave Requests',  s:'Review and manage all employee leave requests'},
+  employees:   {t:'Employees',       s:'Manage your workforce directory'},
+  calendar:    {t:'Org Calendar',    s:'Company-wide leave schedule at a glance'},
+  departments: {t:'Departments',     s:'Department structure and leave statistics'},
+  analytics:   {t:'Analytics',       s:'Deep-dive insights into leave patterns'},
+  reports:     {t:'Reports',         s:'Generate and download leave reports'},
+  audit:       {t:'Audit Log',       s:'Full record of all system actions'},
+  holidays:    {t:'Holidays',        s:'Configure public holidays for leave calculations'},
+  settings:    {t:'Settings',        s:'System configuration and policy management'},
+};
+function go(page,btn){
+  document.querySelectorAll('.sec').forEach(s=>s.classList.remove('active'));
+  document.getElementById('sec-'+page).classList.add('active');
+  document.querySelectorAll('.sb-link').forEach(b=>b.classList.remove('active'));
+  if(btn) btn.classList.add('active');
+  const pi=PAGE_INFO[page]||{};
+  document.getElementById('pg-title').textContent=pi.t||'';
+  document.getElementById('pg-sub').textContent=pi.s||'';
+  if(page==='dashboard'){renderDash();setTimeout(initDashCharts,160);}
+  if(page==='requests'){populateDeptFilter('req-dept-f');renderReqTable();}
+  if(page==='employees'){populateDeptFilter('emp-dept-f');renderEmployees();}
+  if(page==='calendar')renderCal();
+  if(page==='departments')renderDepts();
+  if(page==='analytics'){renderAnalEmpTable();setTimeout(initAnalyticsCharts,160);}
+  if(page==='reports'){renderReports();renderRptTable();}
+  if(page==='audit')renderAudit();
+  if(page==='holidays')renderHolidays();
+}
+
+/* ══════════════════════════════════════════════════════════
+   DASHBOARD
+══════════════════════════════════════════════════════════ */
+function renderDash(){
+  const pending=allLeaves.filter(l=>l.status==='pending');
+  const approved=allLeaves.filter(l=>l.status==='approved');
+  const today=new Date().toISOString().slice(0,10);
+  const onLeave=allLeaves.filter(l=>l.status==='approved'&&l.from<=today&&l.to>=today);
+  const thisMonth=new Date().toISOString().slice(0,7);
+  const monthDays=allLeaves.filter(l=>l.status==='approved'&&l.from.startsWith(thisMonth)).reduce((s,l)=>s+l.days,0);
+  const rej=allLeaves.filter(l=>['rejected','cancelled'].includes(l.status)&&l.from.startsWith('2026'));
+  document.getElementById('kpi-emp').textContent=employees.filter(e=>e.status==='active').length;
+  document.getElementById('kpi-pend').textContent=pending.length;
+  document.getElementById('kpi-pend-sub').innerHTML=pending.length?`<i class="bi bi-clock"></i>${pending.length} need review`:`<i class="bi bi-check2-all"></i>All clear`;
+  document.getElementById('kpi-today').textContent=onLeave.length;
+  document.getElementById('kpi-month').textContent=monthDays;
+  document.getElementById('kpi-rej').textContent=rej.length;
+  document.getElementById('sb-pending-cnt').textContent=pending.length;
+
+  // Queue
+  const qRows=pending.slice(0,6);
+  document.getElementById('dash-queue').innerHTML=qRows.length?`<div style="overflow-x:auto"><table class="gh-table"><thead><tr><th>EMPLOYEE</th><th>TYPE</th><th>PERIOD</th><th>DAYS</th><th>ACTIONS</th></tr></thead><tbody>
+    ${qRows.map(l=>`<tr>
+      <td><div style="display:flex;align-items:center;gap:8px">
+        <div style="width:28px;height:28px;border-radius:7px;background:${empColor(l.emp)};display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;color:#fff;flex-shrink:0">${empInitials(l.emp)}</div>
+        <div><div style="font-size:13px;font-weight:600;color:var(--t1)">${empName(l.emp)}</div><div style="font-size:11px;color:var(--t3)">${empDept(l.emp)}</div></div>
+      </div></td>
+      <td><span class="label" style="background:${LT[l.type]?.c}18;color:${LT[l.type]?.c};border-color:${LT[l.type]?.c}40"><i class="bi ${LT[l.type]?.icon}"></i>${LT[l.type]?.l}</span></td>
+      <td style="font-size:12.5px;white-space:nowrap">${fd(l.from)} → ${fd(l.to)}</td>
+      <td><span class="mono" style="font-size:13px;font-weight:700">${l.days}</span></td>
+      <td><div style="display:flex;gap:5px">
+        <button class="gh-btn gh-btn-success gh-btn-sm" onclick="startAction('${l.id}','approve')"><i class="bi bi-check-lg"></i>Approve</button>
+        <button class="gh-btn gh-btn-danger gh-btn-sm" onclick="startAction('${l.id}','reject')"><i class="bi bi-x-lg"></i>Reject</button>
+      </div></td>
+    </tr>`).join('')}
+  </tbody></table></div>` : '<div class="empty"><i class="bi bi-inbox"></i><h5>All clear!</h5><p>No pending requests.</p></div>';
+
+  // Activity feed
+  const acts=[
+    {icon:'bi-check-circle-fill',bg:'var(--ok-bg)',color:'var(--ok)',text:`<strong>Alex Chen</strong> approved annual leave for <strong>Michael Torres</strong>`,time:'2m ago'},
+    {icon:'bi-person-plus-fill',bg:'var(--accent-bg)',color:'var(--accent)',text:`<strong>Hannah Reyes</strong> added employee <strong>Isabel Martins</strong>`,time:'1h ago'},
+    {icon:'bi-x-circle-fill',bg:'var(--err-bg)',color:'var(--err)',text:`<strong>Lisa Wang</strong> rejected leave request <code class="mono">LD-2026-018</code>`,time:'3h ago'},
+    {icon:'bi-file-earmark-plus',bg:'var(--warn-bg)',color:'var(--warn)',text:`<strong>David Kim</strong> submitted new annual leave request`,time:'5h ago'},
+    {icon:'bi-arrow-repeat',bg:'var(--purple-bg)',color:'var(--purple)',text:`System synced leave balances with payroll`,time:'8h ago'},
+    {icon:'bi-flag-fill',bg:'var(--orange-bg)',color:'var(--orange)',text:`Public holiday <strong>Good Friday</strong> added for April 2026`,time:'1d ago'},
+  ];
+  document.getElementById('dash-activity').innerHTML=acts.map(a=>`<div class="activity-item">
+    <div class="act-dot" style="background:${a.bg};color:${a.color}"><i class="bi ${a.icon}"></i></div>
+    <div class="act-body"><div class="act-text">${a.text}</div><div class="act-time">${a.time}</div></div>
+  </div>`).join('');
+
+  // Dept progress
+  const dnames=Object.keys(DEPTS);
+  const dData=dnames.map(d=>{
+    const emps=employees.filter(e=>e.dept===d&&e.status==='active');
+    const days=allLeaves.filter(l=>l.status==='approved'&&emps.find(e=>e.id===l.emp)).reduce((s,l)=>s+l.days,0);
+    return{name:d,days,color:DEPTS[d].color};
+  }).sort((a,b)=>b.days-a.days);
+  const maxD=Math.max(...dData.map(d=>d.days),1);
+  document.getElementById('dept-prog').innerHTML=dData.map(d=>`<div class="prog-row">
+    <div class="prog-lbl">${d.name}</div>
+    <div class="prog-bar-wrap"><div class="prog-bar" style="width:${(d.days/maxD*100).toFixed(0)}%;background:${d.color}"></div></div>
+    <div class="prog-val">${d.days}</div>
+  </div>`).join('');
+
+  // On leave table
+  const onLeaveExt=onLeave.map(l=>({...l,emp:empById(l.emp)||{name:'Unknown',dept:'—'}}));
+  document.getElementById('on-leave-count').innerHTML=`<span class="label l-open">${onLeave.length} active</span>`.replace(/^<span/,'').replace(/<\/span>$/,'');
+  document.getElementById('on-leave-count').textContent=`${onLeave.length} active`;
+  document.getElementById('on-leave-tbody').innerHTML=onLeaveExt.length?onLeaveExt.map(l=>`<tr>
+    <td><div style="display:flex;align-items:center;gap:8px">
+      <div style="width:28px;height:28px;border-radius:6px;background:${empColor(l.emp.id||'E0')};display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;color:#fff">${empInitials(l.emp.id||'?')}</div>
+      <span style="font-size:13px;font-weight:600;color:var(--t1)">${l.emp.name}</span>
+    </div></td>
+    <td>${l.emp.dept}</td>
+    <td><span class="label" style="background:${LT[l.type]?.c}18;color:${LT[l.type]?.c};border-color:${LT[l.type]?.c}40">${LT[l.type]?.l}</span></td>
+    <td>${fd(l.from)}</td><td>${fd(l.to)}</td>
+    <td><span class="mono" style="font-weight:700">${l.days}</span></td>
+    <td><span class="label l-open">Active</span></td>
+  </tr>`).join('') : '<tr><td colspan="7" style="text-align:center;padding:24px;color:var(--t3)">No employees currently on leave</td></tr>';
+}
+
+/* ══════════════════════════════════════════════════════════
+   REQUESTS TABLE
+══════════════════════════════════════════════════════════ */
+function populateDeptFilter(id){
+  const sel=document.getElementById(id);if(!sel)return;
+  const depts=[...new Set(employees.map(e=>e.dept))].sort();
+  sel.innerHTML='<option value="">All Departments</option>'+depts.map(d=>`<option value="${d}">${d}</option>`).join('');
+}
+function setF(f,btn){
+  reqFilter=f;
+  document.querySelectorAll('#sec-requests .fchip').forEach(b=>b.classList.remove('active'));
+  if(btn)btn.classList.add('active');
+  else document.querySelectorAll('#sec-requests .fchip').forEach(b=>{if(b.textContent.toLowerCase()===f||b.textContent.toLowerCase()==='all'&&f==='all')b.classList.add('active');});
+  selLeaves.clear();
+  document.getElementById('sel-all').checked=false;
+  updateBulkBar();
+  renderReqTable();
+}
+function renderReqTable(){
+  const q=(document.getElementById('req-q')?.value||'').toLowerCase();
+  const df=document.getElementById('req-dept-f')?.value||'';
+  let rows=allLeaves.filter(l=>{
+    if(reqFilter!=='all'&&l.status!==reqFilter)return false;
+    const en=empName(l.emp).toLowerCase(), ed=empDept(l.emp);
+    if(q&&!en.includes(q)&&!l.id.toLowerCase().includes(q)&&!(LT[l.type]?.l||'').toLowerCase().includes(q)&&!l.reason.toLowerCase().includes(q))return false;
+    if(df&&ed!==df)return false;
+    return true;
+  });
+  document.getElementById('req-total-lbl').textContent=`Showing ${rows.length} of ${allLeaves.length} records`;
+  const tbody=document.getElementById('req-tbody'),empty=document.getElementById('req-empty');
+  if(!rows.length){tbody.innerHTML='';empty.style.display='block';return;}
+  empty.style.display='none';
+  tbody.innerHTML=rows.map(l=>`<tr>
+    <td><input type="checkbox" ${selLeaves.has(l.id)?'checked':''} onchange="togSel('${l.id}',this)"/></td>
+    <td><span class="tbl-ref">${l.id}</span></td>
+    <td><div style="display:flex;align-items:center;gap:8px">
+      <div style="width:26px;height:26px;border-radius:6px;background:${empColor(l.emp)};display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;color:#fff;flex-shrink:0">${empInitials(l.emp)}</div>
+      <button style="background:none;border:none;font-size:13px;font-weight:600;color:var(--accent);cursor:pointer;padding:0;text-align:left" onclick="openEmpPanel('${l.emp}')">${empName(l.emp)}</button>
+    </div></td>
+    <td style="font-size:12.5px">${empDept(l.emp)}</td>
+    <td><span class="label" style="background:${LT[l.type]?.c}18;color:${LT[l.type]?.c};border-color:${LT[l.type]?.c}40;font-size:11px"><i class="bi ${LT[l.type]?.icon}"></i>${LT[l.type]?.l}</span></td>
+    <td style="font-size:12.5px;white-space:nowrap">${fd(l.from)}</td>
+    <td style="font-size:12.5px;white-space:nowrap">${fd(l.to)}</td>
+    <td><span class="mono" style="font-weight:700;font-size:13px">${l.days}</span></td>
+    <td style="font-size:12px;color:var(--t3);white-space:nowrap">${fd(l.applied)}</td>
+    <td><span class="label ${stLbl(l.status)}">${cap(l.status)}</span></td>
+    <td><div style="display:flex;gap:4px;flex-wrap:nowrap">
+      <button class="gh-btn gh-btn-default gh-btn-sm" onclick="openReqPanel('${l.id}')"><i class="bi bi-eye"></i></button>
+      ${l.status==='pending'?`
+      <button class="gh-btn gh-btn-success gh-btn-sm" onclick="startAction('${l.id}','approve')"><i class="bi bi-check-lg"></i></button>
+      <button class="gh-btn gh-btn-danger gh-btn-sm" onclick="startAction('${l.id}','reject')"><i class="bi bi-x-lg"></i></button>`:''}
+    </div></td>
+  </tr>`).join('');
+}
+function togSel(id,cb){
+  if(cb.checked)selLeaves.add(id);else selLeaves.delete(id);
+  updateBulkBar();
+}
+function togAll(cb){
+  const q=(document.getElementById('req-q')?.value||'').toLowerCase();
+  const df=document.getElementById('req-dept-f')?.value||'';
+  allLeaves.filter(l=>reqFilter==='all'||l.status===reqFilter).forEach(l=>{ if(cb.checked)selLeaves.add(l.id);else selLeaves.delete(l.id); });
+  renderReqTable();updateBulkBar();
+}
+function clearSel(){selLeaves.clear();document.getElementById('sel-all').checked=false;updateBulkBar();renderReqTable();}
+function updateBulkBar(){
+  const bar=document.getElementById('bulk-bar');
+  if(selLeaves.size>0){bar.style.display='flex';document.getElementById('bulk-cnt').textContent=`${selLeaves.size} selected`;}
+  else bar.style.display='none';
+}
+function bulkApprove(){
+  selLeaves.forEach(id=>{const l=allLeaves.find(l=>l.id===id);if(l&&l.status==='pending')l.status='approved';});
+  saveLeaves();clearSel();renderReqTable();renderDash();toast(`✓ Approved ${selLeaves.size||'selected'} requests`,'ok');
+}
+function bulkReject(){
+  selLeaves.forEach(id=>{const l=allLeaves.find(l=>l.id===id);if(l&&l.status==='pending')l.status='rejected';});
+  saveLeaves();clearSel();renderReqTable();renderDash();toast('Rejected selected requests','err');
+}
+
+/* ══════════════════════════════════════════════════════════
+   APPROVE / REJECT MODAL
+══════════════════════════════════════════════════════════ */
+function startAction(id,type){
+  actionTarget=id;actionType=type;
+  const l=allLeaves.find(l=>l.id===id);if(!l)return;
+  const isApp=type==='approve';
+  document.getElementById('modal-action-title').textContent=isApp?'Approve Leave Request':'Reject Leave Request';
+  document.getElementById('modal-action-body').innerHTML=`
+    <div style="background:var(--surface2);border:1px solid var(--bd);border-radius:9px;padding:14px;margin-bottom:16px">
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
+        <div><div style="font-size:10.5px;color:var(--t3);font-weight:700;text-transform:uppercase;letter-spacing:.5px;margin-bottom:3px">Employee</div><div style="font-size:13.5px;font-weight:700;color:var(--t1)">${empName(l.emp)}</div></div>
+        <div><div style="font-size:10.5px;color:var(--t3);font-weight:700;text-transform:uppercase;letter-spacing:.5px;margin-bottom:3px">Leave Type</div><span class="label" style="background:${LT[l.type]?.c}18;color:${LT[l.type]?.c};border-color:${LT[l.type]?.c}40">${LT[l.type]?.l}</span></div>
+        <div><div style="font-size:10.5px;color:var(--t3);font-weight:700;text-transform:uppercase;letter-spacing:.5px;margin-bottom:3px">Period</div><div style="font-size:13px;color:var(--t1)">${fd(l.from)} → ${fd(l.to)}</div></div>
+        <div><div style="font-size:10.5px;color:var(--t3);font-weight:700;text-transform:uppercase;letter-spacing:.5px;margin-bottom:3px">Days</div><div class="mono" style="font-size:16px;font-weight:700;color:var(--t1)">${l.days}</div></div>
+      </div>
+    </div>
+    <div class="fg"><label class="fl">${isApp?'Approval Note (Optional)':'Reason for Rejection *'}</label>
+    <textarea class="fi" id="action-note" placeholder="${isApp?'Any message to the employee…':'Please provide a reason…'}"></textarea></div>`;
+  const btn=document.getElementById('modal-confirm-btn');
+  btn.className=`gh-btn ${isApp?'gh-btn-success':'gh-btn-danger'}`;
+  btn.innerHTML=isApp?'<i class="bi bi-check-lg"></i>Approve':'<i class="bi bi-x-lg"></i>Reject';
+  if(!actionModal)actionModal=new bootstrap.Modal(document.getElementById('action-modal'));
+  actionModal.show();
+}
+function confirmAction(){
+  const l=allLeaves.find(l=>l.id===actionTarget);if(!l)return;
+  const note=document.getElementById('action-note')?.value?.trim();
+  if(actionType==='reject'&&!note){toast('Please provide a rejection reason','err');return;}
+  l.status=actionType==='approve'?'approved':'rejected';
+  if(note)l.note=note;
+  saveLeaves();actionModal.hide();
+  renderReqTable();renderDash();
+  toast(actionType==='approve'?`✓ Approved: ${empName(l.emp)}`:`✗ Rejected: ${empName(l.emp)}`, actionType==='approve'?'ok':'err');
+}
+
+/* ══════════════════════════════════════════════════════════
+   EMPLOYEE PANEL
+══════════════════════════════════════════════════════════ */
+function openEmpPanel(id){
+  const e=empById(id);if(!e)return;
+  const empL=allLeaves.filter(l=>l.emp===id);
+  const usedAnn=empL.filter(l=>l.status==='approved'&&l.type==='annual').reduce((s,l)=>s+l.days,0);
+  const dc=DEPTS[e.dept]||{color:'#0969DA',bg:'rgba(9,105,218,.1)'};
+  document.getElementById('panel-content').innerHTML=`
+    <div style="text-align:center;padding-bottom:20px;border-bottom:1px solid var(--bd);margin-bottom:18px">
+      <div style="width:64px;height:64px;border-radius:14px;background:${empColor(id)};display:flex;align-items:center;justify-content:center;font-family:'JetBrains Mono',monospace;font-size:20px;font-weight:700;color:#fff;margin:0 auto 12px">${empInitials(id)}</div>
+      <div style="font-size:17px;font-weight:700;color:var(--t1);margin-bottom:3px">${e.name}</div>
+      <div style="font-size:13px;color:var(--t3);margin-bottom:8px">${e.role}</div>
+      <span class="label" style="background:${dc.bg};color:${dc.color};border-color:${dc.color}40">${e.dept}</span>
+      <span class="label ${e.status==='active'?'l-open':'l-closed'}" style="margin-left:6px">${cap(e.status)}</span>
+    </div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:18px">
+      ${[['Employee ID',e.id],['Start Date',fd(e.start)],['Line Manager',e.mgr],['Email',e.id.toLowerCase()+'@company.com']].map(([l,v])=>`
+      <div style="background:var(--surface2);border:1px solid var(--bd);border-radius:8px;padding:10px">
+        <div style="font-size:10px;color:var(--t3);font-weight:700;letter-spacing:.5px;text-transform:uppercase;margin-bottom:3px">${l}</div>
+        <div style="font-size:12.5px;font-weight:600;color:var(--t1)">${v}</div>
+      </div>`).join('')}
+    </div>
+    <div style="margin-bottom:18px">
+      <div style="font-size:12px;font-weight:700;color:var(--t2);margin-bottom:10px;text-transform:uppercase;letter-spacing:.5px">Leave Balance 2026</div>
+      ${Object.entries(LT).map(([k,lt])=>{
+        const used=empL.filter(l=>l.status==='approved'&&l.type===k).reduce((s,l)=>s+l.days,0);
+        const tot=k==='annual'?e.leave.annual_total:k==='sick'?e.leave.sick_total:null;
+        const avail=tot!==null?tot-used:null;
+        return `<div style="display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:1px solid var(--bd)">
+          <i class="bi ${lt.icon}" style="color:${lt.c};font-size:14px;width:16px;text-align:center"></i>
+          <span style="font-size:12.5px;color:var(--t2);flex:1">${lt.l}</span>
+          <span class="mono" style="font-size:13px;font-weight:700;color:${lt.c}">${avail!==null?avail:'∞'}</span>
+          ${tot?`<span style="font-size:11px;color:var(--t3)">/ ${tot}</span>`:''}
+        </div>`;
+      }).join('')}
+    </div>
+    <div>
+      <div style="font-size:12px;font-weight:700;color:var(--t2);margin-bottom:10px;text-transform:uppercase;letter-spacing:.5px">Recent Requests (${empL.length})</div>
+      ${empL.slice(0,4).map(l=>`<div style="display:flex;align-items:center;gap:9px;padding:8px 0;border-bottom:1px solid var(--bd)">
+        <span class="label" style="background:${LT[l.type]?.c}18;color:${LT[l.type]?.c};border-color:${LT[l.type]?.c}40;font-size:10.5px">${LT[l.type]?.l}</span>
+        <span style="font-size:12px;color:var(--t3);flex:1">${fd(l.from)} · ${l.days}d</span>
+        <span class="label ${stLbl(l.status)}" style="font-size:10.5px">${cap(l.status)}</span>
+      </div>`).join('')}
+    </div>
+    <div style="margin-top:16px;display:flex;gap:8px">
+      <button class="gh-btn gh-btn-default" style="flex:1" onclick="toast('Edit employee modal – production ready','info')"><i class="bi bi-pencil-fill"></i>Edit</button>
+      <button class="gh-btn gh-btn-danger" style="flex:1" onclick="toast('Deactivate requires confirmation','warn')"><i class="bi bi-person-x-fill"></i>Deactivate</button>
+    </div>`;
+  openPanel();
+}
+function openReqPanel(id){
+  const l=allLeaves.find(l=>l.id===id);if(!l)return;
+  document.getElementById('panel-content').innerHTML=`
+    <div style="margin-bottom:16px">
+      <div style="display:flex;align-items:center;gap:8px;margin-bottom:14px">
+        <span class="tbl-ref" style="font-size:14px">${l.id}</span>
+        <span class="label ${stLbl(l.status)}">${cap(l.status)}</span>
+      </div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
+        ${[['Employee',empName(l.emp)],['Department',empDept(l.emp)],['Leave Type',LT[l.type]?.l],['From',fd(l.from)],['To',fd(l.to)],['Days',l.days],['Applied',fd(l.applied)],['Approver',l.approver]].map(([lbl,val])=>`
+        <div style="background:var(--surface2);border:1px solid var(--bd);border-radius:8px;padding:10px">
+          <div style="font-size:10px;color:var(--t3);font-weight:700;letter-spacing:.5px;text-transform:uppercase;margin-bottom:3px">${lbl}</div>
+          <div style="font-size:13px;font-weight:600;color:var(--t1)">${val}</div>
+        </div>`).join('')}
+      </div>
+    </div>
+    <div style="background:var(--surface2);border:1px solid var(--bd);border-radius:9px;padding:14px;margin-bottom:14px">
+      <div style="font-size:10.5px;color:var(--t3);font-weight:700;text-transform:uppercase;letter-spacing:.5px;margin-bottom:5px">Reason</div>
+      <div style="font-size:13.5px;color:var(--t2);line-height:1.55">${l.reason}</div>
+    </div>
+    ${l.note?`<div style="background:var(--err-bg);border:1px solid var(--err-b);border-radius:9px;padding:12px;margin-bottom:14px"><div style="font-size:11px;color:var(--err);font-weight:700;margin-bottom:4px">MANAGER NOTE</div><div style="font-size:13px;color:var(--t2)">${l.note}</div></div>`:''}
+    ${l.status==='pending'?`<div style="display:flex;gap:8px;margin-top:8px">
+      <button class="gh-btn gh-btn-success" style="flex:1" onclick="startAction('${l.id}','approve');closePanel()"><i class="bi bi-check-lg"></i>Approve</button>
+      <button class="gh-btn gh-btn-danger" style="flex:1" onclick="startAction('${l.id}','reject');closePanel()"><i class="bi bi-x-lg"></i>Reject</button>
+    </div>`:''}`;
+  openPanel();
+}
+function openPanel(){
+  document.getElementById('side-panel').classList.add('open');
+  document.getElementById('sp-overlay').classList.add('show');
+}
+function closePanel(){
+  document.getElementById('side-panel').classList.remove('open');
+  document.getElementById('sp-overlay').classList.remove('show');
+}
+
+/* ══════════════════════════════════════════════════════════
+   EMPLOYEES
+══════════════════════════════════════════════════════════ */
+function renderEmployees(){
+  const q=(document.getElementById('emp-q')?.value||'').toLowerCase();
+  const df=document.getElementById('emp-dept-f')?.value||'';
+  const sf=document.getElementById('emp-status-f')?.value||'';
+  const filtered=employees.filter(e=>{
+    if(q&&!e.name.toLowerCase().includes(q)&&!e.role.toLowerCase().includes(q)&&!e.id.toLowerCase().includes(q))return false;
+    if(df&&e.dept!==df)return false;
+    if(sf&&e.status!==sf)return false;
+    return true;
+  });
+  const empty=document.getElementById('emp-empty');
+  const con=document.getElementById('emp-container');
+  if(!filtered.length){con.innerHTML='';empty.style.display='block';return;}
+  empty.style.display='none';
+  if(empViewList){
+    con.innerHTML=`<div class="tbl-wrap"><table class="gh-table">
+      <thead><tr><th>EMPLOYEE</th><th>DEPT</th><th>ROLE</th><th>ID</th><th>START</th><th>MANAGER</th><th>STATUS</th><th>ANN. LEFT</th><th>ACTIONS</th></tr></thead>
+      <tbody>${filtered.map(e=>{
+        const usedA=allLeaves.filter(l=>l.emp===e.id&&l.status==='approved'&&l.type==='annual').reduce((s,l)=>s+l.days,0);
+        const left=e.leave.annual_total-usedA;
+        const dc=DEPTS[e.dept]||{color:'#0969DA'};
+        return`<tr>
+          <td><div style="display:flex;align-items:center;gap:8px">
+            <div style="width:28px;height:28px;border-radius:7px;background:${empColor(e.id)};display:flex;align-items:center;justify-content:center;font-size:10.5px;font-weight:700;color:#fff;flex-shrink:0">${empInitials(e.id)}</div>
+            <button style="background:none;border:none;font-size:13px;font-weight:600;color:var(--accent);cursor:pointer;padding:0" onclick="openEmpPanel('${e.id}')">${e.name}</button>
+          </div></td>
+          <td><span class="label" style="background:${dc.bg||dc.color+'18'};color:${dc.color};border-color:${dc.color}40;font-size:10.5px">${e.dept}</span></td>
+          <td style="font-size:12.5px;color:var(--t2)">${e.role}</td>
+          <td><span class="tbl-ref">${e.id}</span></td>
+          <td style="font-size:12px;color:var(--t3)">${fd(e.start)}</td>
+          <td style="font-size:12.5px">${e.mgr}</td>
+          <td><span class="label ${e.status==='active'?'l-open':'l-closed'}">${cap(e.status)}</span></td>
+          <td><span class="mono" style="font-weight:700;color:${left<=3?'var(--err)':left<=7?'var(--warn)':'var(--ok)'}">${left}</span></td>
+          <td><button class="gh-btn gh-btn-default gh-btn-sm" onclick="openEmpPanel('${e.id}')"><i class="bi bi-person-fill"></i>View</button></td>
+        </tr>`;
+      }).join('')}</tbody>
+    </table></div>`;
+  } else {
+    con.innerHTML=`<div class="emp-grid">${filtered.map(e=>{
+      const usedA=allLeaves.filter(l=>l.emp===e.id&&l.status==='approved'&&l.type==='annual').reduce((s,l)=>s+l.days,0);
+      const left=e.leave.annual_total-usedA;
+      const dc=DEPTS[e.dept]||{color:'#0969DA',bg:'rgba(9,105,218,.1)'};
+      return`<div class="emp-card" style="--ec:${dc.color}" onclick="openEmpPanel('${e.id}')">
+        <div class="emp-av" style="background:${empColor(e.id)}">${empInitials(e.id)}</div>
+        <div class="emp-nm">${e.name}</div>
+        <div class="emp-role">${e.role}</div>
+        <span class="label ${e.status==='active'?'l-open':'l-closed'}" style="font-size:10.5px">${cap(e.status)}</span>
+        <div class="emp-meta">
+          <div><div class="emp-bal" style="color:${left<=3?'var(--err)':left<=7?'var(--warn)':'var(--ok)'}">${left}d</div><div style="font-size:10px;color:var(--t3)">Annual left</div></div>
+          <span class="emp-dept-chip" style="background:${dc.bg||dc.color+'18'};color:${dc.color}">${e.dept.split(' ')[0]}</span>
+        </div>
+      </div>`;
+    }).join('')}</div>`;
+  }
+}
+function toggleEmpView(){
+  empViewList=!empViewList;
+  const ic=document.getElementById('emp-view-ic');
+  ic.className=empViewList?'bi bi-grid-fill':'bi bi-list-ul';
+  ic.nextSibling.textContent=empViewList?' Grid View':' List View';
+  renderEmployees();
+}
+function openAddEmp(){
+  if(!addEmpModal)addEmpModal=new bootstrap.Modal(document.getElementById('add-emp-modal'));
+  addEmpModal.show();
+}
+function saveNewEmployee(){
+  const fn=document.getElementById('ne-fname')?.value?.trim();
+  const ln=document.getElementById('ne-lname')?.value?.trim();
+  const em=document.getElementById('ne-email')?.value?.trim();
+  const ti=document.getElementById('ne-title')?.value?.trim();
+  if(!fn||!ln||!em||!ti){toast('Please fill all required fields','err');return;}
+  const newId='E'+String(employees.length+1).padStart(3,'0');
+  employees.push({id:newId,name:`${fn} ${ln}`,role:ti,dept:document.getElementById('ne-dept').value,mgr:document.getElementById('ne-mgr')?.value||'TBD',start:document.getElementById('ne-start')?.value||new Date().toISOString().slice(0,10),status:'active',leave:{annual:0,sick:0,annual_total:20,sick_total:10}});
+  saveEmp();addEmpModal.hide();renderEmployees();renderDash();
+  toast(`✓ ${fn} ${ln} added to the system`,'ok');
+}
+
+/* ══════════════════════════════════════════════════════════
+   CALENDAR
+══════════════════════════════════════════════════════════ */
+const MNAMES=['January','February','March','April','May','June','July','August','September','October','November','December'];
+function renderCal(){
+  document.getElementById('cal-label').textContent=`${MNAMES[calMonth]} ${calYear}`;
+  const fd2=new Date(calYear,calMonth,1).getDay();
+  const dim=new Date(calYear,calMonth+1,0).getDate();
+  const dprev=new Date(calYear,calMonth,0).getDate();
+  const tStr=new Date().toISOString().slice(0,10);
+  const hSet=new Set(HOLIDAYS.map(h=>h.date));
+  const lmap=new Map();
+  allLeaves.forEach(l=>{if(['approved','pending'].includes(l.status)){const c=new Date(l.from),e=new Date(l.to);while(c<=e){lmap.set(c.toISOString().slice(0,10),l.status);c.setDate(c.getDate()+1);}}});
+  const g=document.getElementById('cal-grid');g.innerHTML='';
+  for(let i=fd2-1;i>=0;i--){const d=document.createElement('div');d.className='cd om';d.textContent=dprev-i;g.appendChild(d);}
+  for(let day=1;day<=dim;day++){
+    const ds=`${calYear}-${String(calMonth+1).padStart(2,'0')}-${String(day).padStart(2,'0')}`;
+    const dow=new Date(calYear,calMonth,day).getDay();
+    const el=document.createElement('div');let cls='cd';
+    if(ds===tStr)cls+=' tod';
+    else if(lmap.has(ds))cls+=lmap.get(ds)==='approved'?' app':' pnd';
+    else if(hSet.has(ds))cls+=' hol';
+    else if(dow===0||dow===6)cls+=' wkn';
+    el.className=cls;el.textContent=day;
+    if(lmap.has(ds))el.title=`Leave (${cap(lmap.get(ds))})`;
+    if(hSet.has(ds))el.title=HOLIDAYS.find(h=>h.date===ds)?.name||'Holiday';
+    g.appendChild(el);
+  }
+  const tot=Math.ceil((fd2+dim)/7)*7;
+  for(let nx=1;nx<=(tot-fd2-dim);nx++){const d=document.createElement('div');d.className='cd om';d.textContent=nx;g.appendChild(d);}
+  const calM=`${calYear}-${String(calMonth+1).padStart(2,'0')}`;
+  const mLeaves=allLeaves.filter(l=>l.from.startsWith(calM)||l.to.startsWith(calM));
+  document.getElementById('cal-events').innerHTML=mLeaves.length?mLeaves.slice(0,6).map(l=>`<div style="display:flex;align-items:center;gap:9px;padding:8px 0;border-bottom:1px solid var(--bd)">
+    <div style="width:3px;height:32px;border-radius:3px;background:${LT[l.type]?.c};flex-shrink:0"></div>
+    <div style="flex:1;min-width:0"><div style="font-size:12.5px;font-weight:600;color:var(--t1);white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${empName(l.emp)}</div>
+    <div style="font-size:11px;color:var(--t3)">${LT[l.type]?.l} · ${fd(l.from)}–${fd(l.to)}</div></div>
+    <span class="label ${stLbl(l.status)}" style="font-size:10.5px">${cap(l.status)}</span>
+  </div>`).join(''):
+  '<div style="text-align:center;padding:24px;color:var(--t3);font-size:13px">No leave events this month</div>';
+  document.getElementById('cal-holidays').innerHTML=HOLIDAYS.map(h=>`<div style="display:flex;justify-content:space-between;align-items:center;padding:7px 0;border-bottom:1px solid var(--bd)">
+    <div style="display:flex;align-items:center;gap:7px"><i class="bi bi-flag-fill" style="color:var(--purple);font-size:12px"></i><span style="font-size:12.5px;font-weight:500;color:var(--t2)">${h.name}</span></div>
+    <span style="font-size:11px;color:var(--t3);font-family:'JetBrains Mono',monospace">${fd(h.date)}</span>
+  </div>`).join('');
+}
+function calPrev(){calMonth--;if(calMonth<0){calMonth=11;calYear--;}renderCal();}
+function calNext(){calMonth++;if(calMonth>11){calMonth=0;calYear++;}renderCal();}
+
+/* ══════════════════════════════════════════════════════════
+   DEPARTMENTS
+══════════════════════════════════════════════════════════ */
+function renderDepts(){
+  const dnames=Object.keys(DEPTS);
+  document.getElementById('dept-grid').innerHTML=dnames.map(d=>{
+    const emps=employees.filter(e=>e.dept===d&&e.status==='active');
+    const dLeaves=allLeaves.filter(l=>l.status==='approved'&&emps.find(e=>e.id===l.emp));
+    const totalDays=dLeaves.reduce((s,l)=>s+l.days,0);
+    const pend=allLeaves.filter(l=>l.status==='pending'&&emps.find(e=>e.id===l.emp)).length;
+    const dc=DEPTS[d];
+    return`<div class="dept-card">
+      <div class="dept-icon" style="background:${dc.bg}">${dc.icon}</div>
+      <div class="dept-name">${d}</div>
+      <div class="dept-count">${emps.length} employee${emps.length!==1?'s':''}</div>
+      <div class="dept-stats">
+        <div><span class="dept-stat-val">${totalDays}</span><span class="dept-stat-lbl">Days taken</span></div>
+        <div><span class="dept-stat-val" style="color:${pend?'var(--warn)':'var(--ok)'}">${pend}</span><span class="dept-stat-lbl">Pending</span></div>
+        <div><span class="dept-stat-val">${(totalDays/Math.max(emps.length,1)).toFixed(1)}</span><span class="dept-stat-lbl">Avg days</span></div>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+/* ══════════════════════════════════════════════════════════
+   ANALYTICS
+══════════════════════════════════════════════════════════ */
+function setTab(tab,el){
+  document.querySelectorAll('.tab-item').forEach(t=>t.classList.remove('active'));
+  document.querySelectorAll('.tab-content').forEach(t=>t.classList.remove('active'));
+  if(el)el.classList.add('active');
+  document.getElementById('tab-'+tab).classList.add('active');
+  if(tab==='trends')setTimeout(()=>initTrendCharts(),80);
+  if(tab==='utilisation')setTimeout(()=>initUtilChart(),80);
+  if(tab==='types')setTimeout(()=>initTypesChart(),80);
+}
+function renderAnalEmpTable(){
+  document.getElementById('anal-emp-tbody').innerHTML=employees.filter(e=>e.status==='active').map(e=>{
+    const eL=allLeaves.filter(l=>l.emp===e.id&&l.status==='approved');
+    const ann=eL.filter(l=>l.type==='annual').reduce((s,l)=>s+l.days,0);
+    const sick=eL.filter(l=>l.type==='sick').reduce((s,l)=>s+l.days,0);
+    const left=e.leave.annual_total-ann;
+    const util=Math.round(ann/e.leave.annual_total*100);
+    const dc=DEPTS[e.dept]||{color:'#0969DA'};
+    return`<tr>
+      <td><div style="display:flex;align-items:center;gap:8px">
+        <div style="width:26px;height:26px;border-radius:6px;background:${empColor(e.id)};display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;color:#fff">${empInitials(e.id)}</div>
+        <span style="font-size:13px;font-weight:600;color:var(--t1)">${e.name}</span>
+      </div></td>
+      <td><span class="label" style="background:${dc.bg||dc.color+'18'};color:${dc.color};border-color:${dc.color}40;font-size:10.5px">${e.dept}</span></td>
+      <td><span class="mono" style="font-weight:700">${ann}</span> / ${e.leave.annual_total}</td>
+      <td><span class="mono" style="font-weight:700;color:${sick>5?'var(--err)':'var(--t2)'}">${sick}</span> / ${e.leave.sick_total}</td>
+      <td><span class="mono" style="font-weight:700;color:${left<=3?'var(--err)':left<=7?'var(--warn)':'var(--ok)'}">${left}</span></td>
+      <td><div style="display:flex;align-items:center;gap:8px">
+        <div style="flex:1;height:6px;background:var(--surface2);border-radius:4px;overflow:hidden"><div style="width:${util}%;height:100%;background:${util>=80?'var(--err)':util>=50?'var(--warn)':'var(--accent)'};border-radius:4px"></div></div>
+        <span class="mono" style="font-size:11.5px;color:var(--t2)">${util}%</span>
+      </div></td>
+    </tr>`;
+  }).join('');
+}
+
+/* ══════════════════════════════════════════════════════════
+   REPORTS
+══════════════════════════════════════════════════════════ */
+function renderReports(){
+  const opts=[
+    {ic:'📊',bg:'rgba(9,105,218,.1)',color:'#0969DA',title:'Leave Summary Report',desc:'Total leave taken by type, per employee and department for selected period'},
+    {ic:'👥',bg:'rgba(26,127,55,.1)',color:'#1A7F37',title:'Headcount & Absence Report',desc:'Absenteeism rates, frequency analysis, and Bradford Factor scores'},
+    {ic:'📅',bg:'rgba(130,80,223,.1)',color:'#8250DF',title:'Leave Balance Report',desc:'Outstanding leave balances for all employees — useful for year-end planning'},
+    {ic:'⚡',bg:'rgba(188,76,0,.1)',color:'#BC4C00',title:'Pending Approvals Report',desc:'All unresolved leave requests with ageing and escalation flags'},
+    {ic:'🏢',bg:'rgba(191,57,137,.1)',color:'#BF3989',title:'Department Analysis',desc:'Leave patterns compared across departments with trend indicators'},
+    {ic:'🔍',bg:'rgba(207,34,46,.1)',color:'#CF222E',title:'Audit & Compliance Report',desc:'Full audit trail of approvals, rejections, and policy exceptions'},
+  ];
+  document.getElementById('rpt-options').innerHTML=opts.map(o=>`<div class="rpt-option" onclick="toast('Generating ${o.title}…','info')">
+    <div class="rpt-ic" style="background:${o.bg};color:${o.color}">${o.ic}</div>
+    <div><div class="rpt-title">${o.title}</div><div class="rpt-desc">${o.desc}</div><div style="margin-top:8px"><button class="gh-btn gh-btn-default gh-btn-sm" onclick="event.stopPropagation();exportCSV()"><i class="bi bi-download"></i>Download</button></div></div>
+  </div>`).join('');
+}
+function renderRptTable(){
+  document.getElementById('rpt-tbody').innerHTML=allLeaves.map(l=>`<tr>
+    <td><span class="tbl-ref">${l.id}</span></td>
+    <td>${empName(l.emp)}</td>
+    <td style="font-size:12px">${empDept(l.emp)}</td>
+    <td><span class="label" style="background:${LT[l.type]?.c}18;color:${LT[l.type]?.c};border-color:${LT[l.type]?.c}40;font-size:10.5px">${LT[l.type]?.l}</span></td>
+    <td style="font-size:12px">${fd(l.from)}</td><td style="font-size:12px">${fd(l.to)}</td>
+    <td><span class="mono" style="font-weight:700">${l.days}</span></td>
+    <td><span class="label ${stLbl(l.status)}">${cap(l.status)}</span></td>
+    <td style="font-size:12px;color:var(--t3)">${l.approver}</td>
+  </tr>`).join('');
+}
+
+/* ══════════════════════════════════════════════════════════
+   AUDIT LOG
+══════════════════════════════════════════════════════════ */
+function renderAudit(){
+  const log=[
+    {icon:'bi-check-circle-fill',bg:'var(--ok-bg)',color:'var(--ok)',msg:`<strong>Alex Chen</strong> approved leave <code>LD-2026-031</code> for <strong>Sarah Johnson</strong> (3 days Annual Leave)`,ts:'2026-04-03 09:14'},
+    {icon:'bi-person-plus-fill',bg:'var(--accent-bg)',color:'var(--accent)',msg:`<strong>Hannah Reyes</strong> created new employee record <code>E014</code> — Isabel Martins, Junior Developer`,ts:'2026-04-02 16:30'},
+    {icon:'bi-x-circle-fill',bg:'var(--err-bg)',color:'var(--err)',msg:`<strong>Lisa Wang</strong> rejected leave <code>LD-2026-018</code> for <strong>James Okonkwo</strong>. Note: "Critical sprint."`,ts:'2026-04-01 11:02'},
+    {icon:'bi-shield-fill-check',bg:'var(--ok-bg)',color:'var(--ok)',msg:`<strong>System</strong> auto-approved 1-day sick leave for <strong>Yuki Tanaka</strong> — policy allows auto-approval`,ts:'2026-03-31 08:00'},
+    {icon:'bi-file-earmark-plus',bg:'var(--warn-bg)',color:'var(--warn)',msg:`<strong>David Kim</strong> submitted annual leave request <code>LD-2026-028</code> — 29 Apr to 1 May (3 days)`,ts:'2026-03-30 15:22'},
+    {icon:'bi-calendar-plus',bg:'var(--purple-bg)',color:'var(--purple)',msg:`<strong>Hannah Reyes</strong> added public holiday <strong>Good Friday</strong> (3 Apr 2026) to system calendar`,ts:'2026-03-29 10:55'},
+    {icon:'bi-toggle-on',bg:'var(--accent-bg)',color:'var(--accent)',msg:`<strong>Hannah Reyes</strong> enabled policy setting: <code>Two-stage approval required for annual leave</code>`,ts:'2026-03-28 09:01'},
+    {icon:'bi-person-fill-check',bg:'var(--ok-bg)',color:'var(--ok)',msg:`<strong>Tom Adeyemi</strong> approved maternity leave for <strong>Sofia Reyes</strong> — 60 days from 4 May 2026`,ts:'2026-03-27 14:33'},
+    {icon:'bi-download',bg:'var(--surface2)',color:'var(--t3)',msg:`<strong>Hannah Reyes</strong> downloaded Leave Balance Report for Q1 2026`,ts:'2026-03-26 12:10'},
+    {icon:'bi-box-arrow-in-right',bg:'var(--surface2)',color:'var(--t3)',msg:`<strong>Hannah Reyes</strong> logged in from IP <code>192.168.1.45</code>`,ts:'2026-03-26 08:59'},
+  ];
+  document.getElementById('audit-list').innerHTML=log.map(a=>`<div class="audit-row">
+    <div class="audit-icon" style="background:${a.bg};color:${a.color}"><i class="bi ${a.icon}"></i></div>
+    <div class="audit-msg">${a.msg}</div>
+    <div class="audit-ts">${a.ts}</div>
+  </div>`).join('');
+}
+
+/* ══════════════════════════════════════════════════════════
+   HOLIDAYS TABLE
+══════════════════════════════════════════════════════════ */
+function renderHolidays(){
+  const days=['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
+  document.getElementById('hol-tbody').innerHTML=HOLIDAYS.map(h=>{
+    const d=new Date(h.date+'T00:00:00');
+    return`<tr>
+      <td><span class="mono">${fd(h.date)}</span></td>
+      <td>${days[d.getDay()]}</td>
+      <td style="font-weight:600;color:var(--t1)">${h.name}</td>
+      <td><span class="label l-purple">National</span></td>
+      <td><span class="label l-open">Yes</span></td>
+      <td><div style="display:flex;gap:5px">
+        <button class="gh-btn gh-btn-default gh-btn-sm" onclick="toast('Edit holiday','info')"><i class="bi bi-pencil-fill"></i></button>
+        <button class="gh-btn gh-btn-danger gh-btn-sm" onclick="toast('Removed holiday','err')"><i class="bi bi-trash-fill"></i></button>
+      </div></td>
+    </tr>`;
+  }).join('');
+}
+
+/* ══════════════════════════════════════════════════════════
+   CHARTS
+══════════════════════════════════════════════════════════ */
+function cc(){return{text:isDark?'#9198A1':'#656D76',grid:isDark?'rgba(255,255,255,.06)':'rgba(27,31,36,.07)',bg:isDark?'#161B22':'#FFFFFF'};}
+function dChart(nm){if(charts[nm]){try{charts[nm].destroy();}catch(e){}delete charts[nm];}}
+
+function initDashCharts(){
+  const c=cc();
+  const months12=['Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec','Jan','Feb','Mar'];
+  const dates12=['2025-04','2025-05','2025-06','2025-07','2025-08','2025-09','2025-10','2025-11','2025-12','2026-01','2026-02','2026-03'];
+  const vals=dates12.map(d=>allLeaves.filter(l=>l.status==='approved'&&l.from.startsWith(d)).reduce((s,l)=>s+l.days,0));
+  const filled=vals.map((v,i)=>v||[3,5,4,6,8,3,4,7,12,5,2,6][i]);
+  dChart('monthly');
+  charts['monthly']=new ApexCharts(document.getElementById('ch-monthly'),{
+    series:[{name:'Days',data:filled}],colors:['#2F81F7'],
+    chart:{type:'bar',height:200,background:'transparent',toolbar:{show:false},animations:{speed:500}},
+    plotOptions:{bar:{columnWidth:'58%',borderRadius:5,borderRadiusApplication:'end'}},
+    xaxis:{categories:months12,labels:{style:{colors:c.text,fontSize:'11px',fontFamily:'Mona Sans'}}},
+    yaxis:{labels:{style:{colors:c.text,fontSize:'11px',fontFamily:'Mona Sans'}}},
+    grid:{borderColor:c.grid,strokeDashArray:4},dataLabels:{enabled:false},
+    tooltip:{theme:isDark?'dark':'light',style:{fontFamily:'Mona Sans'}},theme:{mode:isDark?'dark':'light'},
+  });charts['monthly'].render();
+
+  const byType=Object.entries(LT).map(([k,lt])=>({n:lt.l,v:allLeaves.filter(l=>l.status==='approved'&&l.type===k).reduce((s,l)=>s+l.days,0),c:lt.c})).filter(x=>x.v>0);
+  dChart('donut');
+  charts['donut']=new ApexCharts(document.getElementById('ch-donut'),{
+    series:byType.map(x=>x.v),labels:byType.map(x=>x.n),colors:byType.map(x=>x.c),
+    chart:{type:'donut',height:200,background:'transparent',toolbar:{show:false},animations:{speed:500}},
+    plotOptions:{pie:{donut:{size:'66%',labels:{show:true,total:{show:true,label:'Total',color:c.text,fontSize:'11px',fontFamily:'Mona Sans',formatter:w=>w.globals.seriesTotals.reduce((a,b)=>a+b,0)+'d'}}}}},
+    legend:{position:'bottom',fontSize:'11px',fontFamily:'Mona Sans',labels:{colors:c.text}},
+    dataLabels:{enabled:false},stroke:{width:2},theme:{mode:isDark?'dark':'light'},
+    tooltip:{theme:isDark?'dark':'light',style:{fontFamily:'Mona Sans'}},
+  });charts['donut'].render();
+}
+
+function initAnalyticsCharts(){
+  initTrendCharts();
+  setTimeout(()=>{ const el=document.getElementById('ch-dept-bar'); if(el)initDeptChart(); },80);
+}
+function initTrendCharts(){
+  const c=cc();
+  const m24=Array.from({length:24},(_,i)=>{const d=new Date(2024,3+i,1);return`${['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'][d.getMonth()]} '${String(d.getFullYear()).slice(2)}`;});
+  const sample=[2,3,1,4,5,3,2,6,8,4,3,5,4,6,5,7,9,5,3,6,8,12,5,8];
+  dChart('trend-line');
+  charts['trend-line']=new ApexCharts(document.getElementById('ch-trend-line'),{
+    series:[{name:'Leave Days',data:sample}],colors:['#2F81F7'],
+    chart:{type:'area',height:230,background:'transparent',toolbar:{show:false},animations:{speed:500}},
+    fill:{type:'gradient',gradient:{shadeIntensity:.8,opacityFrom:.3,opacityTo:0}},
+    stroke:{curve:'smooth',width:2.5},
+    xaxis:{categories:m24,labels:{rotate:-45,style:{colors:c.text,fontSize:'9px',fontFamily:'Mona Sans'}}},
+    yaxis:{labels:{style:{colors:c.text,fontSize:'11px',fontFamily:'Mona Sans'}}},
+    grid:{borderColor:c.grid,strokeDashArray:4},dataLabels:{enabled:false},
+    tooltip:{theme:isDark?'dark':'light',style:{fontFamily:'Mona Sans'}},theme:{mode:isDark?'dark':'light'},
+  });charts['trend-line'].render();
+  const bt=Object.entries(LT).map(([k,lt])=>({n:lt.l,v:allLeaves.filter(l=>l.status==='approved'&&l.type===k).reduce((s,l)=>s+l.days,0),c:lt.c})).filter(x=>x.v>0);
+  dChart('trend-donut');
+  charts['trend-donut']=new ApexCharts(document.getElementById('ch-trend-donut'),{
+    series:bt.map(x=>x.v),labels:bt.map(x=>x.n),colors:bt.map(x=>x.c),
+    chart:{type:'pie',height:230,background:'transparent',toolbar:{show:false},animations:{speed:500}},
+    legend:{position:'bottom',fontSize:'11px',fontFamily:'Mona Sans',labels:{colors:c.text}},
+    dataLabels:{style:{fontSize:'11px',fontFamily:'Mona Sans'}},stroke:{width:2},
+    theme:{mode:isDark?'dark':'light'},tooltip:{theme:isDark?'dark':'light',style:{fontFamily:'Mona Sans'}},
+  });charts['trend-donut'].render();
+}
+function initUtilChart(){
+  const c=cc();
+  const emps=employees.filter(e=>e.status==='active').slice(0,12);
+  const used=emps.map(e=>allLeaves.filter(l=>l.emp===e.id&&l.status==='approved'&&l.type==='annual').reduce((s,l)=>s+l.days,0));
+  const left=emps.map((e,i)=>e.leave.annual_total-used[i]);
+  dChart('util-bar');
+  charts['util-bar']=new ApexCharts(document.getElementById('ch-util-bar'),{
+    series:[{name:'Used',data:used},{name:'Remaining',data:left}],
+    colors:['#2F81F7','#238636'],
+    chart:{type:'bar',height:300,stacked:true,background:'transparent',toolbar:{show:false},animations:{speed:500}},
+    plotOptions:{bar:{horizontal:true,borderRadius:4,borderRadiusApplication:'end',borderRadiusWhenStacked:'last'}},
+    xaxis:{categories:emps.map(e=>e.name.split(' ')[0]),labels:{style:{colors:c.text,fontSize:'11px',fontFamily:'Mona Sans'}}},
+    yaxis:{labels:{style:{colors:c.text,fontSize:'11.5px',fontFamily:'Mona Sans'}}},
+    grid:{borderColor:c.grid,strokeDashArray:4},
+    legend:{position:'top',fontSize:'12px',fontFamily:'Mona Sans',labels:{colors:c.text}},
+    dataLabels:{enabled:false},
+    tooltip:{theme:isDark?'dark':'light',style:{fontFamily:'Mona Sans'}},theme:{mode:isDark?'dark':'light'},
+  });charts['util-bar'].render();
+}
+function initTypesChart(){
+  const c=cc();
+  const dnames=Object.keys(DEPTS).slice(0,6);
+  const series=Object.entries(LT).slice(0,4).map(([k,lt])=>({name:lt.l,data:dnames.map(d=>{
+    const emps=employees.filter(e=>e.dept===d&&e.status==='active');
+    return allLeaves.filter(l=>l.status==='approved'&&l.type===k&&emps.find(e=>e.id===l.emp)).reduce((s,l)=>s+l.days,0);
+  })}));
+  dChart('type-radar');
+  charts['type-radar']=new ApexCharts(document.getElementById('ch-type-radar'),{
+    series,colors:['#2F81F7','#CF222E','#9A6700','#8250DF'],
+    chart:{type:'radar',height:320,background:'transparent',toolbar:{show:false}},
+    xaxis:{categories:dnames,labels:{style:{colors:c.text,fontSize:'11px',fontFamily:'Mona Sans'}}},
+    yaxis:{show:false},
+    legend:{position:'top',fontSize:'11px',fontFamily:'Mona Sans',labels:{colors:c.text}},
+    fill:{opacity:.15},stroke:{width:2},markers:{size:4},
+    tooltip:{theme:isDark?'dark':'light',style:{fontFamily:'Mona Sans'}},theme:{mode:isDark?'dark':'light'},
+  });charts['type-radar'].render();
+}
+function initDeptChart(){
+  const c=cc();
+  const dnames=Object.keys(DEPTS);
+  const vals=dnames.map(d=>{const emps=employees.filter(e=>e.dept===d&&e.status==='active');return allLeaves.filter(l=>l.status==='approved'&&emps.find(e=>e.id===l.emp)).reduce((s,l)=>s+l.days,0);});
+  dChart('dept-bar');
+  charts['dept-bar']=new ApexCharts(document.getElementById('ch-dept-bar'),{
+    series:[{name:'Days',data:vals}],colors:Object.values(DEPTS).map(d=>d.color),
+    chart:{type:'bar',height:220,background:'transparent',toolbar:{show:false},animations:{speed:500},distributed:true},
+    plotOptions:{bar:{columnWidth:'55%',borderRadius:6,borderRadiusApplication:'end'}},
+    xaxis:{categories:dnames,labels:{style:{colors:c.text,fontSize:'11px',fontFamily:'Mona Sans'}}},
+    yaxis:{labels:{style:{colors:c.text,fontSize:'11px',fontFamily:'Mona Sans'}}},
+    grid:{borderColor:c.grid,strokeDashArray:4},dataLabels:{enabled:false},legend:{show:false},
+    tooltip:{theme:isDark?'dark':'light',style:{fontFamily:'Mona Sans'}},theme:{mode:isDark?'dark':'light'},
+  });charts['dept-bar'].render();
+}
+function initHeatmapChart(){
+  const c=cc();
+  const empsTop=employees.filter(e=>e.status==='active').slice(0,8);
+  const months=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+  const series=empsTop.map(e=>({name:e.name.split(' ')[0],data:months.map((_,mi)=>{const md=`2026-${String(mi+1).padStart(2,'0')}`;return allLeaves.filter(l=>l.emp===e.id&&l.status==='approved'&&l.from.startsWith(md)).reduce((s,l)=>s+l.days,0);})}));
+  dChart('heatmap');
+  charts['heatmap']=new ApexCharts(document.getElementById('ch-heatmap'),{
+    series,
+    chart:{type:'heatmap',height:280,background:'transparent',toolbar:{show:false},animations:{speed:500}},
+    dataLabels:{enabled:true,style:{fontSize:'11px',fontFamily:'Mona Sans',colors:['#fff']}},
+    colors:['#2F81F7'],
+    xaxis:{categories:months,labels:{style:{colors:c.text,fontSize:'11px',fontFamily:'Mona Sans'}}},
+    yaxis:{labels:{style:{colors:c.text,fontSize:'11px',fontFamily:'Mona Sans'}}},
+    grid:{borderColor:c.grid},
+    tooltip:{theme:isDark?'dark':'light',style:{fontFamily:'Mona Sans'}},theme:{mode:isDark?'dark':'light'},
+    plotOptions:{heatmap:{radius:5,useFillColorAsStroke:false,enableShades:true,shadeIntensity:.6}},
+  });charts['heatmap'].render();
+}
+function reinitCharts(){
+  const sec=document.querySelector('.sec.active');if(!sec)return;
+  if(sec.id==='sec-dashboard')initDashCharts();
+  if(sec.id==='sec-analytics'){initTrendCharts();initHeatmapChart();}
+  if(sec.id==='sec-departments')initDeptChart();
+}
+
+/* ══════════════════════════════════════════════════════════
+   UTILS
+══════════════════════════════════════════════════════════ */
+function fd(s){if(!s)return'—';const d=new Date(s+'T00:00:00');return d.toLocaleDateString('en-GB',{day:'2-digit',month:'short',year:'numeric'});}
+function cap(s){return s?s.charAt(0).toUpperCase()+s.slice(1):''}
+function stLbl(s){return{approved:'l-open',pending:'l-pending',rejected:'l-reject',cancelled:'l-closed'}[s]||'l-closed'}
+function exportCSV(){
+  const headers=['ID','Employee','Dept','Type','From','To','Days','Applied','Approver','Status'];
+  const rows=allLeaves.map(l=>[l.id,empName(l.emp),empDept(l.emp),LT[l.type]?.l||l.type,l.from,l.to,l.days,l.applied,l.approver,l.status]);
+  const csv=[headers,...rows].map(r=>r.join(',')).join('\n');
+  const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([csv],{type:'text/csv'}));a.download='leavedesk-admin-export.csv';a.click();
+  toast('📥 CSV exported successfully','ok');
+}
+function resetData(){employees=SAMPLE_EMP.map(e=>({...e}));allLeaves=SAMPLE_LEAVES.map(l=>({...l}));saveEmp();saveLeaves();toast('Data reset to demo','info');}
+function toast(msg,type='ok'){
+  const cols={ok:'var(--ok)',err:'var(--err)',warn:'var(--warn)',info:'var(--accent)'};
+  const t=document.createElement('div');t.className='toast-gh';t.style.color=cols[type]||cols.ok;t.innerHTML=`${msg.replace(/^<span/,'').replace(/<\/span>$/,'')||msg}`;
+  t.style.cssText+=`;display:flex;align-items:center;gap:10px;`;
+  // just text node approach
+  const dot=document.createElement('span');dot.style.cssText=`width:8px;height:8px;border-radius:50%;background:${cols[type]||cols.ok};flex-shrink:0`;
+  const txt=document.createElement('span');txt.style.color='var(--t1)';txt.innerHTML=msg;
+  t.innerHTML='';t.appendChild(dot);t.appendChild(txt);
+  document.getElementById('toast-zone').appendChild(t);
+  setTimeout(()=>{t.style.transition='all .3s';t.style.opacity='0';t.style.transform='translateX(14px)';setTimeout(()=>t.remove(),320);},3200);
+}
+
+/* ══════════════════════════════════════════════════════════
+   INIT
+══════════════════════════════════════════════════════════ */
+document.addEventListener('DOMContentLoaded',()=>{
+  applyTheme(isDark);
+  renderDash();
+  setTimeout(initDashCharts,200);
+  setTimeout(initHeatmapChart,400);
+});
+</script>
+
+
+</body></html>
