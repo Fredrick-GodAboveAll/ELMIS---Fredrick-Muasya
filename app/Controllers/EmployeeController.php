@@ -11,3 +11,4 @@ class EmployeeController extends Controller
         include '../app/Views/layouts/admin.php';
     }
 }
+

@@ -40,6 +40,7 @@
         <link href="../assets/css/theme.min.css" rel="stylesheet" id="style-default">
         <link href="../assets/css/user-rtl.min.css" rel="stylesheet" id="user-style-rtl">
         <link href="../assets/css/user.min.css" rel="stylesheet" id="user-style-default">
+          <script src="../vendors/jquery/jquery.min.js"> </script>
         <script>
             var isRTL = JSON.parse(localStorage.getItem('isRTL'));
             if (isRTL) {
@@ -160,7 +161,7 @@
         <script src="../vendors/bootstrap/bootstrap.min.js"></script>
         <script src="../vendors/anchorjs/anchor.min.js"></script>
         <script src="../vendors/is/is.min.js"></script>
-        <script src="../vendors/jquery/jquery.min.js"> </script>
+      
         <script src="../vendors/prism/prism.js"></script>
         <script src="../vendors/select2/select2.min.js"> </script>
         <script src="../vendors/select2/select2.full.min.js"> </script>
@@ -180,8 +181,11 @@
         <script src="../vendors/fontawesome/all.min.js"></script>
         <script src="../vendors/lodash/lodash.min.js"></script>
         <script src="../vendors/list.js/list.min.js"></script>
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.min.js"></script>
+        <script src="../vendors/bootstrap/pages-js/holidays-export.js"></script> 
+        <script src="../vendors/bootstrap/xlsx.full.min.js"></script> 
         <script src="../assets/js/theme.js"></script>
   </body>
+
+  
 
 </html>
