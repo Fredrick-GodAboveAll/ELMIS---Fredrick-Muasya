@@ -1,0 +1,108 @@
+bread crub 
+
+<nav aria-label="breadcrumb">
+  <ol class="breadcrumb">
+    <li class="breadcrumb-item active" aria-current="page">Home</li>
+  </ol>
+</nav>
+<nav aria-label="breadcrumb">
+  <ol class="breadcrumb">
+    <li class="breadcrumb-item"><a href="#">Home</a></li>
+    <li class="breadcrumb-item active" aria-current="page">Library</li>
+  </ol>
+</nav>
+<nav aria-label="breadcrumb">
+  <ol class="breadcrumb">
+    <li class="breadcrumb-item"><a href="#">Home</a></li>
+    <li class="breadcrumb-item"><a href="#">Library</a></li>
+    <li class="breadcrumb-item active" aria-current="page">Data</li>
+  </ol>
+</nav>
+
+eg Home > Leaves > Holiday List
+
+icon btn
+
+<button class="btn btn-falcon-default btn-sm me-1 mb-1" type="button">
+  <span class="fas fa-plus me-1" data-fa-transform="shrink-3"></span>Small
+</button>
+<button class="btn btn-falcon-default me-1 mb-1" type="button">
+  <span class="fas fa-plus me-1" data-fa-transform="shrink-3"></span>Regular
+</button>
+<button class="btn btn-falcon-default btn-lg me-1 mb-1" type="button">
+  <span class="fas fa-plus me-1" data-fa-transform="shrink-3"></span>Large
+</button>
+<hr />
+<button class="btn btn-primary me-1 mb-1" type="button">
+  <span class="fas fa-plus me-1" data-fa-transform="shrink-3"></span>Regular
+</button>
+<button class="btn btn-outline-primary me-1 mb-1" type="button">
+  <span class="fas fa-plus me-1" data-fa-transform="shrink-3"></span>Outline
+</button>
+<hr />
+<button class="btn btn-primary me-1 mb-1" type="button">
+  Delete<span class="fas fa-trash ms-1" data-fa-transform="shrink-3"></span>
+</button>
+
+dropdown 
+
+
+<div class="dropdown font-sans-serif d-inline-block mb-2">
+  <button class="btn btn-falcon-default dropdown-toggle" id="dropdownMenuButton" type="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Dropdown button</button>
+  <div class="dropdown-menu dropdown-menu-end py-0" aria-labelledby="dropdownMenuButton">
+    <a class="dropdown-item" href="#">Action</a>
+    <a class="dropdown-item" href="#">Another action</a>
+    <a class="dropdown-item" href="#">Something else here</a>
+    <div class="dropdown-divider"></div>
+    <a class="dropdown-item" href="#">Separated link</a>
+  </div>
+</div>
+
+
+
+forms Form Grid Layout
+More complex layouts can also be created with the grid system.
+
+<form class="row g-3">
+  <div class="col-md-6"><label class="form-label" for="inputEmail4">Email</label><input class="form-control" id="inputEmail4" type="email" /></div>
+  <div class="col-md-6"><label class="form-label" for="inputPassword4">Password</label><input class="form-control" id="inputPassword4" type="password" /></div>
+  <div class="col-12"><label class="form-label" for="inputAddress">Address</label><input class="form-control" id="inputAddress" type="text" placeholder="1234 Main St" /></div>
+  <div class="col-12"><label class="form-label" for="inputAddress2">Address 2</label><input class="form-control" id="inputAddress2" type="text" placeholder="Apartment, studio, or floor" /></div>
+  <div class="col-md-6"><label class="form-label" for="inputCity">City</label><input class="form-control" id="inputCity" type="text" /></div>
+  <div class="col-md-4"><label class="form-label" for="inputState">State</label><select class="form-select" id="inputState">
+      <option selected="selected">Choose...</option>
+      <option>...</option>
+    </select></div>
+  <div class="col-md-2"><label class="form-label" for="inputZip">Zip</label><input class="form-control" id="inputZip" type="text" /></div>
+  <div class="col-12">
+    <div class="form-check"><input class="form-check-input" id="gridCheck" type="checkbox" /><label class="form-check-label" for="gridCheck">Check me out</label></div>
+  </div>
+  <div class="col-12"><button class="btn btn-primary" type="submit">Sign in</button></div>
+</form>
+
+this is select i want 
+
+<label for="organizerSingle">Single</label><select class="form-select js-choice" id="organizerSingle" size="1" name="organizerSingle" data-options='{"removeItemButton":true,"placeholder":true}'>
+  <option value="">Select organizer...</option>
+  <option>Massachusetts Institute of Technology</option>
+  <option>University of Chicago</option>
+  <option>GSAS Open Labs At Harvard</option>
+  <option>California Institute of Technology </option>
+</select>
+
+use 
+<link href="vendors/choices/choices.min.css" rel="stylesheet" />
+<script src="vendors/choices/choices.min.js"></script>
+
+
+DATE PICKER
+
+<label class="form-label" for="datepicker">Start Date</label>
+<input class="form-control datetimepicker" id="datepicker" type="text" placeholder="dd/mm/yy" data-options='{"disableMobile":true}' />
+
+LINKS FOR DATE PICKER
+<link href="vendors/flatpickr/flatpickr.min.css" rel="stylesheet" />
+<script src="vendors/flatpickr/flatpickr.min.js"></script>
+
+
+

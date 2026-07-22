@@ -33,6 +33,7 @@ $router->get('/departments', 'DepartmentController@index', [AuthMiddleware::clas
 $router->get('/leave-types', 'LeaveTypeController@index', [AuthMiddleware::class]);
 $router->get('/leaves', 'LeaveController@index', [AuthMiddleware::class]);
 $router->get('/holidays', 'HolidaysController@index', [AuthMiddleware::class]);
+$router->get('/holidays/new', 'HolidaysController@newHolidayList', [AuthMiddleware::class]);
 $router->get('/reports', 'ReportsController@index', [AuthMiddleware::class]);
 
 // Admin-only route example

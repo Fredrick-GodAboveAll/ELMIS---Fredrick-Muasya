@@ -66,9 +66,12 @@ INSERT INTO `users` (`name`, `email`, `password`, `role`, `email_verified`) VALU
 ('Regular User', 'user@example.com',
  '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', 'user', TRUE);
 
+
 -- -----------------------------------------------------------
 -- Departments table (future linking)
 -- -----------------------------------------------------------
+
+
 CREATE TABLE `departments` (
   `id` INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
   `name` VARCHAR(150) NOT NULL UNIQUE,
@@ -76,9 +79,12 @@ CREATE TABLE `departments` (
   `created_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
+
+
 -- -----------------------------------------------------------
 -- Employees table (flat, CSV-ready)
 -- -----------------------------------------------------------
+
 CREATE TABLE `employees` (
   `payroll_number` INT UNSIGNED PRIMARY KEY,
   `full_name` VARCHAR(150) NOT NULL,
@@ -98,6 +104,7 @@ CREATE TABLE `employees` (
   FOREIGN KEY (`department_id`) REFERENCES `departments`(`id`)
     ON UPDATE CASCADE ON DELETE SET NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
 
 -- -----------------------------------------------------------
 -- Sample departments and employees

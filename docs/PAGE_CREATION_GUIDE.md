@@ -3,6 +3,36 @@
 ## Overview
 This guide explains how to add new pages, controllers, and set up proper navigation with active/show states in the PHP Leave Management System. This framework uses a custom MVC architecture with Bootstrap 5 UI components.
 
+## Quick Pattern for a New Page
+When creating a page like the Holiday List entry screen, use this exact pattern:
+
+1. Add a controller method for the page.
+2. Register a route in `routes/web.php`.
+3. Create a PHP view file in the correct `app/Views/...` folder.
+4. Set `$currentPage` to the section key you want highlighted in the sidebar.
+5. Use the admin layout so the page inherits the same nav and styles.
+6. Link the action button to the route you created.
+
+Example quick flow:
+
+```php
+public function newHolidayList()
+{
+    $title = 'New Holiday List';
+    $currentPage = 'holidays';
+    $content = '../app/Views/holidays/new_holiday_list.php';
+    include '../app/Views/layouts/admin.php';
+}
+```
+
+```php
+$router->get('/holidays/new', 'HolidaysController@newHolidayList', [AuthMiddleware::class]);
+```
+
+```php
+<?php $currentPage = 'holidays'; ?>
+```
+
 ## Table of Contents
 1. [Creating a New Page](#creating-a-new-page)
 2. [Creating a Controller](#creating-a-controller)
