@@ -35,6 +35,32 @@
             <div class="col-md-8">
               <label class="form-label" for="holidayListName">Holiday List Name <span class="text-danger">*</span></label>
               <input class="form-control" id="holidayListName" name="holiday_list_name" type="text" required="required" />
+            
+              
+            
+       <label for="organizerSingle">Single</label>
+
+<select
+  class="form-select js-choice"
+  id="organizerSingle"
+  name="organizerSingle"
+  size="1"
+  data-options='{
+    "removeItemButton": true,
+    "placeholder": true,
+    "addItems": true,
+    "addChoices": true,
+    "duplicateItemsAllowed": false
+  }'>
+
+  <option value="">Select organizer...</option>
+  <option value="Massachusetts Institute of Technology">Massachusetts Institute of Technology</option>
+  <option value="University of Chicago">University of Chicago</option>
+  <option value="GSAS Open Labs At Harvard">GSAS Open Labs At Harvard</option>
+  <option value="California Institute of Technology">California Institute of Technology</option>
+
+</select>
+            
             </div>
 
             <div class="col-md-4">

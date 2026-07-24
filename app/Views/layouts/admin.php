@@ -36,6 +36,7 @@
         <link rel="preconnect" href="https://fonts.gstatic.com">
         <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,500,600,700%7cPoppins:300,400,500,600,700,800,900&amp;display=swap" rel="stylesheet">
         <link href="../vendors/simplebar/simplebar.min.css" rel="stylesheet">
+        <link href="../vendors/choices/choices.min.css" rel="stylesheet" />
         <link href="../assets/css/theme-rtl.min.css" rel="stylesheet" id="style-rtl">
         <link href="../assets/css/theme.min.css" rel="stylesheet" id="style-default">
         <link href="../assets/css/user-rtl.min.css" rel="stylesheet" id="user-style-rtl">
@@ -57,6 +58,8 @@
             }
         </script>
     </head>
+
+  
 
 
   <body>
@@ -176,6 +179,7 @@
         <script src="../vendors/countup/countUp.umd.js"></script>
         <script src="../vendors/echarts/echarts.min.js"></script>
         <script src="../vendors/fullcalendar/index.global.min.js"></script>
+        <script src="../vendors/choices/choices.min.js"></script>
         <script src="../vendors/flatpickr/flatpickr.min.js"></script>
         <script src="../vendors/dayjs/dayjs.min.js"></script>
         <script src="../vendors/fontawesome/all.min.js"></script>
