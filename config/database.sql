@@ -123,3 +123,94 @@ INSERT INTO `employees` (
   'Permanent', '2026-11-04', 0, 1),
 (10738, 'MS ALICE WANJIKU KAMAU', '12345678', 'F', 34,
   '1990-08-20', 'Accountant', 'K', '1', 'Permanent', '2045-03-15', 0, 2);
+
+-- -----------------------------------------------------------
+-- Developer Guide: Adding Tables, Columns, and Inserts
+-- -----------------------------------------------------------
+-- This section provides conventions, examples, and best practices
+-- for adding new tables and data to this project.
+-- Place migration .sql files under `database/migrations/` and
+-- keep `config/database.sql` as the canonical schema snapshot.
+
+/*
+Conventions
+- Use snake_case for table and column names.
+- Use singular or plural table names consistently (current schema uses plural: `users`, `employees`).
+- Use explicit column types (e.g., INT UNSIGNED, VARCHAR(255), TIMESTAMP, DATE).
+- Use `id` or explicit primary key naming. For legacy tables we sometimes use `payroll_number` as primary key.
+- Use `created_at` and `updated_at` TIMESTAMP columns with default values when appropriate.
+
+Creating a new table (example)
+--------------------------------
+-- Create a migration file in `database/migrations/` such as `2026_08_15_create_projects_table.sql`.
+-- Use the following template as a starting point:
+
+-- Example: projects table
+CREATE TABLE `projects` (
+  `id` INT UNSIGNED NOT NULL AUTO_INCREMENT,
+  `name` VARCHAR(150) NOT NULL,
+  `description` TEXT DEFAULT NULL,
+  `owner_id` INT UNSIGNED DEFAULT NULL,
+  `start_date` DATE DEFAULT NULL,
+  `end_date` DATE DEFAULT NULL,
+  `created_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `updated_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`),
+  INDEX `idx_owner_id` (`owner_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+-- If `owner_id` references `employees(id)` or similar, add the foreign key constraint:
+ALTER TABLE `projects`
+  ADD CONSTRAINT `fk_projects_owner` FOREIGN KEY (`owner_id`) REFERENCES `employees`(`payroll_number`)
+    ON UPDATE CASCADE ON DELETE SET NULL;
+
+Inserting seed data (example)
+--------------------------------
+-- Prefer INSERT ... VALUES in migration or seed SQL files. Use transactions when inserting multiple related rows.
+START TRANSACTION;
+INSERT INTO `projects` (`name`, `description`, `owner_id`, `start_date`) VALUES
+('HR Onboarding', 'Onboarding project for new hires', 10737, '2026-09-01');
+COMMIT;
+
+Best practices and notes
+-------------------------
+- Always create a migration file for schema changes; do NOT edit historical migration files after they have been applied to environments.
+- Keep `config/database.sql` updated as an authoritative snapshot (for new developers and CI setups).
+- Use UUIDs only when necessary; the project predominantly uses integer keys.
+- When adding foreign keys, choose appropriate `ON UPDATE` and `ON DELETE` behaviors (CASCADE, SET NULL, RESTRICT) depending on business logic.
+- Add indexes for columns used in WHERE/JOIN clauses to improve query performance. Add `INDEX` lines in the CREATE TABLE statement.
+- Wrap multi-statement migrations in `START TRANSACTION; ... COMMIT;` where supported to avoid partial schema application.
+- Validate new schema locally by importing the migration into a test database and running application integration tests.
+
+Rolling back changes
+---------------------
+- For simple additions, use `DROP TABLE IF EXISTS table_name;` in a rollback migration.
+- For column removals, prefer creating a new migration that ALTERs the table to DROP the column, rather than editing old migrations.
+- Keep a clear changelog message in the migration filename and file header comment.
+
+Data migrations and transformations
+-----------------------------------
+- When modifying existing columns (type/nullable), create a data migration that:
+  1. Adds the new column (temporary),
+  2. Migrates and cleans data into the new column,
+  3. Drops old column and renames new column as needed.
+
+Testing schema changes
+-----------------------
+- Run the migration against a fresh local database created from `config/database.sql` plus your new migration to verify no conflicts.
+- Add tests (integration or migration tests) that confirm expected table structures and constraints.
+
+Version control and code review
+-------------------------------
+- Commit migration files with descriptive names and short headers explaining intent.
+- Include SQL examples or notes if the migration requires manual actions in production (e.g., long-running conversions).
+
+Security and sanitation
+------------------------
+- Avoid putting sensitive secrets or plaintext passwords in migration files.
+- Use prepared statements in application code when inserting or selecting data — never interpolate user input directly into SQL.
+
+If you want, I can:
+- Create a sample migration file `database/migrations/2026_08_15_create_projects_table.sql` based on the example above.
+- Add a small `scripts/` helper to run migrations locally with `mysql` CLI.
+*/
