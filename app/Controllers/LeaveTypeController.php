@@ -7,7 +7,7 @@ class LeaveTypeController extends Controller
     {
         $title = 'Leave Types';
         $currentPage = 'leave_types';
-        $content = '../app/Views/leave_types/index.php';
+        $content = '../app/Views/leave_management/leave_types.php';
         include '../app/Views/layouts/admin.php';
     }
 }

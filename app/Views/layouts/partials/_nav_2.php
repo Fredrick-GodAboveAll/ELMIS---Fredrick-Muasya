@@ -70,19 +70,40 @@
                     <li class="nav-item"><a class="nav-link <?php echo ($currentPage === 'leave_types') ? 'active' : ''; ?>" href="/leave-types">
                         <div class="d-flex align-items-center"><span class="nav-link-text ps-1">leave Types</span></div>
                       </a><!-- more inner pages--></li>
-                    <li class="nav-item"><a class="nav-link <?php echo ($currentPage === 'leave_management') ? 'active' : ''; ?>" href="/leaves">
-                        <div class="d-flex align-items-center"><span class="nav-link-text ps-1">leave Reports</span></div>
-                      </a><!-- more inner pages--></li>
-                    <li class="nav-item"><a class="nav-link <?php echo ($currentPage === 'leave_types') ? 'active' : ''; ?>" href="/leave-types">
-                        <div class="d-flex align-items-center"><span class="nav-link-text ps-1">leave Policies</span></div>
-                      </a><!-- more inner pages--></li>
                   </ul><!-- parent pages-->
+
 
                   <a class="nav-link <?php echo ($currentPage === 'holidays') ? 'active' : ''; ?>" href="/holidays" role="button">
                     <div class="d-flex align-items-center">
                       <span class="nav-link-icon"><span class="far fa-calendar"></span>
                     </span><span class="nav-link-text ps-1">Time Off & Holidays</span></div>
                   </a><!-- parent pages-->
+
+
+                  <a class="nav-link <?php echo ($currentPage === 'HoutPage') ? 'active' : ''; ?>" href="/holidays/hout" role="button">
+                    <div class="d-flex align-items-center">
+                      <span class="nav-link-icon"><span class="far fa-calendar"></span>
+                    </span><span class="nav-link-text ps-1">Hout</span></div>
+                  </a><!-- parent pages-->
+
+                  <a class="nav-link dropdown-indicator" href="#leaveSetup" role="button" data-bs-toggle="collapse" aria-expanded="false" aria-controls="leaveSetup">
+                    <div class="d-flex align-items-center">
+                      <span class="nav-link-icon">
+                        <span class="fas fa-plane-departure"></span>
+                      </span><span class="nav-link-text ps-1">Leave Setup</span>
+                    </div>
+                  </a>
+                  <ul class="nav collapse" id="leaveSetup">
+                    <li class="nav-item"><a class="nav-link" href="app/events/create-an-event.html">
+                        <div class="d-flex align-items-center"><span class="nav-link-text ps-1">Create an event</span></div>
+                      </a><!-- more inner pages--></li>
+                    <li class="nav-item"><a class="nav-link" href="app/events/event-detail.html">
+                        <div class="d-flex align-items-center"><span class="nav-link-text ps-1">Event detail</span></div>
+                      </a><!-- more inner pages--></li>
+                    <li class="nav-item"><a class="nav-link" href="app/events/event-list.html">
+                        <div class="d-flex align-items-center"><span class="nav-link-text ps-1">Event list</span></div>
+                      </a><!-- more inner pages--></li>
+                  </ul><!-- parent pages-->
                   
                 </li>
 

@@ -50,7 +50,7 @@ $router->get('/holidays/new', 'HolidaysController@newHolidayList', [AuthMiddlewa
 Create a new PHP file in the appropriate views directory:
 
 ```php
-<?php $currentPage = 'your_page_name'; ?>
+<?php $currentPage = 'Hout'; ?>
 
 <!-- Your page content here -->
 <div class="row g-3 mb-3">
