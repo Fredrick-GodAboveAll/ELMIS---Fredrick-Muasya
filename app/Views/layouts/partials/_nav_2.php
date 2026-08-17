@@ -33,7 +33,10 @@
                 <li class="nav-item"><!-- parent pages-->
                   
                 
-                  <a class="nav-link dropdown-indicator <?php echo (in_array($currentPage, ['dashboard', 'analytics'])) ? '' : 'collapsed'; ?>" href="#dashboard" role="button" data-bs-toggle="collapse" aria-expanded="<?php echo (in_array($currentPage, ['dashboard', 'analytics'])) ? 'true' : 'false'; ?>" aria-controls="dashboard">
+                  <a class="nav-link dropdown-indicator 
+                  <?php echo (in_array($currentPage, ['dashboard', 'analytics'])) ? '' : 'collapsed'; ?>" href="#dashboard" 
+                  role="button" data-bs-toggle="collapse" 
+                  aria-expanded="<?php echo (in_array($currentPage, ['dashboard', 'analytics'])) ? 'true' : 'false'; ?>" aria-controls="dashboard">
                     <div class="d-flex align-items-center"><span class="nav-link-icon"><span class="fas fa-chart-pie"></span></span><span class="nav-link-text ps-1">Dashboard</span></div>
                   </a>
                   <ul class="nav collapse <?php echo (in_array($currentPage, ['dashboard', 'analytics'])) ? 'show' : ''; ?>" id="dashboard">
@@ -50,26 +53,53 @@
                  <!-- LEAVE  -->
                 <li class="nav-item"><!-- label-->
                   <div class="row navbar-vertical-label-wrapper mt-3 mb-2">
-                    <div class="col-auto navbar-vertical-label">Attendance</div>
+                    <div class="col-auto navbar-vertical-label">Leave & Attendance</div>
                     <div class="col ps-0">
                       <hr class="mb-0 navbar-vertical-divider" />
                     </div>
                   </div><!-- parent pages-->
+
+                  <a class="nav-link <?php echo ($currentPage === 'leave_management') ? 'active' : ''; ?>" href="/leaves" role="button">
+                    <div class="d-flex align-items-center">
+                      <span class="nav-link-icon"><span class="fas fa-plane-departure"></span>
+                    </span><span class="nav-link-text ps-1">Leave</span></div>
+                  </a><!-- parent pages-->
                   
-                  <a class="nav-link dropdown-indicator <?php echo (in_array($currentPage, ['leave_management', 'leave_types'])) ? '' : 'collapsed'; ?>" href="#leave"
-                  role="button" data-bs-toggle="collapse" aria-expanded="<?php echo (in_array($currentPage, ['leave_management', 'leave_types'])) ? 'true' : 'false'; ?>" aria-controls="user">
+                  <a class="nav-link dropdown-indicator <?php echo (in_array($currentPage, 
+                    ['holiday_list','leave_types', 'leave_period', 'leave_policy'])) ? '' : 'collapsed'; ?>" href="#leave"
+                    role="button" data-bs-toggle="collapse" 
+                    aria-expanded="<?php echo (in_array($currentPage, 
+                    ['holiday_list','leave_types', 'leave_period', 'leave_policy'])) ? 'true' : 'false'; ?>" aria-controls="user">
+                    
                     <div class="d-flex align-items-center">
                       <span class="nav-link-icon">
-                        <span class="fas fa-umbrella-beach"></span>
-                      </span><span class="nav-link-text ps-1">Leave</span></div>
+                        <span class="fas fa-database"></span>
+                      </span><span class="nav-link-text ps-1">Setup</span></div>
                   </a>
-                  <ul class="nav collapse <?php echo (in_array($currentPage, ['leave_management', 'leave_types'])) ? 'show' : ''; ?>" id="leave">
-                    <li class="nav-item"><a class="nav-link <?php echo ($currentPage === 'leave_management') ? 'active' : ''; ?>" href="/leaves">
-                        <div class="d-flex align-items-center"><span class="nav-link-text ps-1">leave Records</span></div>
+                  <ul class="nav collapse <?php echo (in_array($currentPage, 
+                    ['holiday_list', 'leave_types', 'leave_period', 'leave_policy',])) ? 'show' : ''; ?>" id="leave">
+
+                    <li class="nav-item">
+                      <a class="nav-link <?php echo ($currentPage === 'holiday_list') ? 'active' : ''; ?>" href="/holiday-list">
+                      <div class="d-flex align-items-center"><span class="nav-link-text ps-1">holiday list</span></div>
+                    </a><!-- more inner pages--></li>
+
+                    <li class="nav-item">
+                      <a class="nav-link <?php echo ($currentPage === 'leave_types') ? 'active' : ''; ?>" href="/leave-types">
+                        <div class="d-flex align-items-center"><span class="nav-link-text ps-1">leave type</span></div>
                       </a><!-- more inner pages--></li>
-                    <li class="nav-item"><a class="nav-link <?php echo ($currentPage === 'leave_types') ? 'active' : ''; ?>" href="/leave-types">
-                        <div class="d-flex align-items-center"><span class="nav-link-text ps-1">leave Types</span></div>
+
+                      <li class="nav-item">
+                        <a class="nav-link <?php echo ($currentPage === 'leave_period') ? 'active' : ''; ?>" href="/leave-periods">
+                        <div class="d-flex align-items-center"><span class="nav-link-text ps-1">leave period</span></div>
                       </a><!-- more inner pages--></li>
+
+
+                      <li class="nav-item">
+                        <a class="nav-link <?php echo ($currentPage === 'leave_policy') ? 'active' : ''; ?>" href="/leave-policies">
+                        <div class="d-flex align-items-center"><span class="nav-link-text ps-1">leave policy</span></div>
+                      </a><!-- more inner pages--></li>
+
                   </ul><!-- parent pages-->
 
 
@@ -79,31 +109,6 @@
                     </span><span class="nav-link-text ps-1">Time Off & Holidays</span></div>
                   </a><!-- parent pages-->
 
-
-                  <a class="nav-link <?php echo ($currentPage === 'HoutPage') ? 'active' : ''; ?>" href="/holidays/hout" role="button">
-                    <div class="d-flex align-items-center">
-                      <span class="nav-link-icon"><span class="far fa-calendar"></span>
-                    </span><span class="nav-link-text ps-1">Hout</span></div>
-                  </a><!-- parent pages-->
-
-                  <a class="nav-link dropdown-indicator" href="#leaveSetup" role="button" data-bs-toggle="collapse" aria-expanded="false" aria-controls="leaveSetup">
-                    <div class="d-flex align-items-center">
-                      <span class="nav-link-icon">
-                        <span class="fas fa-plane-departure"></span>
-                      </span><span class="nav-link-text ps-1">Leave Setup</span>
-                    </div>
-                  </a>
-                  <ul class="nav collapse" id="leaveSetup">
-                    <li class="nav-item"><a class="nav-link" href="app/events/create-an-event.html">
-                        <div class="d-flex align-items-center"><span class="nav-link-text ps-1">Create an event</span></div>
-                      </a><!-- more inner pages--></li>
-                    <li class="nav-item"><a class="nav-link" href="app/events/event-detail.html">
-                        <div class="d-flex align-items-center"><span class="nav-link-text ps-1">Event detail</span></div>
-                      </a><!-- more inner pages--></li>
-                    <li class="nav-item"><a class="nav-link" href="app/events/event-list.html">
-                        <div class="d-flex align-items-center"><span class="nav-link-text ps-1">Event list</span></div>
-                      </a><!-- more inner pages--></li>
-                  </ul><!-- parent pages-->
                   
                 </li>
 
@@ -162,81 +167,6 @@
                     <div class="d-flex align-items-center"><span class="nav-link-icon"><span class="fas fa-upload"></span></span>
                     <span class="nav-link-text ps-1">Bulk Upload</span></div>
                   </a><!-- parent pages-->
-                  
-                  
-                  <a class="nav-link dropdown-indicator" href="#events" role="button" data-bs-toggle="collapse" aria-expanded="false" aria-controls="events">
-                    <div class="d-flex align-items-center"><span class="nav-link-icon"><span class="fas fa-calendar-day"></span></span><span class="nav-link-text ps-1">Events</span></div>
-                  </a>
-                  <ul class="nav collapse" id="events">
-                    <li class="nav-item"><a class="nav-link" href="app/events/create-an-event.html">
-                        <div class="d-flex align-items-center"><span class="nav-link-text ps-1">Create an event</span></div>
-                      </a><!-- more inner pages--></li>
-                    <li class="nav-item"><a class="nav-link" href="app/events/event-detail.html">
-                        <div class="d-flex align-items-center"><span class="nav-link-text ps-1">Event detail</span></div>
-                      </a><!-- more inner pages--></li>
-                    <li class="nav-item"><a class="nav-link" href="app/events/event-list.html">
-                        <div class="d-flex align-items-center"><span class="nav-link-text ps-1">Event list</span></div>
-                      </a><!-- more inner pages--></li>
-                  </ul><!-- parent pages-->
-
-                  
-                  <a class="nav-link dropdown-indicator" href="#e-learning" role="button" data-bs-toggle="collapse" aria-expanded="false" aria-controls="e-learning">
-                    <div class="d-flex align-items-center"><span class="nav-link-icon"><span class="fas fa-graduation-cap"></span></span><span class="nav-link-text ps-1">E learning</span><span class="badge rounded-pill ms-2 badge-subtle-success">New</span></div>
-                  </a>
-                  <ul class="nav collapse" id="e-learning">
-                    <li class="nav-item"><a class="nav-link dropdown-indicator" href="#course" data-bs-toggle="collapse" aria-expanded="false" aria-controls="e-learning">
-                        <div class="d-flex align-items-center"><span class="nav-link-text ps-1">Course</span></div>
-                      </a><!-- more inner pages-->
-                      <ul class="nav collapse" id="course">
-                        <li class="nav-item"><a class="nav-link" href="app/e-learning/course/course-list.html">
-                            <div class="d-flex align-items-center"><span class="nav-link-text ps-1">Course list</span></div>
-                          </a><!-- more inner pages--></li>
-                        <li class="nav-item"><a class="nav-link" href="app/e-learning/course/course-grid.html">
-                            <div class="d-flex align-items-center"><span class="nav-link-text ps-1">Course grid</span></div>
-                          </a><!-- more inner pages--></li>
-                        <li class="nav-item"><a class="nav-link" href="app/e-learning/course/course-details.html">
-                            <div class="d-flex align-items-center"><span class="nav-link-text ps-1">Course details</span></div>
-                          </a><!-- more inner pages--></li>
-                        <li class="nav-item"><a class="nav-link" href="app/e-learning/course/create-a-course.html">
-                            <div class="d-flex align-items-center"><span class="nav-link-text ps-1">Create a course</span></div>
-                          </a><!-- more inner pages--></li>
-                      </ul>
-                    </li>
-                    <li class="nav-item"><a class="nav-link" href="app/e-learning/student-overview.html">
-                        <div class="d-flex align-items-center"><span class="nav-link-text ps-1">Student overview</span></div>
-                      </a><!-- more inner pages--></li>
-                    <li class="nav-item"><a class="nav-link" href="app/e-learning/trainer-profile.html">
-                        <div class="d-flex align-items-center"><span class="nav-link-text ps-1">Trainer profile</span></div>
-                      </a><!-- more inner pages--></li>
-                  </ul><!-- parent pages-->
-                  
-                  
-                  <a class="nav-link dropdown-indicator" href="#support-desk" role="button" data-bs-toggle="collapse" aria-expanded="false" aria-controls="support-desk">
-                    <div class="d-flex align-items-center"><span class="nav-link-icon"><span class="fas fa-ticket-alt"></span></span><span class="nav-link-text ps-1">Support desk</span></div>
-                  </a>
-                  <ul class="nav collapse" id="support-desk">
-                    <li class="nav-item"><a class="nav-link" href="app/support-desk/table-view.html">
-                        <div class="d-flex align-items-center"><span class="nav-link-text ps-1">Table view</span></div>
-                      </a><!-- more inner pages--></li>
-                    <li class="nav-item"><a class="nav-link" href="app/support-desk/card-view.html">
-                        <div class="d-flex align-items-center"><span class="nav-link-text ps-1">Card view</span></div>
-                      </a><!-- more inner pages--></li>
-                    <li class="nav-item"><a class="nav-link" href="app/support-desk/contacts.html">
-                        <div class="d-flex align-items-center"><span class="nav-link-text ps-1">Contacts</span></div>
-                      </a><!-- more inner pages--></li>
-                    <li class="nav-item"><a class="nav-link" href="app/support-desk/contact-details.html">
-                        <div class="d-flex align-items-center"><span class="nav-link-text ps-1">Contact details</span></div>
-                      </a><!-- more inner pages--></li>
-                    <li class="nav-item"><a class="nav-link" href="app/support-desk/tickets-preview.html">
-                        <div class="d-flex align-items-center"><span class="nav-link-text ps-1">Tickets preview</span></div>
-                      </a><!-- more inner pages--></li>
-                    <li class="nav-item"><a class="nav-link" href="app/support-desk/quick-links.html">
-                        <div class="d-flex align-items-center"><span class="nav-link-text ps-1">Quick links</span></div>
-                      </a><!-- more inner pages--></li>
-                    <li class="nav-item"><a class="nav-link" href="app/support-desk/reports.html">
-                        <div class="d-flex align-items-center"><span class="nav-link-text ps-1">Reports</span></div>
-                      </a><!-- more inner pages--></li>
-                  </ul>
 
                 </li>
 
@@ -260,10 +190,6 @@
                         <div class="d-flex align-items-center"><span class="nav-link-text ps-1">Settings</span></div>
                       </a><!-- more inner pages--></li>
                   </ul><!-- parent pages-->
-
-                  <a class="nav-link" href="pages/starter.html" role="button">
-                    <div class="d-flex align-items-center"><span class="nav-link-icon"><span class="fas fa-flag"></span></span><span class="nav-link-text ps-1">Starter</span></div>
-                  </a><!-- parent pages-->
                   
                 </li>
 

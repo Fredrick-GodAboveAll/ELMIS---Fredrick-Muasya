@@ -71,7 +71,7 @@
           </thead>
           <tbody class="list" id="table-simple-pagination-body">
 
-            <tr class="btn-reveal-trigger">
+            <!-- <tr class="btn-reveal-trigger">
               <td class="align-middle" style="width: 28px;">
                 <div class="form-check mb-0"><input class="form-check-input" type="checkbox" id="simple-pagination-item-0" data-bulk-select-row="data-bulk-select-row" /></div>
               </td>
@@ -87,7 +87,7 @@
                   </div>
                 </div>
               </td>
-            </tr>
+            </tr> -->
             
           </tbody>
         </table>

@@ -67,19 +67,18 @@ INSERT INTO `users` (`name`, `email`, `password`, `role`, `email_verified`) VALU
  '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', 'user', TRUE);
 
 
+
 -- -----------------------------------------------------------
 -- Departments table (future linking)
 -- -----------------------------------------------------------
 
-
 CREATE TABLE `departments` (
   `id` INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
   `name` VARCHAR(150) NOT NULL UNIQUE,
+  `code` VARCHAR(10) UNIQUE, -- short code, e.g. 'ADMIN', 'ENG'
   `head_of_department` INT UNSIGNED DEFAULT NULL,
   `created_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
-
-
 
 -- -----------------------------------------------------------
 -- Employees table (flat, CSV-ready)
@@ -123,6 +122,20 @@ INSERT INTO `employees` (
   'Permanent', '2026-11-04', 0, 1),
 (10738, 'MS ALICE WANJIKU KAMAU', '12345678', 'F', 34,
   '1990-08-20', 'Accountant', 'K', '1', 'Permanent', '2045-03-15', 0, 2);
+
+
+-- -----------------------------------------------------------
+-- Financial Years
+-- -----------------------------------------------------------
+
+CREATE TABLE financial_years (
+id INT AUTO_INCREMENT PRIMARY KEY,
+label VARCHAR(9) NOT NULL UNIQUE, -- e.g. '2025/2026'
+start_date DATE NOT NULL, -- 1 July
+end_date DATE NOT NULL, -- 30 June
+is_current BOOLEAN NOT NULL DEFAULT 0
+);
+
 
 -- -----------------------------------------------------------
 -- Developer Guide: Adding Tables, Columns, and Inserts
