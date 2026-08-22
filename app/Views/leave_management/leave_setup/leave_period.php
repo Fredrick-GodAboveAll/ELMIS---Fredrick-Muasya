@@ -45,12 +45,18 @@
                 <div class="d-none" id="table-simple-pagination-actions">
                   <div class="d-flex"><select class="form-select form-select-sm" aria-label="Bulk actions">
                       <option selected="">Bulk actions</option>
-                      <option value="Refund">Refund</option>
+              
                       <option value="Delete">Delete</option>
                       <option value="Archive">Archive</option>
                     </select><button class="btn btn-falcon-default btn-sm ms-2" type="button">Apply</button></div>
                 </div>
-                <div id="table-simple-pagination-replace-element"><button class="btn btn-falcon-default btn-sm" type="button"><span class="fas fa-plus" data-fa-transform="shrink-3 down-2"></span><span class="d-none d-sm-inline-block ms-1">New</span></button><button class="btn btn-falcon-default btn-sm mx-2" type="button"><span class="fas fa-filter" data-fa-transform="shrink-3 down-2"></span><span class="d-none d-sm-inline-block ms-1">Filter</span></button><button class="btn btn-falcon-default btn-sm" type="button"><span class="fas fa-external-link-alt" data-fa-transform="shrink-3 down-2"></span><span class="d-none d-sm-inline-block ms-1">Export</span></button></div>
+                <div id="table-simple-pagination-replace-element">
+                  <button class="btn btn-falcon-default btn-sm mx-2" type="button">
+                  <span class="fas fa-filter" data-fa-transform="shrink-3 down-2"></span>
+                  <span class="d-none d-sm-inline-block ms-1">Filter</span>
+                </button><button class="btn btn-falcon-default btn-sm" type="button">
+                  <span class="fas fa-external-link-alt" data-fa-transform="shrink-3 down-2"></span>
+                  <span class="d-none d-sm-inline-block ms-1">Export</span></button></div>
               </div>
             </div>
           </div>

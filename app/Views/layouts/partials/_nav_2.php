@@ -123,21 +123,22 @@
                   
                   <a class="nav-link dropdown-indicator <?php echo (in_array($currentPage, ['employees'])) ? '' : 'collapsed'; ?>" href="#employees" role="button" data-bs-toggle="collapse" aria-expanded="<?php echo (in_array($currentPage, ['employees'])) ? 'true' : 'false'; ?>" aria-controls="user">
                     <div class="d-flex align-items-center"><span class="nav-link-icon">
-                      <span class="fas fa-users"></span></span><span class="nav-link-text ps-1">Employee Profiles</span></div>
+                      <span class="fas fa-users"></span></span><span class="nav-link-text ps-1"> Employees </span></div>
                   </a>
                   <ul class="nav collapse <?php echo (in_array($currentPage, ['employees'])) ? 'show' : ''; ?>" id="employees">
                     <li class="nav-item"><a class="nav-link <?php echo ($currentPage === 'employees') ? 'active' : ''; ?>" href="/employees">
-                        <div class="d-flex align-items-center"><span class="nav-link-text ps-1">Employees List</span></div>
+                        <div class="d-flex align-items-center"><span class="nav-link-text ps-1">employee list</span></div>
                       </a><!-- more inner pages--></li>
-                    <li class="nav-item"><a class="nav-link" href="/employees/detail">
-                        <div class="d-flex align-items-center"><span class="nav-link-text ps-1">Employee Detail</span></div>
-                      </a><!-- more inner pages--></li>
-                  </ul><!-- parent pages-->
+
+                    <!-- <li class="nav-item"><a class="nav-link" href="/employees/detail">
+                        <div class="d-flex align-items-center"><span class="nav-link-text ps-1">employee detail</span></div>
+                      </a>more inner pages</li>-->
+                  </ul>
 
                   <a class="nav-link <?php echo ($currentPage === 'departments') ? 'active' : ''; ?>" href="/departments" role="button">
                     <div class="d-flex align-items-center"><span class="nav-link-icon">
                       <span class="fas fa-sitemap"></span></span>
-                      <span class="nav-link-text ps-1">Departments & Groups</span></div>
+                      <span class="nav-link-text ps-1"> Departments </span></div>
                   </a><!-- parent pages-->
 
                   <a class="nav-link <?php echo ($currentPage === 'reports') ? 'active' : ''; ?>" href="/reports" role="button">
@@ -157,13 +158,15 @@
                       <hr class="mb-0 navbar-vertical-divider" />
                     </div>
                   </div><!-- parent pages-->
+
                   
-                  <a class="nav-link" href="app/calendar.html" role="button">
+                  <a class="nav-link <?php echo ($currentPage === 'system_calender') ? 'active' : ''; ?> " href="/system-calender" role="button">
                     <div class="d-flex align-items-center"><span class="nav-link-icon"><span class="fas fa-calendar-alt"></span></span>
                     <span class="nav-link-text ps-1">Calendar</span></div>
                   </a><!-- parent pages-->
 
-                  <a class="nav-link" href="app/calendar.html" role="button">
+
+                  <a class="nav-link <?php echo ($currentPage === 'bulk_leave_actions') ? 'active' : ''; ?> " href="/bulk-actions" role="button">
                     <div class="d-flex align-items-center"><span class="nav-link-icon"><span class="fas fa-upload"></span></span>
                     <span class="nav-link-text ps-1">Bulk Upload</span></div>
                   </a><!-- parent pages-->

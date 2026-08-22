@@ -67,7 +67,6 @@ INSERT INTO `users` (`name`, `email`, `password`, `role`, `email_verified`) VALU
  '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', 'user', TRUE);
 
 
-
 -- -----------------------------------------------------------
 -- Departments table (future linking)
 -- -----------------------------------------------------------
@@ -79,6 +78,14 @@ CREATE TABLE `departments` (
   `head_of_department` INT UNSIGNED DEFAULT NULL,
   `created_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+-- -----------------------------------------------------------
+-- Sample departments 
+-- -----------------------------------------------------------
+INSERT INTO `departments` (`name`, `code`, `head_of_department`) VALUES
+('Human Resources', 'HRM', 'Director HRM&D'),
+('Finance', 'FCE', 'Senior Chief Finance Officer');
+
 
 -- -----------------------------------------------------------
 -- Employees table (flat, CSV-ready)
@@ -104,24 +111,28 @@ CREATE TABLE `employees` (
     ON UPDATE CASCADE ON DELETE SET NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
-
 -- -----------------------------------------------------------
--- Sample departments and employees
+-- Sample employees
 -- -----------------------------------------------------------
-INSERT INTO `departments` (`name`, `head_of_department`) VALUES
-('Human Resources', NULL),
-('Finance', NULL);
 
 INSERT INTO `employees` (
   payroll_number, full_name, id_number, gender, age,
   date_of_birth, designation, job_group, employment_status,
   engagement_type, rod_date, special_need, department_id
 ) VALUES
-(10737, 'MR JULIUS ODHIAMBO MBOGAH', '84', 'M', 63,
-  '1963-04-15', 'Deputy Director - HRM & Development', 'R', '1',
+(10737, 'MR JULIUS ODHIAMBO MBOGAH', '19960091', 'M', 63,
+  '1963-04-15', 'Deputy Director - HRM & Development', 'R', 'permanent',
   'Permanent', '2026-11-04', 0, 1),
+
 (10738, 'MS ALICE WANJIKU KAMAU', '12345678', 'F', 34,
-  '1990-08-20', 'Accountant', 'K', '1', 'Permanent', '2045-03-15', 0, 2);
+  '1990-08-20', 'Accountant', 'K', 'permanent', 'Permanent', '2045-03-15', 0, 2),
+
+(10739, 'MR KELVIN KIPCHIRCHIR KOECH', '23456789', 'M', 29,
+  '1996-11-02', 'IT Officer', 'J', 'probation',
+  'Contract', '2027-12-15', 4, 1),
+
+(10740, 'MS GRACE WANGARI MWANGI', '34567890', 'F', 31,
+  '1994-05-19', 'Finance Assistant', 'H', 'contract', 'Permanent', '2038-06-30', 0, 2);
 
 
 -- -----------------------------------------------------------

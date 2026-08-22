@@ -56,7 +56,7 @@
 
             <div class="col-md-4">
               <label class="form-label fs--1 mb-1" for="toDate">To Date <span class="text-danger">*</span></label>
-              <input class="form-control form-control-sm datetimepicker" id="toDate" name="to_date" type="text" placeholder="dd/mm/yyyy" data-options='{"disableMobile":true,"dateFormat":"d/m/Y"}' readonly required="required" />
+              <input class="form-control form-control-sm datetimepicker" id="toDate" name="to_date" disabled type="text" placeholder="dd/mm/yyyy" data-options='{"disableMobile":true,"dateFormat":"d/m/Y"}' readonly required="required" />
             </div>
 
             <div class="col-md-4">
@@ -74,12 +74,10 @@
                   "duplicateItemsAllowed": false
                 }'>
 
-                <option value="">Select organizer...</option>
-                <option value="Massachusetts Institute of Technology">Massachusetts Institute of Technology</option>
-                <option value="University of Chicago">University of Chicago</option>
-                <option value="GSAS Open Labs At Harvard">GSAS Open Labs At Harvard</option>
-                <option value="California Institute of Technology">California Institute of Technology</option>
-
+                <option value="">Holiday List... </option>
+                <option value="Massachusetts Institute of Technology">H-2026-2027</option>
+                <option value="Massachusetts Institute of Technology">H-2025-2026</option>
+                
               </select>
             </div>
 

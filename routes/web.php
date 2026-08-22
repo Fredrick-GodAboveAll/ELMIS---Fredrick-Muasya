@@ -31,11 +31,13 @@ $router->get('/employees/upload', 'EmployeeController@upload', [AuthMiddleware::
 $router->post('/employees/import', 'EmployeeController@import', [AuthMiddleware::class]);
 $router->get('/departments', 'DepartmentController@index', [AuthMiddleware::class]);
 
+// Reports Route 
+$router->get('/reports', 'ReportsController@index', [AuthMiddleware::class]);
+
 
 // LEAVE ROUTES 
 
 $router->get('/leaves', 'LeaveController@index', [AuthMiddleware::class]);
-
 $router->get('/leave-types', 'LeaveController@LeaveType', [AuthMiddleware::class]);
 $router->get('/leave-periods', 'LeaveController@LeavePeriod', [AuthMiddleware::class]);
 $router->post('/leave-periods/update', 'LeaveController@updateLeavePeriodStatus', [AuthMiddleware::class]);
@@ -51,14 +53,22 @@ $router->get('/holidays', 'HolidaysController@index', [AuthMiddleware::class]);
 $router->get('/holidays/new', 'HolidaysController@newHolidayList', [AuthMiddleware::class]);
 $router->get('/holidays/hout', 'HolidaysController@Hout_list', [AuthMiddleware::class]);
 
-// ROUTES ROUTES 
 
-$router->get('/reports', 'ReportsController@index', [AuthMiddleware::class]);
+// SYTEM TOOLS ROUTES ---- for making work easier and seeing the system clock
+
+$router->get('/system-calender', 'SystemToolsController@SystemCalender', [AuthMiddleware::class]);
+$router->get('/bulk-actions', 'SystemToolsController@SystemBulkUpload', [AuthMiddleware::class]);
+
+// USER ROUTES ---- the one using the system ADMIN later we will figure out the other user 
+
+$router->get('/user-profiles', 'UserController@index', [AuthMiddleware::class]);
+$router->get('/user/settings', 'UserController@SystemSetting', [AuthMiddleware::class]);
 
 
 
 // LEAVE ROUTES
-$router->get('/holidays/hout', 'HolidaysController@Hout_list', [AuthMiddleware::class]);
+
+$router->get('/holidays', 'HolidaysController@index', [AuthMiddleware::class]);
 
 // Admin-only route example
 $router->get('/admin/users', 'AdminController@index',
