@@ -59,6 +59,14 @@ $router->get('/holidays/hout', 'HolidaysController@Hout_list', [AuthMiddleware::
 $router->get('/system-calender', 'SystemToolsController@SystemCalender', [AuthMiddleware::class]);
 $router->get('/bulk-actions', 'SystemToolsController@SystemBulkUpload', [AuthMiddleware::class]);
 
+// Bulk import routes
+$router->get('/bulk-import/employees/template', 'BulkImportController@employeesTemplate', [AuthMiddleware::class]);
+$router->post('/bulk-import/employees', 'BulkImportController@importEmployees', [AuthMiddleware::class]);
+$router->get('/bulk-import/leave/template', 'BulkImportController@leaveTemplate', [AuthMiddleware::class]);
+$router->post('/bulk-import/leave', 'BulkImportController@importLeave', [AuthMiddleware::class]);
+$router->get('/bulk-import/allowances/template', 'BulkImportController@allowancesTemplate', [AuthMiddleware::class]);
+$router->post('/bulk-import/allowances', 'BulkImportController@importAllowances', [AuthMiddleware::class]);
+
 // USER ROUTES ---- the one using the system ADMIN later we will figure out the other user 
 
 $router->get('/user-profiles', 'UserController@index', [AuthMiddleware::class]);

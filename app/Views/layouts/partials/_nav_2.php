@@ -182,14 +182,30 @@
                     </div>
                   </div><!-- parent pages-->
                   
-                  <a class="nav-link dropdown-indicator" href="#user" role="button" data-bs-toggle="collapse" aria-expanded="false" aria-controls="user">
-                    <div class="d-flex align-items-center"><span class="nav-link-icon"><span class="fas fa-user"></span></span><span class="nav-link-text ps-1">User</span></div>
+                  <a class="nav-link dropdown-indicator
+                  
+                  <?php echo (in_array($currentPage, 
+                    ['user_profile','system_settings'])) ? '' : 'collapsed'; ?>" href="#user"
+                    role="button" data-bs-toggle="collapse"
+                    aria-expanded="<?php echo (in_array($currentPage, 
+                    ['user_profile', 'system_settings'])) ? 'true' : 'false'; ?>" aria-expanded="false"
+                  aria-controls="user">
+
+                    <div class="d-flex align-items-center">
+                      <span class="nav-link-icon"><span class="fas fa-user"></span>
+                    </span><span class="nav-link-text ps-1">User</span></div>
+
                   </a>
-                  <ul class="nav collapse" id="user">
-                    <li class="nav-item"><a class="nav-link" href="pages/user/profile.html">
+
+                  <ul class="nav collapse <?php echo (in_array($currentPage, 
+                    ['user_profile', 'system_settings',])) ? 'show' : ''; ?>" id="user">
+
+                    <li class="nav-item">
+                      <a class="nav-link <?php echo ($currentPage === 'user_profile') ? 'active' : ''; ?>" href="/user-profiles">
                         <div class="d-flex align-items-center"><span class="nav-link-text ps-1">Profile</span></div>
                       </a><!-- more inner pages--></li>
-                    <li class="nav-item"><a class="nav-link" href="pages/user/settings.html">
+                    <li class="nav-item">
+                      <a class="nav-link <?php echo ($currentPage === 'system_settings') ? 'active' : ''; ?>" href="/user/settings">
                         <div class="d-flex align-items-center"><span class="nav-link-text ps-1">Settings</span></div>
                       </a><!-- more inner pages--></li>
                   </ul><!-- parent pages-->

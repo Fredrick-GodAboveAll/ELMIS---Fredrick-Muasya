@@ -1,0 +1,5 @@
+payroll_number,full_name,id_number,gender,age,date_of_birth,designation,job_group,employment_status,engagement_type,rod_date,special_need
+90001,MS MARY WANGARI,30010001,F,28,1997-05-10,Human Resource Officer,K,permanent,Permanent,2038-07-01,0
+90002,MR DAVID KIPTOO,30010002,M,31,1994-09-18,Finance Assistant,H,contract,Permanent,2037-06-30,0
+90003,MS CYNTHIA MWENDWA,30010003,F,26,1999-02-25,Procurement Officer,G,permanent,Contract,2039-12-15,0
+,MR BAD DATA,30010004,M,,1990-01-01,Officer,J,permanent,Permanent,2030-01-01,0

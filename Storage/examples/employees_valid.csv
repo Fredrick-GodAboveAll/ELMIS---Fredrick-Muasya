@@ -1,0 +1,8 @@
+payroll_number,full_name,id_number,gender,age,date_of_birth,designation,job_group,employment_status,engagement_type,rod_date,special_need
+10737,MR JULIUS ODHIAMBO MBOGAH,19960091,M,63,1963-04-15,"Deputy Director - HRM & Development",R,permanent,Permanent,2026-11-04,0
+10738,MS ALICE WANJIKU KAMAU,12345678,F,34,1990-08-20,Accountant,K,permanent,Permanent,2045-03-15,0
+10739,MR KELVIN KIPCHIRCHIR KOECH,23456789,M,29,1996-11-02,IT Officer,J,probation,Contract,2027-12-15,4
+10740,MS GRACE WANGARI MWANGI,34567890,F,31,1994-05-19,Finance Assistant,H,contract,Permanent,2038-06-30,0
+10741,MR JOHN KIBET OCHIENG,45678901,M,27,1998-02-10,Procurement Officer,G,permanent,Contract,2035-06-30,0
+10742,MS ANNE WANGARI MUNGA,56789012,F,26,1999-04-05,Human Resource Assistant,J,permanent,Permanent,2036-12-01,0
+10743,MR EMMANUEL KIPKORIR,67890123,M,31,1994-09-18,Data Analyst,K,permanent,Contract,2040-02-15,0

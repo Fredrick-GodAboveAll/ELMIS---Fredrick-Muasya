@@ -1,0 +1,5 @@
+payroll_number,full_name,id_number,gender,age,date_of_birth,designation,job_group,employment_status,engagement_type,rod_date,special_need
+10742,MR SAMUEL WAITHAKA,12341234,M,40,1986-11-11,Senior Officer,INVALID,permanent,Permanent,2026-10-01,0
+10743,MS ROSE WAMBUI,56789012,XX,29,1997-09-22,Accountant, K ,permanent,Permanent,2030-01-01,0
+,MR BAD DATA,98765432,M,,1990-01-01,Officer,J,permanent,Permanent,2030-01-01,0
+10745,MS MARY NYAMBURA,45678900,F,28,1997-05-05,Finance Officer,H,permanent,Contract,
