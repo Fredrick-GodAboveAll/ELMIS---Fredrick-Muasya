@@ -82,7 +82,7 @@ $csrfToken = \App\Core\Csrf::generate();
   </div>
 </div>
 
-<!-- Allowances -->
+<!-- Allowances 
 <div class="row g-3 mb-3">
   <div class="col-xxl-12 col-xl-12">
     <div class="card">
@@ -112,7 +112,7 @@ $csrfToken = \App\Core\Csrf::generate();
       </div>
     </div>
   </div>
-</div>
+</div>-->
 
 <!-- ============ Template preview modals ============ -->
 
@@ -293,52 +293,84 @@ $csrfToken = \App\Core\Csrf::generate();
     <button class="btn-close text-reset" type="button" data-bs-dismiss="offcanvas" aria-label="Close"></button>
   </div>
   <div class="offcanvas-body">
-    <div class="alert alert-primary py-2 px-3 mb-3" role="alert">
-      <div class="d-flex align-items-center justify-content-between gap-3">
-        <div>
-          <div class="fw-semibold">Latest import</div>
-          <div class="small text-600">23 Aug 2026 · 09:14</div>
-        </div>
-        <span class="badge badge-subtle-success">Success</span>
+    <?php
+    $lastImportSummary = \App\Core\Session::get('last_import_summary');
+    $lastImportRejections = \App\Core\Session::get('last_import_rejections', []);
+
+    $hasSummary = is_array($lastImportSummary) && !empty($lastImportSummary);
+    $total = $hasSummary ? (int) ($lastImportSummary['total'] ?? 0) : 0;
+    $added = $hasSummary ? (int) ($lastImportSummary['added'] ?? 0) : 0;
+    $rejected = $hasSummary ? (int) ($lastImportSummary['rejected'] ?? 0) : 0;
+    ?>
+
+    <?php if (!$hasSummary): ?>
+      <div class="text-center py-5">
+        <span class="fas fa-file-import fa-2x text-300 mb-3"></span>
+        <h6>No employee imports yet</h6>
+        <p class="small text-600 mb-0">
+          Import an employee Excel or CSV file to see the results here.
+        </p>
       </div>
-    </div>
-
-    <div class="small text-600 mb-2">Recent activity</div>
-
-    <div class="list-group list-group-flush">
-      <div class="list-group-item px-0 py-3 border-0 border-bottom">
-        <div class="d-flex justify-content-between align-items-start gap-3">
+    <?php else: ?>
+      <div class="mb-3">
+        <div class="d-flex align-items-start justify-content-between mb-2">
           <div>
-            <div class="fw-semibold">employees_aug_23.csv</div>
-            <div class="small text-600">Uploaded 23 Aug 2026 · 09:14</div>
+            <div class="fw-semibold">Import Summary</div>
+            <div class="small text-600"><?= htmlspecialchars((string) $added) ?> employee<?= $added === 1 ? '' : 's' ?> added &middot; <?= htmlspecialchars((string) $rejected) ?> record<?= $rejected === 1 ? '' : 's' ?> rejected</div>
           </div>
-          <span class="badge badge-subtle-success">Success</span>
         </div>
-        <div class="mt-2 small text-600">7 employees processed</div>
+
+        <div class="d-flex gap-2">
+          <div class="card p-2 text-center flex-fill">
+            <div class="small text-600">Total</div>
+            <div class="mt-1"><span class="badge badge-subtle-primary px-3 py-2"><?= htmlspecialchars((string) $total) ?></span></div>
+          </div>
+
+          <div class="card p-2 text-center flex-fill">
+            <div class="small text-600">Added</div>
+            <div class="mt-1"><span class="badge badge-subtle-success px-3 py-2"><?= htmlspecialchars((string) $added) ?></span></div>
+          </div>
+
+          <div class="card p-2 text-center flex-fill">
+            <div class="small text-600">Rejected</div>
+            <div class="mt-1"><span class="badge badge-subtle-danger px-3 py-2"><?= htmlspecialchars((string) $rejected) ?></span></div>
+          </div>
+        </div>
       </div>
 
-      <div class="list-group-item px-0 py-3 border-0 border-bottom">
-        <div class="d-flex justify-content-between align-items-start gap-3">
-          <div>
-            <div class="fw-semibold">employees_march.xlsx</div>
-            <div class="small text-600">Uploaded 12 Aug 2026 · 10:36</div>
-          </div>
-          <span class="badge badge-subtle-success">Success</span>
-        </div>
-        <div class="mt-2 small text-600">84 employees processed</div>
-      </div>
+      <div class="mt-3">
+        <h6 class="mb-2">Rejected records</h6>
 
-      <div class="list-group-item px-0 py-3 border-0">
-        <div class="d-flex justify-content-between align-items-start gap-3">
-          <div>
-            <div class="fw-semibold">employees_jan.xlsx</div>
-            <div class="small text-600">Uploaded 15 Jan 2026 · 13:45</div>
+        <?php if (empty($lastImportRejections)): ?>
+          <div class="alert alert-success py-2 px-3">
+            <span class="fas fa-check-circle me-2"></span>
+            No rejected records. All imported rows passed validation.
           </div>
-          <span class="badge badge-subtle-danger">Failed</span>
-        </div>
-        <div class="mt-2 small text-600">3 rows invalid</div>
+        <?php else: ?>
+          <div class="table-responsive">
+            <table class="table table-sm mb-0">
+              <thead class="table-light">
+                <tr>
+                  <th class="text-end">Excel Row</th>
+                  <th>Payroll Number</th>
+                  <th>Reason</th>
+                </tr>
+              </thead>
+              <tbody>
+                <?php foreach ($lastImportRejections as $rej): ?>
+                  <tr>
+                    <td class="text-end"><?= htmlspecialchars((string) ($rej['row'] ?? '')) ?></td>
+                    <td><?= $rej['payroll_number'] === '' ? '&mdash;' : htmlspecialchars((string) $rej['payroll_number']) ?></td>
+                    <td><?= htmlspecialchars((string) ($rej['reason'] ?? '')) ?></td>
+                  </tr>
+                <?php endforeach; ?>
+              </tbody>
+            </table>
+          </div>
+          <div class="small text-600 mt-2">Rejected records were not added to the employee database. Correct the affected rows and upload the file again.</div>
+        <?php endif; ?>
       </div>
-    </div>
+    <?php endif; ?>
   </div>
 </div>
 

@@ -1,3 +1,3 @@
 payroll_number,full_name,id_number,gender,age,date_of_birth,designation,job_group,employment_status,engagement_type,rod_date,special_need
 90091,MS JANE WANGARI,30010901,F,29,1996-04-18,Senior HR Officer,K,permanent,Permanent,2038-10-10,0
-,MR BAD DATA,30010902,M,,1990-01-01,Officer,J,permanent,Permanent,2030-01-01,0
+90092,MR DAVID KIPTOO,30010902,M,31,1994-09-18,Finance Assistant,H,contract,Permanent,2037-06-30,0

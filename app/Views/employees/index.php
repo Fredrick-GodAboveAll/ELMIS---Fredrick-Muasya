@@ -10,7 +10,6 @@
   </ol>
 </nav>
 
-
 <div class="row mb-2 justify-content-end align-items-center">
   <div class="col-auto">
 
@@ -120,10 +119,7 @@
                   </td>
                 </tr>
               <?php endforeach; ?>
-            <?php else: ?>
-              <tr>
-                <td colspan="8" class="text-center py-4">No employees found.</td>
-              </tr>
+          
             <?php endif; ?>
 
           </tbody>
@@ -134,3 +130,4 @@
   </div>
 
 </div>
+

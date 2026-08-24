@@ -80,17 +80,33 @@ class BulkImportController extends Controller
         $employeeModel = new Employee();
         $added = 0;
         $rejected = 0;
+        $rejections = [];
+        $total = max(0, count($rows) - 1);
 
-        foreach (array_slice($rows, 1) as $row) {
+        foreach (array_slice($rows, 1) as $idx => $row) {
+            $rowNumber = $idx + 2; // account for header row being 1
+
+            // attempt to read raw payroll value for reporting even if record invalid
+            $payrollRaw = '';
+            if (isset($headerMapping['payroll_number'])) {
+                $col = $headerMapping['payroll_number'];
+                $payrollRaw = $row[$col] ?? '';
+            } elseif (isset($headerMapping['employee_no'])) {
+                $col = $headerMapping['employee_no'];
+                $payrollRaw = $row[$col] ?? '';
+            }
+
             $record = $this->buildEmployeeRecord($row, $headerMapping);
 
             if ($record === null) {
                 $rejected++;
+                $rejections[] = ['row' => $rowNumber, 'payroll_number' => trim((string) $payrollRaw), 'reason' => 'Invalid or missing required fields'];
                 continue;
             }
 
             if ($employeeModel->findByPayrollNumber((int) ($record['payroll_number'] ?? 0))) {
                 $rejected++;
+                $rejections[] = ['row' => $rowNumber, 'payroll_number' => $record['payroll_number'] ?? '', 'reason' => 'Duplicate payroll number'];
                 continue;
             }
 
@@ -98,11 +114,16 @@ class BulkImportController extends Controller
                 $added++;
             } else {
                 $rejected++;
+                $rejections[] = ['row' => $rowNumber, 'payroll_number' => $record['payroll_number'] ?? '', 'reason' => 'Database insert failed'];
             }
         }
 
         $message = 'Employees import completed. ' . $added . ' record(s) added and ' . $rejected . ' record(s) rejected.';
         Session::flash('success', $message);
+
+        // save a summary and the rejections for display in the UI offcanvas
+        Session::set('last_import_summary', ['total' => $total, 'added' => $added, 'rejected' => $rejected]);
+        Session::set('last_import_rejections', $rejections);
         header('Location: /bulk-actions');
         exit;
     }
