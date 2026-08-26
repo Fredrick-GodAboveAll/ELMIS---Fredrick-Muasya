@@ -14,8 +14,11 @@ class SystemToolsController extends Controller
 
     public function SystemBulkUpload()
     {
+        // Show the unified bulk import UI.
+        // The view `apps/bulk_actions.php` contains the upload forms for employees, leave and allowances.
         $title = 'Bulk Actions';
-        $currentPage = 'bulk_leave_actions';
+        // Align current page identifier with the view which uses 'bulk_import'.
+        $currentPage = 'bulk_import';
         $content = '../app/Views/apps/bulk_actions.php';
         include '../app/Views/layouts/admin.php';
     }

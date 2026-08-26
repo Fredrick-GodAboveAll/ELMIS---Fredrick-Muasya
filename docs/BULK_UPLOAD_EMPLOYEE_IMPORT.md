@@ -98,3 +98,11 @@ Reasons it is rejected:
 
 ## Notes
 This work was done to make the employee bulk upload page behave in a predictable, safe way for HR data imports and to prevent accidental edits of existing employees during a fresh import.
+
+## Consolidation / Migration note
+The legacy employee-specific upload page and its routes were removed in favor of a single, unified bulk import page:
+
+- UI: `app/Views/apps/bulk_actions.php` (accessible via `/bulk-actions`)
+- Controller: `app/Controllers/BulkImportController.php` (endpoints under `/bulk-import/*`)
+
+If you have any external integrations that used `/employees/upload` or `/employees/import`, update them to use the unified `/bulk-import/employees` endpoint and the `/bulk-actions` UI.

@@ -59,7 +59,7 @@ app/Views/holidays
 app/Views/employees
 - `index.php` — Employee listing (EmployeeController::index).
 - `employee-departments.php` — Employee department mapping UI.
-- `employee-bulk.php` — CSV bulk import for employees.
+- `bulk_actions.php` — Unified bulk import UI (employees, leave, allowances).
 - `add-employee.php` — Add employee form.
 
 app/Views/departments

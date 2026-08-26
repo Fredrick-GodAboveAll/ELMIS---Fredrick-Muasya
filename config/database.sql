@@ -1,3 +1,6 @@
+-- Canonical schema for the Leave Management system.
+-- Use this file to create and initialize the application database.
+-- Example: `mysql -u root -p < config/database.sql`
 CREATE DATABASE IF NOT EXISTS `leave_management`
 CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 USE `leave_management`;
@@ -92,7 +95,7 @@ INSERT INTO `departments` (`name`, `code`, `head_of_department`) VALUES
 -- -----------------------------------------------------------
 
 CREATE TABLE `employees` (
-  `payroll_number` INT UNSIGNED PRIMARY KEY,
+  `payroll_number` VARCHAR(20) PRIMARY KEY,
   `full_name` VARCHAR(150) NOT NULL,
   `id_number` VARCHAR(30) NOT NULL,
   `gender` ENUM('M','F') NOT NULL,
@@ -120,18 +123,18 @@ INSERT INTO `employees` (
   date_of_birth, designation, job_group, employment_status,
   engagement_type, rod_date, special_need, department_id
 ) VALUES
-(10737, 'MR JULIUS ODHIAMBO MBOGAH', '19960091', 'M', 63,
+('10737', 'MR JULIUS ODHIAMBO MBOGAH', '19960091', 'M', 63,
   '1963-04-15', 'Deputy Director - HRM & Development', 'R', 'permanent',
   'Permanent', '2026-11-04', 0, 1),
 
-(10738, 'MS ALICE WANJIKU KAMAU', '12345678', 'F', 34,
+('10738', 'MS ALICE WANJIKU KAMAU', '12345678', 'F', 34,
   '1990-08-20', 'Accountant', 'K', 'permanent', 'Permanent', '2045-03-15', 0, 2),
 
-(10739, 'MR KELVIN KIPCHIRCHIR KOECH', '23456789', 'M', 29,
+('10739', 'MR KELVIN KIPCHIRCHIR KOECH', '23456789', 'M', 29,
   '1996-11-02', 'IT Officer', 'J', 'probation',
   'Contract', '2027-12-15', 4, 1),
 
-(10740, 'MS GRACE WANGARI MWANGI', '34567890', 'F', 31,
+('10740', 'MS GRACE WANGARI MWANGI', '34567890', 'F', 31,
   '1994-05-19', 'Finance Assistant', 'H', 'contract', 'Permanent', '2038-06-30', 0, 2);
 
 

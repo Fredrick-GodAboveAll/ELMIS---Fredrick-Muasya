@@ -6,8 +6,21 @@ use App\Core\Session;
 use App\Models\Employee;
 use ZipArchive;
 
+/**
+ * BulkImportController
+ *
+ * Responsible for handling template downloads and processing bulk imports
+ * for employees, leave and allowances. The controller is intentionally
+ * conservative: employee imports insert new records only and reject
+ * duplicates or invalid rows. Import endpoints expect multipart form
+ * uploads and a CSRF token.
+ */
 class BulkImportController extends Controller
 {
+    /**
+     * Stream a prebuilt employee import template (.xlsx) to the client.
+     * Creates the template file if it doesn't exist in storage/templates.
+     */
     public function employeesTemplate()
     {
         $templatePath = __DIR__ . '/../../storage/templates/employees_import_template.xlsx';
@@ -24,6 +37,13 @@ class BulkImportController extends Controller
         $this->streamFile($templatePath, 'employees_import_template.xlsx');
     }
 
+    /**
+     * Handle POST employee import file uploads.
+     * - Validates CSRF token
+     * - Accepts .xlsx and .csv
+     * - Performs per-row validation and inserts only new employees
+     * - Saves import summary and rejections in session for UI display
+     */
     public function importEmployees()
     {
         if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
@@ -104,17 +124,33 @@ class BulkImportController extends Controller
                 continue;
             }
 
-            if ($employeeModel->findByPayrollNumber((int) ($record['payroll_number'] ?? 0))) {
+            if ($employeeModel->findByPayrollNumber($record['payroll_number'] ?? '')) {
                 $rejected++;
                 $rejections[] = ['row' => $rowNumber, 'payroll_number' => $record['payroll_number'] ?? '', 'reason' => 'Duplicate payroll number'];
                 continue;
             }
 
-            if ($employeeModel->insertEmployee($record)) {
-                $added++;
-            } else {
+            // Defensive validation: payroll number should be 1-20 digits (stored as string)
+            $payrollStr = (string) ($record['payroll_number'] ?? '');
+            if ($payrollStr === '' || !preg_match('/^[0-9]{1,20}$/', $payrollStr)) {
                 $rejected++;
-                $rejections[] = ['row' => $rowNumber, 'payroll_number' => $record['payroll_number'] ?? '', 'reason' => 'Database insert failed'];
+                $rejections[] = ['row' => $rowNumber, 'payroll_number' => $record['payroll_number'] ?? '', 'reason' => 'Invalid payroll number'];
+                continue;
+            }
+
+            try {
+                if ($employeeModel->insertEmployee($record)) {
+                    $added++;
+                } else {
+                    $rejected++;
+                    $rejections[] = ['row' => $rowNumber, 'payroll_number' => $record['payroll_number'] ?? '', 'reason' => 'Database insert failed'];
+                }
+            } catch (\Throwable $e) {
+                // Log and collect the failure but keep processing remaining rows
+                $rejected++;
+                $rejections[] = ['row' => $rowNumber, 'payroll_number' => $record['payroll_number'] ?? '', 'reason' => 'Exception: ' . $e->getMessage()];
+                error_log(sprintf('Bulk import failed on row %d: %s', $rowNumber, $e->getMessage()));
+                continue;
             }
         }
 
@@ -128,6 +164,10 @@ class BulkImportController extends Controller
         exit;
     }
 
+    /**
+     * Placeholder: stream or prepare leave import template.
+     * Currently not wired; kept for future expansion.
+     */
     public function leaveTemplate()
     {
         Session::flash('info', 'Leave import is not wired yet.');
@@ -135,6 +175,9 @@ class BulkImportController extends Controller
         exit;
     }
 
+    /**
+     * Placeholder: process leave imports. Not implemented yet.
+     */
     public function importLeave()
     {
         Session::flash('info', 'Leave import is not wired yet.');
@@ -142,6 +185,9 @@ class BulkImportController extends Controller
         exit;
     }
 
+    /**
+     * Placeholder: allowances import template endpoint.
+     */
     public function allowancesTemplate()
     {
         Session::flash('info', 'Allowances import is not wired yet.');
@@ -149,6 +195,9 @@ class BulkImportController extends Controller
         exit;
     }
 
+    /**
+     * Placeholder: process allowances import. Not implemented yet.
+     */
     public function importAllowances()
     {
         Session::flash('info', 'Allowances import is not wired yet.');
@@ -502,13 +551,13 @@ XML;
         $rodDate = $this->valueFromAliases($row, $headerMapping, ['rod_date', 'retirement_date', 'rod']);
         $specialNeed = $this->valueFromAliases($row, $headerMapping, ['special_need', 'disability', 'special_need_flag']);
 
-        $normalizedPayroll = (int) preg_replace('/[^0-9]/', '', $payrollNumber);
+        $normalizedPayroll = preg_replace('/[^0-9]/', '', $payrollNumber);
         $normalizedGender = $this->normalizeGender($gender);
         $normalizedAge = $this->normalizeAge($age);
         $normalizedBirthDate = $this->normalizeDate($dateOfBirth);
         $normalizedRodDate = $this->normalizeDate($rodDate);
 
-        if ($payrollNumber === '' || $normalizedPayroll <= 0) {
+        if ($payrollNumber === '' || $normalizedPayroll === '') {
             return null;
         }
 

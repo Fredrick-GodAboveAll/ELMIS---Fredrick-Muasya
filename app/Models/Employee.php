@@ -19,11 +19,28 @@ class Employee extends Model
         return $stmt->fetchAll(PDO::FETCH_OBJ);
     }
 
+    /**
+     * Return all employees with their department name (if assigned).
+     * department_name will be null when unassigned.
+     */
+    public function allWithDepartment()
+    {
+        $sql = "SELECT e.payroll_number, e.full_name, e.id_number, e.designation, e.job_group, e.employment_status, e.department_id, d.name AS department_name
+            FROM {$this->table} e
+                LEFT JOIN departments d ON d.id = e.department_id
+                ORDER BY e.payroll_number ASC";
+
+        $stmt = $this->db->prepare($sql);
+        $stmt->execute();
+
+        return $stmt->fetchAll(PDO::FETCH_OBJ);
+    }
+
     public function insertEmployee(array $data): bool
     {
-        $payrollNumber = (int) ($data['payroll_number'] ?? 0);
+        $payrollNumber = (string) ($data['payroll_number'] ?? '');
 
-        if ($payrollNumber <= 0 || $this->findByPayrollNumber($payrollNumber)) {
+        if ($payrollNumber === '' || $this->findByPayrollNumber($payrollNumber)) {
             return false;
         }
 
@@ -61,7 +78,7 @@ class Employee extends Model
         return $this->insertEmployee($data);
     }
 
-    public function findByPayrollNumber(int $payrollNumber)
+    public function findByPayrollNumber(string $payrollNumber)
     {
         $stmt = $this->db->prepare("SELECT * FROM {$this->table} WHERE payroll_number = :payroll_number LIMIT 1");
         $stmt->execute(['payroll_number' => $payrollNumber]);

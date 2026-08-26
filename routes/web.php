@@ -27,9 +27,11 @@ $router->get('/dashboard/analytics', 'DashboardController@analytics', [AuthMiddl
 $router->get('/employees', 'EmployeeController@index', [AuthMiddleware::class]);
 $router->get('/employees/detail', 'EmployeeController@detail', [AuthMiddleware::class]);
 $router->get('/employees/departments', 'EmployeeController@departments', [AuthMiddleware::class]);
-$router->get('/employees/upload', 'EmployeeController@upload', [AuthMiddleware::class]);
-$router->post('/employees/import', 'EmployeeController@import', [AuthMiddleware::class]);
 $router->get('/departments', 'DepartmentController@index', [AuthMiddleware::class]);
+$router->post('/departments', 'DepartmentController@store', [AuthMiddleware::class]);
+$router->post('/departments/delete', 'DepartmentController@delete', [AuthMiddleware::class]);
+// Department deployment page
+$router->get('/departments/deployment', 'DepartmentController@deployment', [AuthMiddleware::class]);
 
 // Reports Route 
 $router->get('/reports', 'ReportsController@index', [AuthMiddleware::class]);
@@ -57,9 +59,18 @@ $router->get('/holidays/hout', 'HolidaysController@Hout_list', [AuthMiddleware::
 // SYTEM TOOLS ROUTES ---- for making work easier and seeing the system clock
 
 $router->get('/system-calender', 'SystemToolsController@SystemCalender', [AuthMiddleware::class]);
+// Unified bulk actions UI (single page for downloads/uploads).
+// The view at `/bulk-actions` contains upload forms that POST to
+// the `/bulk-import/*` endpoints defined below. Access is restricted
+// to authenticated users via `AuthMiddleware`.
+$router->get('/bulk-actions', 'SystemToolsController@SystemBulkUpload', [AuthMiddleware::class]);
+
 $router->get('/bulk-actions', 'SystemToolsController@SystemBulkUpload', [AuthMiddleware::class]);
 
 // Bulk import routes
+// Template download endpoints (GET) and upload handlers (POST).
+// These endpoints expect multipart form uploads with `import_file`
+// and the CSRF token included in the form. Protected with AuthMiddleware.
 $router->get('/bulk-import/employees/template', 'BulkImportController@employeesTemplate', [AuthMiddleware::class]);
 $router->post('/bulk-import/employees', 'BulkImportController@importEmployees', [AuthMiddleware::class]);
 $router->get('/bulk-import/leave/template', 'BulkImportController@leaveTemplate', [AuthMiddleware::class]);
