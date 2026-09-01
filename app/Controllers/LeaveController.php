@@ -4,15 +4,19 @@ namespace App\Controllers;
 use App\Core\Csrf;
 use App\Core\Session;
 use App\Models\Leave;
+use App\Services\LeaveTypeService;
 use App\Utils\Validator;
+use InvalidArgumentException;
 
 class LeaveController extends Controller
 {
     protected $leaveModel;
+    protected $leaveTypeService;
 
     public function __construct()
     {
         $this->leaveModel = new Leave();
+        $this->leaveTypeService = new LeaveTypeService();
     }
 
     public function index()
@@ -28,7 +32,45 @@ class LeaveController extends Controller
         $title = 'Leave Types';
         $currentPage = 'leave_types';
         $content = '../app/Views/leave_management/leave_setup/leave_types.php';
+        $leaveTypeService = new \App\Services\LeaveTypeService();
+        $leaveTypes = $leaveTypeService->all();
         include '../app/Views/layouts/admin.php';
+    }
+
+    public function leaveApplications()
+    {
+        $title = 'Leave Applications';
+        $currentPage = 'leave_applications';
+        $content = '../app/Views/leave_management/leave_setup/leave_applications.php';
+        include '../app/Views/layouts/admin.php';
+    }
+    public function storeLeaveType()
+    {
+        try {
+            Csrf::validate($_POST['csrf_token'] ?? '');
+
+            $data = [
+                'name' => $_POST['leave_name'] ?? '',
+                'annual_entitlement_value' => $_POST['annual_entitlement_value'] ?? 0,
+                'calculation_method' => $_POST['calculation_method'] ?? 'working_days',
+                'carry_forward' => $_POST['carry_forward'] ?? 0,
+                'carry_forward_limit' => $_POST['carry_forward_limit'] ?? 0,
+            ];
+
+            $createdId = $this->leaveTypeService->create($data);
+
+            Session::flash('success', 'Leave type created successfully.');
+            header('Location: /leave-types');
+            exit;
+        } catch (InvalidArgumentException $e) {
+            Session::flash('error', $e->getMessage());
+            header('Location: /leave-types');
+            exit;
+        } catch (\Exception $e) {
+            Session::flash('error', 'Unable to create leave type. Please try again.');
+            header('Location: /leave-types');
+            exit;
+        }
     }
 
     public function LeavePeriod()

@@ -41,6 +41,8 @@ $router->get('/reports', 'ReportsController@index', [AuthMiddleware::class]);
 
 $router->get('/leaves', 'LeaveController@index', [AuthMiddleware::class]);
 $router->get('/leave-types', 'LeaveController@LeaveType', [AuthMiddleware::class]);
+$router->get('/leave-applications', 'LeaveController@leaveApplications', [AuthMiddleware::class]);
+$router->post('/leave-types', 'LeaveController@storeLeaveType', [AuthMiddleware::class]);
 $router->get('/leave-periods', 'LeaveController@LeavePeriod', [AuthMiddleware::class]);
 $router->post('/leave-periods/update', 'LeaveController@updateLeavePeriodStatus', [AuthMiddleware::class]);
 $router->post('/leave-periods/delete', 'LeaveController@deleteLeavePeriod', [AuthMiddleware::class]);
