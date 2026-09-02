@@ -18,6 +18,12 @@ class LeaveTypeService
         return $this->leaveTypeModel->all();
     }
 
+    // compatibility wrapper used by controllers expecting ->all()
+    public function all(): array
+    {
+        return $this->getAll();
+    }
+
     public function create(array $data): int
     {
         $name = trim((string) ($data['name'] ?? ''));

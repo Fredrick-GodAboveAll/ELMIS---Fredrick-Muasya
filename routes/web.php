@@ -51,6 +51,10 @@ $router->post('/new-leave-period', 'LeaveController@storeLeavePeriod', [AuthMidd
 $router->get('/leave-policies', 'LeaveController@LeavePolicy', [AuthMiddleware::class]);
 $router->get('/holiday-list', 'LeaveController@HolidayList', [AuthMiddleware::class]);
 
+// Tools: Leave Calculator test (isolated)
+$router->get('/tools/leave-calculator', 'ToolsController@leaveCalculator', [AuthMiddleware::class]);
+$router->post('/tools/leave-calculator', 'ToolsController@leaveCalculator', [AuthMiddleware::class]);
+
 // HOLIDAY ROUTES 
 
 $router->get('/holidays', 'HolidaysController@index', [AuthMiddleware::class]);

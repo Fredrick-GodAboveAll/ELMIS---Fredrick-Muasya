@@ -94,6 +94,11 @@
                           <div class="d-flex align-items-center"><span class="nav-link-text ps-1">leave applications</span></div>
                         </a><!-- more inner pages--></li>
 
+                    <li class="nav-item">
+                      <a class="nav-link <?php echo ($currentPage === 'leave_calculator') ? 'active' : ''; ?>" href="/tools/leave-calculator">
+                        <div class="d-flex align-items-center"><span class="nav-link-text ps-1">leave calculator</span></div>
+                      </a><!-- more inner pages--></li>
+
                       <li class="nav-item">
                         <a class="nav-link <?php echo ($currentPage === 'leave_period') ? 'active' : ''; ?>" href="/leave-periods">
                         <div class="d-flex align-items-center"><span class="nav-link-text ps-1">leave period</span></div>
