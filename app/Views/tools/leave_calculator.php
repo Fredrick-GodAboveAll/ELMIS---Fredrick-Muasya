@@ -34,24 +34,24 @@
     <form method="post" class="row g-3">
       <div class="col-md-4">
         <label class="form-label">Start Date</label>
-        <input type="date" name="start_date" class="form-control" value="<?= htmlspecialchars($oldInput['start_date'] ?? ($_POST['start_date'] ?? '')) ?>" required />
+        <input type="date" name="start_date" class="form-control" value="<?= htmlspecialchars($oldInput['start_date'] ?? '') ?>" required />
       </div>
       <div class="col-md-4">
         <label class="form-label">Leave Type</label>
-        <select name="leave_type" class="form-select">
+        <select name="leave_type" class="form-select" required>
           <option value="">Select leave type</option>
-          <option value="annual" <?= ((($oldInput['leave_type'] ?? $_POST['leave_type'] ?? '') === 'annual') ? 'selected' : '') ?>>Annual</option>
-          <option value="sick" <?= ((($oldInput['leave_type'] ?? $_POST['leave_type'] ?? '') === 'sick') ? 'selected' : '') ?>>Sick</option>
-          <option value="maternity" <?= ((($oldInput['leave_type'] ?? $_POST['leave_type'] ?? '') === 'maternity') ? 'selected' : '') ?>>Maternity</option>
-          <option value="paternity" <?= ((($oldInput['leave_type'] ?? $_POST['leave_type'] ?? '') === 'paternity') ? 'selected' : '') ?>>Paternity</option>
-          <option value="compassionate" <?= ((($oldInput['leave_type'] ?? $_POST['leave_type'] ?? '') === 'compassionate') ? 'selected' : '') ?>>Compassionate</option>
-          <option value="casual" <?= ((($oldInput['leave_type'] ?? $_POST['leave_type'] ?? '') === 'casual') ? 'selected' : '') ?>>Casual</option>
+          <option value="annual" <?= ((($oldInput['leave_type'] ?? '') === 'annual') ? 'selected' : '') ?>>Annual</option>
+          <option value="sick" <?= ((($oldInput['leave_type'] ?? '') === 'sick') ? 'selected' : '') ?>>Sick</option>
+          <option value="maternity" <?= ((($oldInput['leave_type'] ?? '') === 'maternity') ? 'selected' : '') ?>>Maternity</option>
+          <option value="paternity" <?= ((($oldInput['leave_type'] ?? '') === 'paternity') ? 'selected' : '') ?>>Paternity</option>
+          <option value="compassionate" <?= ((($oldInput['leave_type'] ?? '') === 'compassionate') ? 'selected' : '') ?>>Compassionate</option>
+          <option value="casual" <?= ((($oldInput['leave_type'] ?? '') === 'casual') ? 'selected' : '') ?>>Casual</option>
         </select>
       </div>
 
       <div class="col-md-4">
         <label class="form-label">Number of Days</label>
-        <input type="number" name="number_of_days" min="1" class="form-control" value="<?= htmlspecialchars($oldInput['number_of_days'] ?? ($_POST['number_of_days'] ?? '')) ?>" required />
+        <input type="number" name="number_of_days" min="1" class="form-control" value="<?= htmlspecialchars($oldInput['number_of_days'] ?? '') ?>" required />
         <div class="form-text">Provide number of days; the calculator will compute the end date automatically.</div>
       </div>
       <div class="col-12">

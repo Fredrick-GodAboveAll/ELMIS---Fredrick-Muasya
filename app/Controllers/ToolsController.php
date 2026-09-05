@@ -18,7 +18,6 @@ class ToolsController
 
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $start = $_POST['start_date'] ?? '';
-            $method = $_POST['calculation_method'] ?? null; // kept for backward compatibility but not used in UI
             $leaveType = $_POST['leave_type'] ?? null;
             $numberOfDays = isset($_POST['number_of_days']) && $_POST['number_of_days'] !== '' ? (int) $_POST['number_of_days'] : null;
             $calculator = new LeaveCalculator();
@@ -31,17 +30,27 @@ class ToolsController
             ]);
 
             try {
-                if ($numberOfDays === null) {
-                    throw new \InvalidArgumentException('Please provide Number of Days.');
+                if ($leaveType === null || $leaveType === '') {
+                    throw new \InvalidArgumentException('Please select a Leave Type.');
+                }
+                if ($start === '') {
+                    throw new \InvalidArgumentException('Please provide a Start Date.');
+                }
+                if ($numberOfDays === null || $numberOfDays < 1) {
+                    throw new \InvalidArgumentException('Please provide a valid Number of Days.');
                 }
 
-                // compute end date from start + number of days
-                    $endDate = $calculator->calculateEndDate($start, $numberOfDays, $method, $leaveType);
-                    $returnDate = $calculator->calculateReturnDate($endDate);
-                    \App\Core\Session::flash('leave_calc_end_date', $endDate);
-                    \App\Core\Session::flash('leave_calc_return_date', $returnDate);
+                // compute end date from start + number of days (let service infer method from leave type)
+                $endDate = $calculator->calculateEndDate($start, $numberOfDays, null, $leaveType);
+                $returnDate = $calculator->calculateReturnDate($endDate);
+
+                \App\Core\Session::flash('leave_calc_result', $numberOfDays);
+                \App\Core\Session::flash('leave_calc_end_date', $endDate);
+                \App\Core\Session::flash('leave_calc_return_date', $returnDate);
             } catch (\InvalidArgumentException $e) {
                 \App\Core\Session::flash('leave_calc_error', $e->getMessage());
+            } catch (\Throwable $e) {
+                \App\Core\Session::flash('leave_calc_error', 'Could not calculate dates. Please check the values entered.');
             }
 
             // Redirect to avoid resubmission (POST-Redirect-GET)
@@ -54,7 +63,6 @@ class ToolsController
         $endDateResult = \App\Core\Session::flash('leave_calc_end_date');
         $returnDateResult = \App\Core\Session::flash('leave_calc_return_date');
         $oldInput = \App\Core\Session::flash('leave_calc_input') ?: [];
-        $errors = [];
         if ($err = \App\Core\Session::flash('leave_calc_error')) {
             $errors[] = $err;
         }
