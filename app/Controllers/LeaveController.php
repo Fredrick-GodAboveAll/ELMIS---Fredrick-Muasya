@@ -3,7 +3,7 @@ namespace App\Controllers;
 
 use App\Core\Csrf;
 use App\Core\Session;
-use App\Models\Leave;
+use App\Models\FinancialYear;
 use App\Services\LeaveTypeService;
 use App\Utils\Validator;
 use InvalidArgumentException;
@@ -15,7 +15,7 @@ class LeaveController extends Controller
 
     public function __construct()
     {
-        $this->leaveModel = new Leave();
+        $this->leaveModel = new FinancialYear();
         $this->leaveTypeService = new LeaveTypeService();
     }
 

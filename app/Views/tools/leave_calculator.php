@@ -14,6 +14,9 @@
     <?php if ($result !== null): ?>
       <div class="alert alert-success">Calculated days: <strong><?= htmlspecialchars((string)$result) ?></strong></div>
     <?php endif; ?>
+    <?php if (!empty($leavePeriodResult)): ?>
+      <div class="alert alert-info">Leave Period: <strong><?= htmlspecialchars((string)$leavePeriodResult) ?></strong></div>
+    <?php endif; ?>
     <?php if (!empty($endDateResult)): ?>
       <div class="alert alert-success">Computed end date: <strong><?= htmlspecialchars((string)$endDateResult) ?></strong></div>
     <?php endif; ?>
@@ -38,21 +41,31 @@
       </div>
       <div class="col-md-4">
         <label class="form-label">Leave Type</label>
-        <select name="leave_type" class="form-select" required>
+        <select name="leave_type_id" class="form-select" required>
           <option value="">Select leave type</option>
-          <option value="annual" <?= ((($oldInput['leave_type'] ?? '') === 'annual') ? 'selected' : '') ?>>Annual</option>
-          <option value="sick" <?= ((($oldInput['leave_type'] ?? '') === 'sick') ? 'selected' : '') ?>>Sick</option>
-          <option value="maternity" <?= ((($oldInput['leave_type'] ?? '') === 'maternity') ? 'selected' : '') ?>>Maternity</option>
-          <option value="paternity" <?= ((($oldInput['leave_type'] ?? '') === 'paternity') ? 'selected' : '') ?>>Paternity</option>
-          <option value="compassionate" <?= ((($oldInput['leave_type'] ?? '') === 'compassionate') ? 'selected' : '') ?>>Compassionate</option>
-          <option value="casual" <?= ((($oldInput['leave_type'] ?? '') === 'casual') ? 'selected' : '') ?>>Casual</option>
+          <?php foreach ($leaveTypes as $leaveType): ?>
+            <?php $selected = ((string) ($oldInput['leave_type_id'] ?? '') === (string) $leaveType->id) ? 'selected' : ''; ?>
+            <option value="<?= (int) $leaveType->id ?>" <?= $selected ?>><?= htmlspecialchars($leaveType->name) ?></option>
+          <?php endforeach; ?>
         </select>
       </div>
 
       <div class="col-md-4">
         <label class="form-label">Number of Days</label>
+        <?php
+        $selectedLeaveTypeForHint = null;
+        $selectedLeaveTypeId = (int) ($oldInput['leave_type_id'] ?? 0);
+        foreach ($leaveTypes as $leaveType) {
+            if ((int) $leaveType->id === $selectedLeaveTypeId) {
+                $selectedLeaveTypeForHint = $leaveType;
+                break;
+            }
+        }
+        $selectedEntitlement = $selectedLeaveTypeForHint ? (float) $selectedLeaveTypeForHint->annual_entitlement_value : null;
+        $selectedEntitlementText = $selectedEntitlement !== null ? 'Maximum allowed: ' . (int) $selectedEntitlement . ' days' : 'Select a leave type to view the maximum allowed days.';
+        ?>
         <input type="number" name="number_of_days" min="1" class="form-control" value="<?= htmlspecialchars($oldInput['number_of_days'] ?? '') ?>" required />
-        <div class="form-text">Provide number of days; the calculator will compute the end date automatically.</div>
+        <div class="form-text" id="leaveEntitlementHint"><?= htmlspecialchars($selectedEntitlementText) ?></div>
       </div>
       <div class="col-12">
         <button class="btn btn-primary" type="submit">Calculate</button>

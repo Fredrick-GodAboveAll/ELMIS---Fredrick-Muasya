@@ -1,7 +1,19 @@
 <?php
 namespace App\Services;
 
+use App\Models\FinancialYear;
+
 class LeavePeriodService
 {
-    // Placeholder for leave period related business logic
+    private FinancialYear $financialYearModel;
+
+    public function __construct()
+    {
+        $this->financialYearModel = new FinancialYear();
+    }
+
+    public function resolveForDate(string $date): ?object
+    {
+        return $this->financialYearModel->findByDate($date) ?: null;
+    }
 }

@@ -18,6 +18,41 @@ class LeaveTypeService
         return $this->leaveTypeModel->all();
     }
 
+    public function findActiveById(int $id): ?object
+    {
+        $leaveType = $this->leaveTypeModel->findActiveById($id);
+        return $leaveType ?: null;
+    }
+
+    public function validateRequestedDaysAgainstEntitlement(int $leaveTypeId, int $requestedDays): void
+    {
+        $leaveType = $this->findActiveById($leaveTypeId);
+        if (!$leaveType) {
+            throw new InvalidArgumentException('The selected Leave Type is not active or could not be found.');
+        }
+
+        $entitlement = (float) ($leaveType->annual_entitlement_value ?? 0);
+        if ($requestedDays > $entitlement) {
+            $formattedEntitlement = $this->formatEntitlement($entitlement);
+            $pluralizedUnit = $formattedEntitlement == '1' ? 'day' : 'days';
+            throw new InvalidArgumentException(
+                "Requested leave days cannot exceed the {$leaveType->name} entitlement of {$formattedEntitlement} {$pluralizedUnit}."
+            );
+        }
+    }
+
+    private function formatEntitlement(float $value): string
+    {
+        $normalized = (float) $value;
+        $asInt = (int) $value;
+
+        if ($normalized === (float) $asInt) {
+            return (string) $asInt;
+        }
+
+        return number_format($normalized, 2, '.', '');
+    }
+
     // compatibility wrapper used by controllers expecting ->all()
     public function all(): array
     {

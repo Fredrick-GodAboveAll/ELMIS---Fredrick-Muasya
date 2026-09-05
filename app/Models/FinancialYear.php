@@ -3,7 +3,7 @@ namespace App\Models;
 
 use PDO;
 
-class Leave extends Model
+class FinancialYear extends Model
 {
     protected $table = 'financial_years';
 
@@ -85,6 +85,13 @@ class Leave extends Model
     {
         $stmt = $this->db->prepare("SELECT * FROM {$this->table} WHERE is_current = 1 ORDER BY start_date DESC LIMIT 1");
         $stmt->execute();
+        return $stmt->fetch(PDO::FETCH_OBJ);
+    }
+
+    public function findByDate(string $date)
+    {
+        $stmt = $this->db->prepare("SELECT * FROM {$this->table} WHERE start_date <= ? AND end_date >= ? LIMIT 1");
+        $stmt->execute([$date, $date]);
         return $stmt->fetch(PDO::FETCH_OBJ);
     }
 

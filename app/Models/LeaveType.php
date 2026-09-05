@@ -23,6 +23,13 @@ class LeaveType extends Model
         return $stmt->fetch(PDO::FETCH_OBJ);
     }
 
+    public function findActiveById(int $id)
+    {
+        $stmt = $this->db->prepare("SELECT * FROM {$this->table} WHERE id = ? AND is_active = 1 LIMIT 1");
+        $stmt->execute([$id]);
+        return $stmt->fetch(PDO::FETCH_OBJ);
+    }
+
     public function existsByName(string $name): bool
     {
         $sql = "SELECT id FROM {$this->table} WHERE LOWER(name) = LOWER(?) LIMIT 1";

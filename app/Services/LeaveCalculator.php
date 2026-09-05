@@ -12,13 +12,7 @@ class LeaveCalculator
      * @return int
      * @throws InvalidArgumentException
      */
-    /**
-     * @param string $startDate
-     * @param string $endDate
-     * @param string|null $calculationMethod explicit method 'working_days'|'calendar_days'
-     * @param string|null $leaveType optional leave type key used to infer method when calculationMethod is null
-     */
-    public function calculate(string $startDate, string $endDate, ?string $calculationMethod = null, ?string $leaveType = null): int
+    public function calculate(string $startDate, string $endDate, ?string $calculationMethod = null): int
     {
         if (trim($startDate) === '') {
             throw new InvalidArgumentException('Start date is required.');
@@ -49,11 +43,6 @@ class LeaveCalculator
             throw new InvalidArgumentException('Start date cannot be after end date.');
         }
 
-        // if calculation method not provided, try to infer from leave type
-        if ($calculationMethod === null && $leaveType !== null) {
-            $calculationMethod = $this->inferMethodFromLeaveType($leaveType);
-        }
-
         if (!in_array($calculationMethod, ['working_days', 'calendar_days'], true)) {
             throw new InvalidArgumentException('Invalid calculation method.');
         }
@@ -82,40 +71,15 @@ class LeaveCalculator
     }
 
     /**
-     * Lightweight internal mapping from leave type key -> calculation method.
-     * This is intentionally minimal and can be replaced with a DB lookup later.
-     * Keys are case-insensitive.
-     *
-     * @param string $leaveType
-     * @return string|null
-     */
-    private function inferMethodFromLeaveType(string $leaveType): ?string
-    {
-        $map = [
-            // common examples; edit as needed
-            'annual' => 'working_days',
-            'sick' => 'working_days',
-            'maternity' => 'calendar_days',
-            'compassionate' => 'working_days',
-            'casual' => 'working_days',
-            'paternity' => 'working_days',
-        ];
-
-        $key = strtolower(trim($leaveType));
-        return $map[$key] ?? null;
-    }
-
-    /**
      * Given a start date and number of days, compute the inclusive end date
-     * according to the calculation method (or infer from leave type).
+     * according to the calculation method supplied by the Leave Type.
      * @param string $startDate
      * @param int $days
      * @param string|null $calculationMethod
-     * @param string|null $leaveType
      * @return string YYYY-MM-DD
      * @throws InvalidArgumentException
      */
-    public function calculateEndDate(string $startDate, int $days, ?string $calculationMethod = null, ?string $leaveType = null): string
+    public function calculateEndDate(string $startDate, int $days, ?string $calculationMethod = null): string
     {
         if (trim($startDate) === '') {
             throw new InvalidArgumentException('Start date is required.');
@@ -135,11 +99,6 @@ class LeaveCalculator
         $startDow = (int) $start->format('N');
         if ($startDow >= 6) {
             throw new InvalidArgumentException('Leave cannot start on Saturday or Sunday.');
-        }
-
-        // infer method if needed
-        if ($calculationMethod === null && $leaveType !== null) {
-            $calculationMethod = $this->inferMethodFromLeaveType($leaveType);
         }
 
         if (!in_array($calculationMethod, ['working_days', 'calendar_days'], true)) {
