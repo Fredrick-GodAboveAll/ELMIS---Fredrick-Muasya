@@ -204,7 +204,8 @@
                   <td class="align-middle" style="width: 28px;">
                     <div class="form-check mb-0"><input class="form-check-input" type="checkbox" id="simple-pagination-item-0" data-bulk-select-row="data-bulk-select-row" /></div>
                   </td>
-                  <td class="align-middle white-space-nowrap fw-semi-bold name"><a href="../../app/e-commerce/customer-details.html">Sylvia Plath</a></td>
+                  <td class="align-middle white-space-nowrap fw-semi-bold name">
+                    <a href="../../app/e-commerce/customer-details.html">Sylvia Plath</a></td>
                   <td class="align-middle white-space-nowrap email">john@gmail.com</td>
                   <td class="align-middle white-space-nowrap product">Slick - Drag &amp; Drop Bootstrap Generator</td>
                   <td class="align-middle text-center fs-9 white-space-nowrap payment"><span class="badge badge rounded-pill badge-subtle-success">Success<span class="ms-1 fas fa-check" data-fa-transform="shrink-2"></span></span></td>

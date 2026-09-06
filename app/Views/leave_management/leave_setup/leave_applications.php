@@ -66,11 +66,15 @@
               </th>
 
               <th class="text-900 sort pe-1 align-middle white-space-nowrap">
-                Personal No.
+                Ref No.
+              </th>
+             
+              <th class="text-900 sort pe-1 align-middle white-space-nowrap">
+                Employee
               </th>
 
               <th class="text-900 sort pe-1 align-middle white-space-nowrap">
-                Employee
+                Personal No
               </th>
 
               <th class="text-900 sort pe-1 align-middle white-space-nowrap">
@@ -78,7 +82,7 @@
               </th>
 
               <th class="text-900 sort pe-1 align-middle white-space-nowrap">
-                Job Group
+                JG
               </th>
 
               <th class="text-900 sort pe-1 align-middle white-space-nowrap">
@@ -97,14 +101,6 @@
                 Days
               </th>
 
-              <th class="text-900 sort pe-1 align-middle white-space-nowrap text-center">
-                Balance
-              </th>
-
-              <th class="text-900 sort pe-1 align-middle white-space-nowrap">
-                Ref No.
-              </th>
-
               <th class="text-900 sort pe-1 align-middle white-space-nowrap">
                 Status
               </th>
@@ -118,6 +114,8 @@
 
           <tbody class="list" id="table-simple-pagination-body">
 
+
+          
             <!-- SAMPLE RECORD 1 -->
             <tr class="btn-reveal-trigger">
 
@@ -130,12 +128,16 @@
                 </div>
               </td>
 
-              <td class="align-middle white-space-nowrap fw-semi-bold">
-                12345
+              <td class="align-middle white-space-nowrap fw-semi-bold name">
+                <a href="">SD/E/001/2026</a>
               </td>
 
               <td class="align-middle white-space-nowrap fw-semi-bold">
                 Fredrick Muasya
+              </td>
+
+              <td class="align-middle white-space-nowrap">
+                12344567
               </td>
 
               <td class="align-middle white-space-nowrap">
@@ -162,13 +164,7 @@
                 5
               </td>
 
-              <td class="align-middle text-center">
-                25
-              </td>
-
-              <td class="align-middle white-space-nowrap">
-                SD/E/001/2026
-              </td>
+              
 
               <td class="align-middle text-center">
                 <span class="badge badge rounded-pill badge-subtle-success">
@@ -206,96 +202,6 @@
                   </div>
                 </div>
               </td>
-            </tr>
-
-
-            <!-- SAMPLE RECORD 2 -->
-            <tr class="btn-reveal-trigger">
-
-              <td class="align-middle" style="width: 28px;">
-                <div class="form-check mb-0">
-                  <input class="form-check-input"
-                    type="checkbox"
-                    id="simple-pagination-item-1"
-                    data-bulk-select-row="data-bulk-select-row" />
-                </div>
-              </td>
-
-              <td class="align-middle white-space-nowrap fw-semi-bold">
-                12678
-              </td>
-
-              <td class="align-middle white-space-nowrap fw-semi-bold">
-                Jane Wambui
-              </td>
-
-              <td class="align-middle white-space-nowrap">
-                Administrative Officer
-              </td>
-
-              <td class="align-middle white-space-nowrap">
-                J
-              </td>
-
-              <td class="align-middle white-space-nowrap">
-                Sick Leave
-              </td>
-
-              <td class="align-middle white-space-nowrap">
-                14/09/2026
-              </td>
-
-              <td class="align-middle white-space-nowrap">
-                16/09/2026
-              </td>
-
-              <td class="align-middle text-center fw-semi-bold">
-                3
-              </td>
-
-              <td class="align-middle text-center">
-                12
-              </td>
-
-              <td class="align-middle white-space-nowrap">
-                SD/E/002/2026
-              </td>
-
-              <td class="align-middle text-center">
-                <span class="badge badge rounded-pill badge-subtle-warning">
-                  Received
-                </span>
-              </td>
-
-              <td class="align-middle white-space-nowrap text-end">
-
-                <div class="dropstart font-sans-serif position-static d-inline-block">
-
-                  <button class="btn btn-link text-600 btn-sm dropdown-toggle btn-reveal float-end"
-                    type="button"
-                    data-bs-toggle="dropdown"
-                    data-boundary="window">
-
-                    <span class="fas fa-ellipsis-h fs-10"></span>
-
-                  </button>
-
-                  <div class="dropdown-menu dropdown-menu-end border py-2">
-
-                    <a class="dropdown-item" href="#">View</a>
-                    <a class="dropdown-item" href="#">Edit</a>
-
-                    <div class="dropdown-divider"></div>
-
-                    <a class="dropdown-item text-warning" href="#">Archive</a>
-                    <a class="dropdown-item text-danger" href="#">Delete</a>
-
-                  </div>
-
-                </div>
-
-              </td>
-
             </tr>
 
           </tbody>
