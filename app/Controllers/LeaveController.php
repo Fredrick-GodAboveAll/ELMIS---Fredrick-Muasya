@@ -4,6 +4,7 @@ namespace App\Controllers;
 use App\Core\Csrf;
 use App\Core\Session;
 use App\Models\FinancialYear;
+use App\Services\LeaveEntitlementService;
 use App\Services\LeaveTypeService;
 use App\Utils\Validator;
 use InvalidArgumentException;
@@ -12,11 +13,13 @@ class LeaveController extends Controller
 {
     protected $leaveModel;
     protected $leaveTypeService;
+    protected $leaveEntitlementService;
 
     public function __construct()
     {
         $this->leaveModel = new FinancialYear();
         $this->leaveTypeService = new LeaveTypeService();
+        $this->leaveEntitlementService = new LeaveEntitlementService();
     }
 
     public function index()
@@ -49,6 +52,12 @@ class LeaveController extends Controller
     {
         $title = 'Leave Entitlement';
         $currentPage = 'leave_entitlement';
+
+        $financialYears = $this->leaveEntitlementService->getFinancialYearSummary();
+        $financialYearCount = count($financialYears);
+        $activeYearCount = count(array_filter($financialYears, fn($year) => isset($year->is_current) && (int) $year->is_current === 1));
+        $totalEntitlementRules = array_sum(array_map(fn($year) => (int) ($year->entitlement_rule_count ?? 0), $financialYears));
+
         $content = '../app/Views/leave_management/leave_setup/leave_entitlement.php';
         include '../app/Views/layouts/admin.php';
     }
@@ -57,7 +66,14 @@ class LeaveController extends Controller
     {
         $title = 'Leave Entitlement Detail';
         $currentPage = 'leave_entitlement';
-        $selectedYear = $_GET['year'] ?? '2026 / 2027';
+
+        $selectedYear = $_GET['year'] ?? $this->leaveEntitlementService->getCurrentOrLatestYearLabel();
+        $selectedYear = trim((string) $selectedYear);
+        $selectedYear = $selectedYear === '' ? $this->leaveEntitlementService->getCurrentOrLatestYearLabel() : $selectedYear;
+
+        $entitlements = $this->leaveEntitlementService->getEntitlementsForYear($selectedYear);
+        $allFinancialYears = $this->leaveEntitlementService->getFinancialYearSummary();
+
         $content = '../app/Views/leave_management/leave_setup/leave_entitlement_detail.php';
         include '../app/Views/layouts/admin.php';
     }

@@ -1,5 +1,6 @@
 <?php $currentPage = 'leave_entitlement'; ?>
-<?php $selectedYear = $_GET['year'] ?? '2026 / 2027'; ?>
+<?php $selectedYear = $_GET['year'] ?? $selectedYear ?? '2026 / 2027'; ?>
+<?php $entitlements = $entitlements ?? []; ?>
 <?php $csrf = \App\Core\Csrf::generate(); ?>
 
 <nav aria-label="breadcrumb" class="mb-3">
@@ -22,17 +23,67 @@
   </div>
 </div>
 
-<div class="card border-0 shadow-none">
-  <div class="card-body py-5">
-    <div class="text-center" id="detailEmptyState">
-      <i class="fas fa-clipboard-list fa-3x text-500 mb-3"></i>
-      <p class="text-700 mb-3">No entitlements configured yet for this financial year. Add the first one to get started.</p>
-      <button class="btn btn-primary" data-bs-toggle="offcanvas" data-bs-target="#entitlementForm" type="button">
-        <span class="fas fa-plus me-2"></span>Add First Entitlement
-      </button>
+<?php if (empty($entitlements)): ?>
+  <div class="card border-0 shadow-none">
+    <div class="card-body py-5">
+      <div class="text-center" id="detailEmptyState">
+        <i class="fas fa-clipboard-list fa-3x text-500 mb-3"></i>
+        <p class="text-700 mb-3">No entitlements configured yet for this financial year. Add the first one to get started.</p>
+        <button class="btn btn-primary" data-bs-toggle="offcanvas" data-bs-target="#entitlementForm" type="button">
+          <span class="fas fa-plus me-2"></span>Add First Entitlement
+        </button>
+      </div>
     </div>
   </div>
-</div>
+<?php else: ?>
+  <div class="card">
+    <div class="card-header">
+      <div class="row flex-between-center">
+        <div class="col-auto">
+          <h5 class="fs-9 mb-0 text-nowrap py-2 py-xl-0">Entitlement Rules</h5>
+        </div>
+        <div class="col-auto ms-auto">
+          <button class="btn btn-falcon-default btn-sm" type="button" data-bs-toggle="offcanvas" data-bs-target="#entitlementForm">
+            <span class="fas fa-plus me-2"></span>Add Entitlement
+          </button>
+        </div>
+      </div>
+    </div>
+    <div class="card-body px-0 pt-0">
+      <div class="table-responsive">
+        <table class="table table-sm mb-0 fs-10">
+          <thead class="bg-200">
+            <tr>
+              <th class="text-900 white-space-nowrap">Leave Type</th>
+              <th class="text-900 white-space-nowrap">Calculation</th>
+              <th class="text-900 white-space-nowrap text-end">Entitlement</th>
+              <th class="text-900 white-space-nowrap text-center">Carry Forward</th>
+              <th class="text-900 white-space-nowrap text-end">Max Carry</th>
+              <th class="text-900 white-space-nowrap text-center">Status</th>
+            </tr>
+          </thead>
+          <tbody>
+            <?php foreach ($entitlements as $entitlement): ?>
+              <?php $isActive = !empty($entitlement->entitlement_id) || !empty($entitlement->leave_type_id); ?>
+              <tr>
+                <td class="align-middle fw-semi-bold"><?= htmlspecialchars((string) ($entitlement->leave_type_name ?? 'N/A')) ?></td>
+                <td class="align-middle"><?= htmlspecialchars((string) ($entitlement->calculation_method ?? 'working_days')) === 'calendar_days' ? 'Calendar Days' : 'Working Days'; ?></td>
+                <td class="align-middle text-end"><?= htmlspecialchars(number_format((float) ($entitlement->entitlement ?? 0), 2)) ?> days</td>
+                <td class="align-middle text-center"><?= !empty($entitlement->carry_forward) ? 'Yes' : 'No' ?></td>
+                <td class="align-middle text-end"><?= htmlspecialchars(number_format((float) ($entitlement->carry_forward_limit ?? 0), 2)) ?></td>
+                <td class="align-middle text-center">
+                  <span class="badge badge-subtle-<?= $isActive ? 'success' : 'secondary'; ?> rounded-pill">
+                    <?= $isActive ? 'Active' : 'Inactive'; ?>
+                  </span>
+                </td>
+              </tr>
+            <?php endforeach; ?>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+<?php endif; ?>
 
 <div class="offcanvas offcanvas-end" tabindex="-1" id="entitlementForm" aria-labelledby="entitlementFormLabel" style="width:460px;">
   <div class="offcanvas-header">

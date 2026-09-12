@@ -1,4 +1,8 @@
 <?php $currentPage = 'leave_entitlement'; ?>
+<?php $financialYears = $financialYears ?? []; ?>
+<?php $financialYearCount = $financialYearCount ?? 0; ?>
+<?php $activeYearCount = $activeYearCount ?? 0; ?>
+<?php $totalEntitlementRules = $totalEntitlementRules ?? 0; ?>
 
 <nav aria-label="breadcrumb" class="mb-3">
   <ol class="breadcrumb mb-0">
@@ -42,7 +46,7 @@
           <div class="col">
             <div class="d-flex align-items-center">
               <div>
-                <h4 class="mb-2">4</h4>
+                <h4 class="mb-2"><?= (int) $financialYearCount; ?></h4>
               </div>
             </div>
           </div>
@@ -73,7 +77,7 @@
           <div class="col">
             <div class="d-flex align-items-center">
               <div>
-                <h4 class="mb-2">1</h4>
+                <h4 class="mb-2"><?= (int) $activeYearCount; ?></h4>
               </div>
             </div>
           </div>
@@ -104,7 +108,7 @@
           <div class="col">
             <div class="d-flex align-items-center">
               <div>
-                <h4 class="mb-2">16</h4>
+                <h4 class="mb-2"><?= (int) $totalEntitlementRules; ?></h4>
               </div>
             </div>
           </div>
@@ -175,118 +179,42 @@
             </tr>
           </thead>
           <tbody class="list" id="table-simple-pagination-body">
-
-            <!-- Row 1: Active -->
-            <tr class="btn-reveal-trigger">
-              <td class="align-middle" style="width: 28px;">
-                <div class="form-check mb-0">
-                  <input class="form-check-input" type="checkbox" id="simple-pagination-item-0" data-bulk-select-row="data-bulk-select-row" />
-                </div>
-              </td>
-              <td class="align-middle white-space-nowrap fw-semi-bold name"><a href="/leave-entitlements/detail?year=2026+%2F+2027">FY26/27</a></td>
-              <td class="align-middle white-space-nowrap email">01 Jul 2026 — 30 Jun 2027</td>
-              <td class="align-middle white-space-nowrap product">6 Leave Types</td>
-              <td class="align-middle text-center fs-9 white-space-nowrap payment">
-                <span class="badge badge rounded-pill badge-subtle-primary">Active<span class="ms-1 fas fa-check" data-fa-transform="shrink-2"></span></span>
-              </td>
-              <td class="align-middle text-end amount">4/6</td>
-              <td class="align-middle white-space-nowrap text-end">
-                <div class="dropstart font-sans-serif position-static d-inline-block">
-                  <button class="btn btn-link text-600 btn-sm dropdown-toggle btn-reveal float-end" type="button" id="dropdown-simple-pagination-table-item-0" data-bs-toggle="dropdown" data-boundary="window" aria-haspopup="true" aria-expanded="false" data-bs-reference="parent"><span class="fas fa-ellipsis-h fs-10"></span></button>
-                  <div class="dropdown-menu dropdown-menu-end border py-2" aria-labelledby="dropdown-simple-pagination-table-item-0">
-                    <a class="dropdown-item" href="/leave-entitlements/detail?year=2026+%2F+2027">View Entitlements</a>
-                    <a class="dropdown-item" href="#!">Edit</a>
-                    <div class="dropdown-divider"></div>
-                    <a class="dropdown-item text-warning" href="#!">Close Year</a>
-                    <a class="dropdown-item text-danger" href="#!">Delete</a>
-                  </div>
-                </div>
-              </td>
-            </tr>
-
-            <!-- Row 2: Closed -->
-            <tr class="btn-reveal-trigger">
-              <td class="align-middle" style="width: 28px;">
-                <div class="form-check mb-0">
-                  <input class="form-check-input" type="checkbox" id="simple-pagination-item-1" data-bulk-select-row="data-bulk-select-row" />
-                </div>
-              </td>
-              <td class="align-middle white-space-nowrap fw-semi-bold name"><a href="/leave-entitlements/detail?year=2025+%2F+2026">FY25/26</a></td>
-              <td class="align-middle white-space-nowrap email">01 Jul 2025 — 30 Jun 2026</td>
-              <td class="align-middle white-space-nowrap product">6 Leave Types</td>
-              <td class="align-middle text-center fs-9 white-space-nowrap payment">
-                <span class="badge badge rounded-pill badge-subtle-secondary">Closed<span class="ms-1 fas fa-ban" data-fa-transform="shrink-2"></span></span>
-              </td>
-              <td class="align-middle text-end amount">6/6</td>
-              <td class="align-middle white-space-nowrap text-end">
-                <div class="dropstart font-sans-serif position-static d-inline-block">
-                  <button class="btn btn-link text-600 btn-sm dropdown-toggle btn-reveal float-end" type="button" id="dropdown-simple-pagination-table-item-1" data-bs-toggle="dropdown" data-boundary="window" aria-haspopup="true" aria-expanded="false" data-bs-reference="parent"><span class="fas fa-ellipsis-h fs-10"></span></button>
-                  <div class="dropdown-menu dropdown-menu-end border py-2" aria-labelledby="dropdown-simple-pagination-table-item-1">
-                    <a class="dropdown-item" href="/leave-entitlements/detail?year=2025+%2F+2026">View Entitlements</a>
-                    <a class="dropdown-item" href="#!">Edit</a>
-                    <div class="dropdown-divider"></div>
-                    <a class="dropdown-item text-warning" href="#!">Reopen</a>
-                    <a class="dropdown-item text-danger" href="#!">Delete</a>
-                  </div>
-                </div>
-              </td>
-            </tr>
-
-            <!-- Row 3: Upcoming -->
-            <tr class="btn-reveal-trigger">
-              <td class="align-middle" style="width: 28px;">
-                <div class="form-check mb-0">
-                  <input class="form-check-input" type="checkbox" id="simple-pagination-item-2" data-bulk-select-row="data-bulk-select-row" />
-                </div>
-              </td>
-              <td class="align-middle white-space-nowrap fw-semi-bold name"><a href="/leave-entitlements/detail?year=2027+%2F+2028">FY27/28</a></td>
-              <td class="align-middle white-space-nowrap email">01 Jul 2027 — 30 Jun 2028</td>
-              <td class="align-middle white-space-nowrap product">6 Leave Types</td>
-              <td class="align-middle text-center fs-9 white-space-nowrap payment">
-                <span class="badge badge rounded-pill badge-subtle-warning">Upcoming<span class="ms-1 fas fa-stream" data-fa-transform="shrink-2"></span></span>
-              </td>
-              <td class="align-middle text-end amount">0/6</td>
-              <td class="align-middle white-space-nowrap text-end">
-                <div class="dropstart font-sans-serif position-static d-inline-block">
-                  <button class="btn btn-link text-600 btn-sm dropdown-toggle btn-reveal float-end" type="button" id="dropdown-simple-pagination-table-item-2" data-bs-toggle="dropdown" data-boundary="window" aria-haspopup="true" aria-expanded="false" data-bs-reference="parent"><span class="fas fa-ellipsis-h fs-10"></span></button>
-                  <div class="dropdown-menu dropdown-menu-end border py-2" aria-labelledby="dropdown-simple-pagination-table-item-2">
-                    <a class="dropdown-item" href="/leave-entitlements/detail?year=2027+%2F+2028">Set Up Entitlements</a>
-                    <a class="dropdown-item" href="#!">Edit</a>
-                    <div class="dropdown-divider"></div>
-                    <a class="dropdown-item text-danger" href="#!">Delete</a>
-                  </div>
-                </div>
-              </td>
-            </tr>
-
-            <!-- Row 4: Closed (older) -->
-            <tr class="btn-reveal-trigger">
-              <td class="align-middle" style="width: 28px;">
-                <div class="form-check mb-0">
-                  <input class="form-check-input" type="checkbox" id="simple-pagination-item-3" data-bulk-select-row="data-bulk-select-row" />
-                </div>
-              </td>
-              <td class="align-middle white-space-nowrap fw-semi-bold name"><a href="#!">FY24/25</a></td>
-              <td class="align-middle white-space-nowrap email">01 Jul 2024 — 30 Jun 2025</td>
-              <td class="align-middle white-space-nowrap product">6 Leave Types</td>
-              <td class="align-middle text-center fs-9 white-space-nowrap payment">
-                <span class="badge badge rounded-pill badge-subtle-secondary">Closed<span class="ms-1 fas fa-ban" data-fa-transform="shrink-2"></span></span>
-              </td>
-              <td class="align-middle text-end amount">6/6</td>
-              <td class="align-middle white-space-nowrap text-end">
-                <div class="dropstart font-sans-serif position-static d-inline-block">
-                  <button class="btn btn-link text-600 btn-sm dropdown-toggle btn-reveal float-end" type="button" id="dropdown-simple-pagination-table-item-3" data-bs-toggle="dropdown" data-boundary="window" aria-haspopup="true" aria-expanded="false" data-bs-reference="parent"><span class="fas fa-ellipsis-h fs-10"></span></button>
-                  <div class="dropdown-menu dropdown-menu-end border py-2" aria-labelledby="dropdown-simple-pagination-table-item-3">
-                    <a class="dropdown-item" href="#!">View Entitlements</a>
-                    <a class="dropdown-item" href="#!">Edit</a>
-                    <div class="dropdown-divider"></div>
-                    <a class="dropdown-item text-warning" href="#!">Reopen</a>
-                    <a class="dropdown-item text-danger" href="#!">Delete</a>
-                  </div>
-                </div>
-              </td>
-            </tr>
-
+            <?php if (!empty($financialYears)): ?>
+              <?php foreach ($financialYears as $index => $year): ?>
+                <tr class="btn-reveal-trigger">
+                  <td class="align-middle" style="width: 28px;">
+                    <div class="form-check mb-0">
+                      <input class="form-check-input" type="checkbox" id="simple-pagination-item-<?= (int) $index; ?>" data-bulk-select-row="data-bulk-select-row" />
+                    </div>
+                  </td>
+                  <td class="align-middle white-space-nowrap fw-semi-bold name">
+                    <a href="/leave-entitlements/detail?year=<?= urlencode((string) $year->label) ?>"><?= htmlspecialchars((string) $year->label) ?></a>
+                  </td>
+                  <td class="align-middle white-space-nowrap email"><?= htmlspecialchars(date('d M Y', strtotime((string) $year->start_date))) ?> — <?= htmlspecialchars(date('d M Y', strtotime((string) $year->end_date))) ?></td>
+                  <td class="align-middle white-space-nowrap product"><?= (int) ($year->active_leave_type_count ?? 0); ?> Leave Types</td>
+                  <td class="align-middle text-center fs-9 white-space-nowrap payment">
+                    <?php $statusClass = strtolower((string) $year->status) === 'active' ? 'badge-subtle-primary' : (strtolower((string) $year->status) === 'upcoming' ? 'badge-subtle-warning' : 'badge-subtle-secondary'); ?>
+                    <span class="badge badge rounded-pill <?= htmlspecialchars($statusClass) ?>"><?= htmlspecialchars((string) $year->status) ?><span class="ms-1 fas fa-<?= strtolower((string) $year->status) === 'active' ? 'check' : (strtolower((string) $year->status) === 'upcoming' ? 'stream' : 'ban') ?>" data-fa-transform="shrink-2"></span></span>
+                  </td>
+                  <td class="align-middle text-end amount"><?= (int) ($year->entitlement_rule_count ?? 0); ?> / <?= (int) ($year->active_leave_type_count ?? 0); ?></td>
+                  <td class="align-middle white-space-nowrap text-end">
+                    <div class="dropstart font-sans-serif position-static d-inline-block">
+                      <button class="btn btn-link text-600 btn-sm dropdown-toggle btn-reveal float-end" type="button" id="dropdown-simple-pagination-table-item-<?= (int) $index; ?>" data-bs-toggle="dropdown" data-boundary="window" aria-haspopup="true" aria-expanded="false" data-bs-reference="parent"><span class="fas fa-ellipsis-h fs-10"></span></button>
+                      <div class="dropdown-menu dropdown-menu-end border py-2" aria-labelledby="dropdown-simple-pagination-table-item-<?= (int) $index; ?>">
+                        <a class="dropdown-item" href="/leave-entitlements/detail?year=<?= urlencode((string) $year->label) ?>">View Entitlements</a>
+                        <a class="dropdown-item" href="#!">Edit</a>
+                        <div class="dropdown-divider"></div>
+                        <a class="dropdown-item text-danger" href="#!">Delete</a>
+                      </div>
+                    </div>
+                  </td>
+                </tr>
+              <?php endforeach; ?>
+            <?php else: ?>
+              <tr>
+                <td colspan="7" class="text-center py-4 text-600">No financial years found.</td>
+              </tr>
+            <?php endif; ?>
           </tbody>
         </table>
       </div>
