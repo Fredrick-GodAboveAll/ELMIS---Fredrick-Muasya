@@ -44,17 +44,32 @@ class LeaveController extends Controller
         $content = '../app/Views/leave_management/leave_setup/leave_applications.php';
         include '../app/Views/layouts/admin.php';
     }
+
+    public function LeaveEntitlement()
+    {
+        $title = 'Leave Entitlement';
+        $currentPage = 'leave_entitlement';
+        $content = '../app/Views/leave_management/leave_setup/leave_entitlement.php';
+        include '../app/Views/layouts/admin.php';
+    }
+
+    public function LeaveEntitlementDetail()
+    {
+        $title = 'Leave Entitlement Detail';
+        $currentPage = 'leave_entitlement';
+        $selectedYear = $_GET['year'] ?? '2026 / 2027';
+        $content = '../app/Views/leave_management/leave_setup/leave_entitlement_detail.php';
+        include '../app/Views/layouts/admin.php';
+    }
+
     public function storeLeaveType()
     {
         try {
             Csrf::validate($_POST['csrf_token'] ?? '');
 
             $data = [
-                'name' => $_POST['leave_name'] ?? '',
-                'annual_entitlement_value' => $_POST['annual_entitlement_value'] ?? 0,
+                'name' => $_POST['name'] ?? $_POST['leave_name'] ?? '',
                 'calculation_method' => $_POST['calculation_method'] ?? 'working_days',
-                'carry_forward' => $_POST['carry_forward'] ?? 0,
-                'carry_forward_limit' => $_POST['carry_forward_limit'] ?? 0,
             ];
 
             $createdId = $this->leaveTypeService->create($data);

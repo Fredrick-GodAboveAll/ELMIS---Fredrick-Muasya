@@ -61,8 +61,6 @@ class ToolsController
                     throw new \InvalidArgumentException('Leave period does not exist for the selected Start Date. Please try again.');
                 }
 
-                $leaveTypeService->validateRequestedDaysAgainstEntitlement($leaveTypeId, $numberOfDays);
-
                 $endDate = $calculator->calculateEndDate($start, $numberOfDays, $calculationMethod);
                 $returnDate = $calculator->calculateReturnDate($endDate);
 

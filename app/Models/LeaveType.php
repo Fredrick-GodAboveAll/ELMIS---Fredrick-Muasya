@@ -9,7 +9,7 @@ class LeaveType extends Model
 
     public function all(): array
     {
-        $sql = "SELECT * FROM {$this->table} WHERE is_active = 1 ORDER BY name ASC";
+        $sql = "SELECT id, name, calculation_method, is_active, created_at, updated_at FROM {$this->table} WHERE is_active = 1 ORDER BY name ASC";
         $stmt = $this->db->prepare($sql);
         $stmt->execute();
 
@@ -18,14 +18,14 @@ class LeaveType extends Model
 
     public function findById(int $id)
     {
-        $stmt = $this->db->prepare("SELECT * FROM {$this->table} WHERE id = ? LIMIT 1");
+        $stmt = $this->db->prepare("SELECT id, name, calculation_method, is_active, created_at, updated_at FROM {$this->table} WHERE id = ? LIMIT 1");
         $stmt->execute([$id]);
         return $stmt->fetch(PDO::FETCH_OBJ);
     }
 
     public function findActiveById(int $id)
     {
-        $stmt = $this->db->prepare("SELECT * FROM {$this->table} WHERE id = ? AND is_active = 1 LIMIT 1");
+        $stmt = $this->db->prepare("SELECT id, name, calculation_method, is_active, created_at, updated_at FROM {$this->table} WHERE id = ? AND is_active = 1 LIMIT 1");
         $stmt->execute([$id]);
         return $stmt->fetch(PDO::FETCH_OBJ);
     }
@@ -41,17 +41,14 @@ class LeaveType extends Model
     public function create(array $data): int|false
     {
         $sql = "INSERT INTO {$this->table}
-                (name, annual_entitlement_value, calculation_method, carry_forward, carry_forward_limit, is_active)
-                VALUES (:name, :annual_entitlement_value, :calculation_method, :carry_forward, :carry_forward_limit, :is_active)";
+                (name, calculation_method, is_active)
+                VALUES (:name, :calculation_method, :is_active)";
 
         $stmt = $this->db->prepare($sql);
         $ok = $stmt->execute([
-            'name' => $data['name'],
-            'annual_entitlement_value' => $data['annual_entitlement_value'],
-            'calculation_method' => $data['calculation_method'],
-            'carry_forward' => $data['carry_forward'] ?? 0,
-            'carry_forward_limit' => $data['carry_forward_limit'] ?? 0,
-            'is_active' => $data['is_active'] ?? 1,
+            'name' => trim((string) ($data['name'] ?? '')),
+            'calculation_method' => trim((string) ($data['calculation_method'] ?? 'working_days')),
+            'is_active' => (int) ($data['is_active'] ?? 1),
         ]);
 
         if (!$ok) {
@@ -59,5 +56,18 @@ class LeaveType extends Model
         }
 
         return (int) $this->db->lastInsertId();
+    }
+
+    public function update(int $id, array $data): bool
+    {
+        $sql = "UPDATE {$this->table} SET name = :name, calculation_method = :calculation_method, is_active = :is_active, updated_at = CURRENT_TIMESTAMP WHERE id = :id";
+        $stmt = $this->db->prepare($sql);
+
+        return $stmt->execute([
+            'id' => $id,
+            'name' => trim((string) ($data['name'] ?? '')),
+            'calculation_method' => trim((string) ($data['calculation_method'] ?? 'working_days')),
+            'is_active' => (int) ($data['is_active'] ?? 1),
+        ]);
     }
 }

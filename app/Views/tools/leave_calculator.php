@@ -52,20 +52,8 @@
 
       <div class="col-md-4">
         <label class="form-label">Number of Days</label>
-        <?php
-        $selectedLeaveTypeForHint = null;
-        $selectedLeaveTypeId = (int) ($oldInput['leave_type_id'] ?? 0);
-        foreach ($leaveTypes as $leaveType) {
-            if ((int) $leaveType->id === $selectedLeaveTypeId) {
-                $selectedLeaveTypeForHint = $leaveType;
-                break;
-            }
-        }
-        $selectedEntitlement = $selectedLeaveTypeForHint ? (float) $selectedLeaveTypeForHint->annual_entitlement_value : null;
-        $selectedEntitlementText = $selectedEntitlement !== null ? 'Maximum allowed: ' . (int) $selectedEntitlement . ' days' : 'Select a leave type to view the maximum allowed days.';
-        ?>
         <input type="number" name="number_of_days" min="1" class="form-control" value="<?= htmlspecialchars($oldInput['number_of_days'] ?? '') ?>" required />
-        <div class="form-text" id="leaveEntitlementHint"><?= htmlspecialchars($selectedEntitlementText) ?></div>
+        <div class="form-text" id="leaveEntitlementHint">Calculation is based on the selected leave type's calculation method.</div>
       </div>
       <div class="col-12">
         <button class="btn btn-primary" type="submit">Calculate</button>
