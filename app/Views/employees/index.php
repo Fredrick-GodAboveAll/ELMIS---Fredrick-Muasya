@@ -73,7 +73,7 @@
               <th class="text-900 sort pe-1 align-middle white-space-nowrap">ID No.</th>
               <th class="text-900 sort pe-1 align-middle white-space-nowrap">Desigantion</th>
               <th class="text-900 sort pe-1 align-middle white-space-nowrap text-center">JG</th>
-              <th class="text-900 sort pe-1 align-middle white-space-nowrap text-center">Employment Terms</th>
+              <th class="text-900 sort pe-1 align-middle white-space-nowrap text-center">Terms</th>
               <th class="text-900 sort pe-1 align-middle white-space-nowrap text-end">Special Needs</th>
               <th class="text-900 no-sort pe-1 align-middle data-table-row-action" data-orderable="false"></th>
             </tr>

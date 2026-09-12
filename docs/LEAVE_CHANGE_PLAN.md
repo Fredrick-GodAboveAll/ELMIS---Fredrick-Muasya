@@ -3,9 +3,10 @@
 This document maps what currently exists in the codebase, how the leave-related pieces are organised, and rules/recommendations for implementing the proposed 6-table leave flow (rules, allocations, applications). Use this as the single source of truth when planning migrations and code changes.
 
 ## Summary
-- Current implemented tables/models: `employees`, `financial_years`, `leave_types`.
+- Current implemented tables/models: `employees` (with `payroll_number` as its primary key), `financial_years`, `leave_types`.
 - Partial services implemented: `LeaveTypeService`, `LeaveCalculator`, `LeavePeriodService`.
 - Placeholder services exist for allocations and applications.
+- Employee references in leave tables should use `payroll_number` rather than a separate numeric `id`.
 
 ## What the system already has (files + responsibilities)
 
@@ -53,10 +54,11 @@ This document maps what currently exists in the codebase, how the leave-related 
    - Compute current balance as `opening_balance - SUM(approved_leave_days_in_that_FY)`; store cached balance in `leave_allocations` only if performance requires it and provide a reconciliation job.
 
 5. Approvals & auditing
-   - `leave_applications` should include: `status` (pending/approved/rejected), `approver_id`, `approved_at`, `created_by`, `created_at`, `updated_at` and an audit/history table or immutable events for approvals and adjustments.
+   - `leave_applications` should include: `status` (`pending`, `approved`, `rejected`, `cancelled`, `withdrawn`), `approver_id`, `approved_at`, `created_by`, `created_at`, `updated_at` and an audit/history table or immutable events for approvals and adjustments.
+   - For this project, use `payroll_number` as the employee key across leave-related tables because that matches the existing `employees` table design.
 
 6. Indexing & constraints
-   - Add foreign keys for `employee_id`, `financial_year_id`, `leave_type_id`. Add composite index on `(financial_year_id, leave_type_id)` in `leave_period_leave_types` and on `(employee_id, financial_year_id, leave_type_id)` in `leave_allocations`.
+   - Add foreign keys using `payroll_number` to `employees(payroll_number)`, together with `financial_year_id` and `leave_type_id`. Add composite index on `(financial_year_id, leave_type_id)` in `leave_period_leave_types`, and on `(payroll_number, financial_year_id, leave_type_id)` in `leave_allocations`.
 
 ## Suggested minimal field lists (for migration authors)
 
@@ -64,10 +66,12 @@ This document maps what currently exists in the codebase, how the leave-related 
   - `id`, `financial_year_id`, `leave_type_id`, `entitlement` (decimal), `carry_forward_allowed` (tinyint), `carry_forward_limit` (decimal), `created_at`, `updated_at`.
 
 - `leave_allocations`
-  - `id`, `employee_id`, `financial_year_id`, `leave_type_id`, `opening_entitlement` (decimal), `carried_forward` (decimal), `opening_balance` (decimal), `created_at`, `updated_at`, `notes`.
+  - `id`, `payroll_number` (VARCHAR(20)), `financial_year_id`, `leave_type_id`, `opening_entitlement` (decimal), `carried_forward` (decimal), `opening_balance` (decimal), `created_at`, `updated_at`, `notes`.
+  - Foreign key: `payroll_number` references `employees(payroll_number)`.
 
 - `leave_applications`
-  - `id`, `employee_id`, `financial_year_id`, `leave_type_id`, `start_date`, `end_date`, `days` (decimal/int), `calculation_method`, `status`, `approver_id`, `approved_at`, `created_by`, `created_at`, `updated_at`, `external_reference`.
+  - `id`, `payroll_number` (VARCHAR(20)), `financial_year_id`, `leave_type_id`, `start_date`, `end_date`, `days` (decimal/int), `calculation_method`, `status`, `approver_id`, `approved_at`, `created_by`, `created_at`, `updated_at`, `external_reference`.
+  - Foreign key: `payroll_number` references `employees(payroll_number)`.
   - If implementing Option A splitting logic, add `parent_application_id` to group split fragments.
 
 ## Step-by-step implementation plan (practical)
