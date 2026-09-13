@@ -53,7 +53,7 @@ class LeaveController extends Controller
         $title = 'Leave Entitlement';
         $currentPage = 'leave_entitlement';
 
-        $financialYears = $this->leaveEntitlementService->getFinancialYearSummary();
+        $financialYears = $this->leaveEntitlementService->getFinancialYearConfigurationSummary();
         $financialYearCount = count($financialYears);
         $activeYearCount = count(array_filter($financialYears, fn($year) => isset($year->is_current) && (int) $year->is_current === 1));
         $totalEntitlementRules = array_sum(array_map(fn($year) => (int) ($year->entitlement_rule_count ?? 0), $financialYears));
@@ -72,7 +72,8 @@ class LeaveController extends Controller
         $selectedYear = $selectedYear === '' ? $this->leaveEntitlementService->getCurrentOrLatestYearLabel() : $selectedYear;
 
         $entitlements = $this->leaveEntitlementService->getEntitlementsForYear($selectedYear);
-        $allFinancialYears = $this->leaveEntitlementService->getFinancialYearSummary();
+        $allFinancialYears = $this->leaveEntitlementService->getFinancialYearConfigurationSummary();
+        $csrf = Csrf::generate();
 
         $content = '../app/Views/leave_management/leave_setup/leave_entitlement_detail.php';
         include '../app/Views/layouts/admin.php';

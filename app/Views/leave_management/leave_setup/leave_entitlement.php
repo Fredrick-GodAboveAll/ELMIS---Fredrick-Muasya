@@ -1,8 +1,4 @@
 <?php $currentPage = 'leave_entitlement'; ?>
-<?php $financialYears = $financialYears ?? []; ?>
-<?php $financialYearCount = $financialYearCount ?? 0; ?>
-<?php $activeYearCount = $activeYearCount ?? 0; ?>
-<?php $totalEntitlementRules = $totalEntitlementRules ?? 0; ?>
 
 <nav aria-label="breadcrumb" class="mb-3">
   <ol class="breadcrumb mb-0">
@@ -193,10 +189,11 @@
                   <td class="align-middle white-space-nowrap email"><?= htmlspecialchars(date('d M Y', strtotime((string) $year->start_date))) ?> — <?= htmlspecialchars(date('d M Y', strtotime((string) $year->end_date))) ?></td>
                   <td class="align-middle white-space-nowrap product"><?= (int) ($year->active_leave_type_count ?? 0); ?> Leave Types</td>
                   <td class="align-middle text-center fs-9 white-space-nowrap payment">
-                    <?php $statusClass = strtolower((string) $year->status) === 'active' ? 'badge-subtle-primary' : (strtolower((string) $year->status) === 'upcoming' ? 'badge-subtle-warning' : 'badge-subtle-secondary'); ?>
-                    <span class="badge badge rounded-pill <?= htmlspecialchars($statusClass) ?>"><?= htmlspecialchars((string) $year->status) ?><span class="ms-1 fas fa-<?= strtolower((string) $year->status) === 'active' ? 'check' : (strtolower((string) $year->status) === 'upcoming' ? 'stream' : 'ban') ?>" data-fa-transform="shrink-2"></span></span>
+                    <?php $statusText = (string) ($year->configuration_status ?? 'Not Configured'); ?>
+                    <?php $statusClass = $statusText === 'Fully Configured' ? 'badge-subtle-success' : ($statusText === 'Configured' ? 'badge-subtle-primary' : 'badge-subtle-secondary'); ?>
+                    <span class="badge badge rounded-pill <?= htmlspecialchars($statusClass) ?>"><?= htmlspecialchars($statusText) ?></span>
                   </td>
-                  <td class="align-middle text-end amount"><?= (int) ($year->entitlement_rule_count ?? 0); ?> / <?= (int) ($year->active_leave_type_count ?? 0); ?></td>
+                  <td class="align-middle text-end amount"><?= htmlspecialchars((string) ($year->configuration_text ?? '0 of 0 configured')) ?></td>
                   <td class="align-middle white-space-nowrap text-end">
                     <div class="dropstart font-sans-serif position-static d-inline-block">
                       <button class="btn btn-link text-600 btn-sm dropdown-toggle btn-reveal float-end" type="button" id="dropdown-simple-pagination-table-item-<?= (int) $index; ?>" data-bs-toggle="dropdown" data-boundary="window" aria-haspopup="true" aria-expanded="false" data-bs-reference="parent"><span class="fas fa-ellipsis-h fs-10"></span></button>
@@ -232,13 +229,17 @@
         <h5 class="modal-title mb-0">Configure Financial Year</h5>
       </div>
       <div class="modal-body">
-        <p class="text-600 mb-3" style="font-size:13px;">Choose a year that still needs entitlement rules set up. Fully-configured years already have all six leave types covered.</p>
+        <p class="text-600 mb-3" style="font-size:13px;">Choose a year to review or configure its entitlement rules.</p>
         <form method="get" action="/leave-entitlements/detail">
           <label class="form-label mb-2" for="configureSelect">Financial year</label>
           <select class="form-select mb-3" id="configureSelect" name="year">
-            <option value="2027 / 2028">2027 / 2028 — not started</option>
-            <option value="2026 / 2027">2026 / 2027 — 4 of 6 configured</option>
-            <option value="2025 / 2026">2025 / 2026 — fully configured</option>
+            <?php if (!empty($financialYears)): ?>
+              <?php foreach ($financialYears as $year): ?>
+                <option value="<?= htmlspecialchars((string) $year->label) ?>"><?= htmlspecialchars((string) $year->label) ?> — <?= htmlspecialchars((string) ($year->configuration_text ?? '0 of 0 configured')) ?></option>
+              <?php endforeach; ?>
+            <?php else: ?>
+              <option value="">No financial years available</option>
+            <?php endif; ?>
           </select>
           <button class="btn btn-primary w-100" type="submit">Continue</button>
         </form>

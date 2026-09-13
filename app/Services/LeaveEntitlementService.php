@@ -12,34 +12,31 @@ class LeaveEntitlementService
         $this->leaveEntitlementModel = new LeaveEntitlement();
     }
 
-    public function getFinancialYearSummary(): array
+    public function getFinancialYearConfigurationSummary(): array
     {
-        $years = $this->leaveEntitlementModel->getFinancialYearSummary();
+        $years = $this->leaveEntitlementModel->getFinancialYearConfigurationSummary();
 
         foreach ($years as $year) {
-            $year->status = $this->resolveStatus($year);
-            $year->display_label = $this->formatYearLabel((string) $year->label);
-            $year->entitlement_rule_count = (int) ($year->entitlement_rule_count ?? 0);
             $year->active_leave_type_count = (int) ($year->active_leave_type_count ?? 0);
+            $year->entitlement_rule_count = (int) ($year->entitlement_rule_count ?? 0);
+            $year->configuration_status = $this->resolveConfigurationStatus($year->entitlement_rule_count, $year->active_leave_type_count);
+            $year->configuration_text = $this->buildConfigurationText($year->entitlement_rule_count, $year->active_leave_type_count);
+            $year->display_label = $this->formatYearLabel((string) $year->label);
         }
 
         return $years;
     }
 
+    public function getFinancialYearSummary(): array
+    {
+        return $this->getFinancialYearConfigurationSummary();
+    }
+
     public function getEntitlementsForYear(string $yearLabel): array
     {
         $normalized = $this->normalizeYearLabel($yearLabel);
-        $rows = $this->leaveEntitlementModel->findByYearLabel($normalized);
 
-        foreach ($rows as $row) {
-            $row->display_label = $this->formatYearLabel((string) ($row->financial_year_label ?? $normalized));
-            $row->leave_type_name = $row->leave_type_name ?? 'Unassigned';
-            $row->entitlement = (float) ($row->entitlement ?? 0);
-            $row->carry_forward = (bool) ($row->carry_forward ?? 0);
-            $row->carry_forward_limit = (float) ($row->carry_forward_limit ?? 0);
-        }
-
-        return $rows;
+        return $this->leaveEntitlementModel->findByYearLabel($normalized);
     }
 
     public function getCurrentOrLatestYearLabel(): string
@@ -76,19 +73,32 @@ class LeaveEntitlementService
         return str_replace('/', ' / ', $normalized);
     }
 
-    private function resolveStatus(object $year): string
+    private function resolveConfigurationStatus(int $configuredCount, int $activeCount): string
     {
-        if (!empty($year->is_current)) {
-            return 'Active';
+        if ($activeCount <= 0) {
+            return 'Not Configured';
         }
 
-        $startDate = new \DateTimeImmutable((string) $year->start_date);
-        $today = new \DateTimeImmutable('now');
-
-        if ($startDate > $today) {
-            return 'Upcoming';
+        if ($configuredCount === 0) {
+            return 'Not Configured';
         }
 
-        return 'Closed';
+        if ($configuredCount < $activeCount) {
+            return 'Configured';
+        }
+
+        return 'Fully Configured';
+    }
+
+    private function buildConfigurationText(int $configuredCount, int $activeCount): string
+    {
+        $safeActiveCount = max(0, $activeCount);
+        $safeConfiguredCount = max(0, $configuredCount);
+
+        if ($safeActiveCount <= 0) {
+            return '0 of 0 configured';
+        }
+
+        return $safeConfiguredCount . ' of ' . $safeActiveCount . ' configured';
     }
 }

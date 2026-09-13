@@ -7,7 +7,7 @@ class LeaveEntitlement extends Model
 {
     protected $table = 'leave_entitlements';
 
-    public function getFinancialYearSummary(): array
+    public function getFinancialYearConfigurationSummary(): array
     {
         $sql = "SELECT
                     fy.id,
@@ -15,11 +15,11 @@ class LeaveEntitlement extends Model
                     fy.start_date,
                     fy.end_date,
                     fy.is_current,
-                    COUNT(DISTINCT le.id) AS entitlement_rule_count,
-                    COUNT(DISTINCT lt.id) AS active_leave_type_count
+                    COUNT(DISTINCT lt.id) AS active_leave_type_count,
+                    COUNT(DISTINCT le.id) AS entitlement_rule_count
                 FROM financial_years fy
-                LEFT JOIN leave_entitlements le ON le.financial_year_id = fy.id
-                LEFT JOIN leave_types lt ON lt.id = le.leave_type_id AND lt.is_active = 1
+                LEFT JOIN leave_types lt ON lt.is_active = 1
+                LEFT JOIN leave_entitlements le ON le.financial_year_id = fy.id AND le.leave_type_id = lt.id
                 GROUP BY fy.id, fy.label, fy.start_date, fy.end_date, fy.is_current
                 ORDER BY fy.start_date DESC";
 
@@ -27,6 +27,11 @@ class LeaveEntitlement extends Model
         $stmt->execute();
 
         return $stmt->fetchAll(PDO::FETCH_OBJ);
+    }
+
+    public function getFinancialYearSummary(): array
+    {
+        return $this->getFinancialYearConfigurationSummary();
     }
 
     public function findByYearLabel(string $yearLabel): array
@@ -48,8 +53,8 @@ class LeaveEntitlement extends Model
                     le.created_at,
                     le.updated_at
                 FROM financial_years fy
-                LEFT JOIN leave_entitlements le ON le.financial_year_id = fy.id
-                LEFT JOIN leave_types lt ON lt.id = le.leave_type_id
+                INNER JOIN leave_entitlements le ON le.financial_year_id = fy.id
+                INNER JOIN leave_types lt ON lt.id = le.leave_type_id
                 WHERE fy.label = :label
                 ORDER BY lt.name ASC";
 
