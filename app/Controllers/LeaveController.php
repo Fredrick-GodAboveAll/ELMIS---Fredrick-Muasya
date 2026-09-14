@@ -66,17 +66,53 @@ class LeaveController extends Controller
     {
         $title = 'Leave Entitlement Detail';
         $currentPage = 'leave_entitlement';
-
-        $selectedYear = $_GET['year'] ?? $this->leaveEntitlementService->getCurrentOrLatestYearLabel();
-        $selectedYear = trim((string) $selectedYear);
-        $selectedYear = $selectedYear === '' ? $this->leaveEntitlementService->getCurrentOrLatestYearLabel() : $selectedYear;
-
-        $entitlements = $this->leaveEntitlementService->getEntitlementsForYear($selectedYear);
+        // Authorization is enforced via RoleMiddleware on the route. Require an explicit `year` query parameter.
         $allFinancialYears = $this->leaveEntitlementService->getFinancialYearConfigurationSummary();
+
+        $hasYear = array_key_exists('year', $_GET) && trim((string) ($_GET['year'] ?? '')) !== '';
+
+        // If no explicit year provided, treat as missing resource (404) per new policy.
+        if (!$hasYear) {
+            (new ErrorController())->notFound();
+        }
+
+        $rawYear = (string) ($_GET['year'] ?? '');
+        $normalizedYear = $this->normalizeYearLabelLocal($rawYear);
+
+        // Build set of known normalized labels
+        $known = [];
+        foreach ($allFinancialYears as $fy) {
+            $label = (string) ($fy->label ?? '');
+            $known[$this->normalizeYearLabelLocal($label)] = true;
+        }
+
+        // If explicitly supplied year is not known, return 404 (do not silently fallback)
+        if (!isset($known[$normalizedYear])) {
+            (new ErrorController())->notFound();
+        }
+
+        // Safe to fetch entitlements for the validated year.
+        $selectedYear = $normalizedYear;
+        $entitlements = $this->leaveEntitlementService->getEntitlementsForYear($selectedYear);
         $csrf = Csrf::generate();
 
         $content = '../app/Views/leave_management/leave_setup/leave_entitlement_detail.php';
         include '../app/Views/layouts/admin.php';
+    }
+
+    /**
+     * Local copy of the year-normalization logic used by the service.
+     * Kept private and minimal to validate query input consistently.
+     */
+    private function normalizeYearLabelLocal(string $yearLabel): string
+    {
+        $value = trim((string) $yearLabel);
+        $value = str_replace(' ', '', $value);
+        $value = str_replace('–', '/', $value);
+        $value = str_replace('—', '/', $value);
+        $value = preg_replace('/\s*\/\s*/', '/', $value) ?? $value;
+
+        return $value;
     }
 
     public function storeLeaveType()
