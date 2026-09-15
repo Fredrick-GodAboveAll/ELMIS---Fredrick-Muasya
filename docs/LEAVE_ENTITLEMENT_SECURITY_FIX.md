@@ -22,11 +22,13 @@ The detail controller previously used this pattern:
 
 There was no check that the supplied value existed in the database-backed list of financial years before using it.
 
-The root cause was in:
+The validation fix was needed in the controller itself:
 
 - `app/Controllers/LeaveController.php`
-- `app/Services/LeaveEntitlementService.php`
-- `app/Models/LeaveEntitlement.php`
+
+The service and model were inspected and used as read-only access points, but they did not require modification for the validation fix. In particular, the underlying entitlement lookup already used a prepared `SELECT` query and did not perform writes during a GET request.
+
+This was therefore a correctness and resource-validation issue rather than a database-write vulnerability.
 
 ## What was fixed
 

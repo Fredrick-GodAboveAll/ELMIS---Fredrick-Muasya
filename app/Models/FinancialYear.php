@@ -88,6 +88,13 @@ class FinancialYear extends Model
         return $stmt->fetch(PDO::FETCH_OBJ);
     }
 
+    public function findByLabel(string $label)
+    {
+        $stmt = $this->db->prepare("SELECT * FROM {$this->table} WHERE label = ? LIMIT 1");
+        $stmt->execute([$label]);
+        return $stmt->fetch(PDO::FETCH_OBJ);
+    }
+
     public function findByDate(string $date)
     {
         $stmt = $this->db->prepare("SELECT * FROM {$this->table} WHERE start_date <= ? AND end_date >= ? LIMIT 1");

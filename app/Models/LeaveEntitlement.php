@@ -71,4 +71,43 @@ class LeaveEntitlement extends Model
 
         return $stmt->fetch(PDO::FETCH_OBJ);
     }
+
+    public function existsForYearType(int $financialYearId, int $leaveTypeId): bool
+    {
+        $stmt = $this->db->prepare("SELECT id FROM {$this->table} WHERE financial_year_id = ? AND leave_type_id = ? LIMIT 1");
+        $stmt->execute([$financialYearId, $leaveTypeId]);
+        return (bool) $stmt->fetchColumn();
+    }
+
+    public function create(array $data)
+    {
+        $sql = "INSERT INTO {$this->table} (financial_year_id, leave_type_id, entitlement, carry_forward, carry_forward_limit, created_at, updated_at) VALUES (:financial_year_id, :leave_type_id, :entitlement, :carry_forward, :carry_forward_limit, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP)";
+
+        $stmt = $this->db->prepare($sql);
+
+        $ok = $stmt->execute([
+            'financial_year_id' => $data['financial_year_id'],
+            'leave_type_id' => $data['leave_type_id'],
+            'entitlement' => $data['entitlement'],
+            'carry_forward' => $data['carry_forward'],
+            'carry_forward_limit' => $data['carry_forward_limit'],
+        ]);
+
+        if (!$ok) {
+            return false;
+        }
+
+        return (int) $this->db->lastInsertId();
+    }
+
+    /**
+     * Return active leave types that do not yet have an entitlement for the given financial year id
+     */
+    public function getEligibleLeaveTypesForYear(int $financialYearId): array
+    {
+        $sql = "SELECT lt.id, lt.name, lt.calculation_method FROM leave_types lt LEFT JOIN leave_entitlements le ON le.leave_type_id = lt.id AND le.financial_year_id = :fy_id WHERE lt.is_active = 1 AND le.id IS NULL ORDER BY lt.name ASC";
+        $stmt = $this->db->prepare($sql);
+        $stmt->execute(['fy_id' => $financialYearId]);
+        return $stmt->fetchAll(PDO::FETCH_OBJ);
+    }
 }

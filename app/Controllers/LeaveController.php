@@ -96,8 +96,117 @@ class LeaveController extends Controller
         $entitlements = $this->leaveEntitlementService->getEntitlementsForYear($selectedYear);
         $csrf = Csrf::generate();
 
+        // Provide eligible leave types (active leave types without an entitlement for this FY)
+        $eligibleLeaveTypes = $this->leaveEntitlementService->getAvailableLeaveTypesForYear($selectedYear);
+
         $content = '../app/Views/leave_management/leave_setup/leave_entitlement_detail.php';
         include '../app/Views/layouts/admin.php';
+    }
+
+    public function storeLeaveEntitlement()
+    {
+        try {
+            // Ensure request is POST
+            if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+                Session::flash('error', 'Invalid request method.');
+                header('Location: /leave-entitlements');
+                exit;
+            }
+
+            Csrf::validate($_POST['csrf_token'] ?? '');
+
+            $year = $_POST['year'] ?? '';
+
+            // Reject edit attempts in this Add-only action
+            $editId = trim((string) ($_POST['edit_id'] ?? ''));
+            if ($editId !== '') {
+                throw new \InvalidArgumentException('Editing entitlements is not supported in this action.');
+            }
+
+            // Validate leave_type input is present and numeric
+            if (!isset($_POST['leave_type']) || trim((string) $_POST['leave_type']) === '') {
+                throw new \InvalidArgumentException('Please select a leave type.');
+            }
+
+            $leaveTypeId = (int) $_POST['leave_type'];
+            if ($leaveTypeId <= 0) {
+                throw new \InvalidArgumentException('Selected leave type is invalid.');
+            }
+
+            // Entitlement days: required, numeric, whole number, >= 0
+            if (!isset($_POST['entitlement_days']) || trim((string) $_POST['entitlement_days']) === '') {
+                throw new \InvalidArgumentException('Please provide entitlement days.');
+            }
+            if (!is_numeric($_POST['entitlement_days'])) {
+                throw new \InvalidArgumentException('Entitlement must be a whole number.');
+            }
+            $entitlementDaysRaw = $_POST['entitlement_days'];
+            if ((string) ((int) $entitlementDaysRaw) !== (string) (string) $entitlementDaysRaw && (float) $entitlementDaysRaw != (int) $entitlementDaysRaw) {
+                // Detect decimals like "1.5" by comparing int cast
+                throw new \InvalidArgumentException('Entitlement must be a whole number.');
+            }
+            $entitlementDays = (int) $entitlementDaysRaw;
+            if ($entitlementDays < 0) {
+                throw new \InvalidArgumentException('Entitlement must be 0 or greater.');
+            }
+
+            // Carry forward must be explicitly 'Yes' or 'No'
+            if (!isset($_POST['carry_forward']) || !in_array($_POST['carry_forward'], ['Yes', 'No'], true)) {
+                throw new \InvalidArgumentException('Carry Forward selection is required.');
+            }
+            $carryForwardRaw = $_POST['carry_forward'];
+            $carryForward = $carryForwardRaw === 'Yes' ? 1 : 0;
+
+            // Carry forward limit validation
+            $carryForwardLimitRaw = $_POST['carry_forward_limit'] ?? '';
+            if ($carryForward === 0) {
+                // When carry_forward is No, the submitted limit MUST be exactly 0 or empty
+                $limitVal = $carryForwardLimitRaw === '' ? 0 : $carryForwardLimitRaw;
+                if (!is_numeric($limitVal) || (int) $limitVal !== 0) {
+                    throw new \InvalidArgumentException('Maximum carry forward must be 0 when carry forward is disabled.');
+                }
+                $carryForwardLimit = 0;
+            } else {
+                // When Yes: required, numeric, whole number, >= 0
+                if ($carryForwardLimitRaw === '' || !is_numeric($carryForwardLimitRaw)) {
+                    throw new \InvalidArgumentException('Please provide a numeric maximum carry forward value.');
+                }
+                if ((float) $carryForwardLimitRaw != (int) $carryForwardLimitRaw) {
+                    throw new \InvalidArgumentException('Maximum carry forward must be a whole number.');
+                }
+                $carryForwardLimit = (int) $carryForwardLimitRaw;
+                if ($carryForwardLimit < 0) {
+                    throw new \InvalidArgumentException('Maximum carry forward must be 0 or greater.');
+                }
+            }
+
+            $data = [
+                'leave_type_id' => $leaveTypeId,
+                'entitlement' => $entitlementDays,
+                'carry_forward' => $carryForward,
+                'carry_forward_limit' => $carryForwardLimit,
+            ];
+
+            $createdId = $this->leaveEntitlementService->create((string) $year, $data);
+
+            $leaveTypeService = new \App\Services\LeaveTypeService();
+            $lt = $leaveTypeService->findById((int) $data['leave_type_id']);
+            $leaveName = $lt ? $lt->name : 'Leave type';
+
+            Session::flash('success', $leaveName . ' entitlement added successfully for FY ' . $year . '.');
+            header('Location: /leave-entitlements/detail?year=' . urlencode($year));
+            exit;
+        } catch (\InvalidArgumentException $e) {
+            Session::flash('error', $e->getMessage());
+            $year = $_POST['year'] ?? '';
+            header('Location: /leave-entitlements/detail?year=' . urlencode((string) $year));
+            exit;
+        } catch (\Exception $e) {
+            Session::flash('error', 'Unable to save entitlement. Please try again.');
+            $year = $_POST['year'] ?? '';
+            header('Location: /leave-entitlements/detail?year=' . urlencode((string) $year));
+            exit;
+        }
     }
 
     /**
