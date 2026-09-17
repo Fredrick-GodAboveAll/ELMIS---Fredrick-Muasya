@@ -1,12 +1,5 @@
 <?php $currentPage = 'leave_entitlement'; ?>
 
-<nav aria-label="breadcrumb" class="mb-3">
-  <ol class="breadcrumb mb-0">
-    <li class="breadcrumb-item"><a href="/dashboard">Dash</a></li>
-    <li class="breadcrumb-item active" aria-current="page">Leave Entitlement</li>
-  </ol>
-</nav>
-
 <div class="row align-items-end justify-content-between g-3 mb-3">
   <div class="col-md-8">
     <div>
@@ -16,6 +9,14 @@
       <h2 class="mb-1">Leave Entitlement</h2>
       <p class="text-600 mb-0">Manage annual entitlement rules, active financial years, and overall leave configuration.</p>
     </div>
+  </div>
+  <div class="col-md-4">
+    <nav aria-label="breadcrumb">
+      <ol class="breadcrumb mb-0 justify-content-md-end">
+        <li class="breadcrumb-item"><a href="/dashboard">Dash</a></li>
+        <li class="breadcrumb-item active" aria-current="page">Leave Entitlement</li>
+      </ol>
+    </nav>
   </div>
 </div>
 
