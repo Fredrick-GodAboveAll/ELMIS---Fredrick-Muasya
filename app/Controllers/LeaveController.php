@@ -5,6 +5,8 @@ use App\Core\Csrf;
 use App\Core\Session;
 use App\Models\FinancialYear;
 use App\Services\LeaveEntitlementService;
+use App\Services\LeavePolicyDetailService;
+use App\Services\LeavePolicyService;
 use App\Services\LeaveTypeService;
 use App\Utils\Validator;
 use InvalidArgumentException;
@@ -14,12 +16,16 @@ class LeaveController extends Controller
     protected $leaveModel;
     protected $leaveTypeService;
     protected $leaveEntitlementService;
+    protected $leavePolicyService;
+    protected $leavePolicyDetailService;
 
     public function __construct()
     {
         $this->leaveModel = new FinancialYear();
         $this->leaveTypeService = new LeaveTypeService();
         $this->leaveEntitlementService = new LeaveEntitlementService();
+        $this->leavePolicyService = new LeavePolicyService();
+        $this->leavePolicyDetailService = new LeavePolicyDetailService();
     }
 
     public function index()
@@ -482,8 +488,207 @@ class LeaveController extends Controller
     {
         $title = 'Leave Policies';
         $currentPage = 'leave_policy';
+        $policies = $this->leavePolicyService->all();
         $content = '../app/Views/leave_management/leave_setup/leave_policy.php';
         include '../app/Views/layouts/admin.php';
+    }
+
+    public function LeavePolicyDetail()
+    {
+        $policyId = isset($_GET['id']) ? (int) $_GET['id'] : 0;
+        if ($policyId <= 0) {
+            Session::flash('error', 'A valid policy is required.');
+            header('Location: /leave-policies');
+            exit;
+        }
+
+        try {
+            $policy = $this->leavePolicyService->findById($policyId);
+        } catch (InvalidArgumentException $e) {
+            Session::flash('error', $e->getMessage());
+            header('Location: /leave-policies');
+            exit;
+        }
+
+        $selectedYearId = isset($_GET['year']) ? (int) $_GET['year'] : 0;
+        $financialYears = $this->leavePolicyDetailService->getAvailableFinancialYears();
+        if ($selectedYearId <= 0 && !empty($financialYears)) {
+            $selectedYearId = (int) $financialYears[0]->id;
+        }
+
+        if ($selectedYearId > 0) {
+            $yearExists = false;
+            foreach ($financialYears as $year) {
+                if ((int) $year->id === $selectedYearId) {
+                    $yearExists = true;
+                    break;
+                }
+            }
+
+            if (!$yearExists) {
+                Session::flash('error', 'The selected financial year could not be found.');
+                header('Location: /leave-policies');
+                exit;
+            }
+        }
+
+        $existingAllocations = [];
+        $entitlements = [];
+        if ($selectedYearId > 0) {
+            $entitlements = $this->leavePolicyDetailService->getEntitlementsForYear($selectedYearId);
+            $existingRecords = $this->leavePolicyDetailService->getPolicyDetailsForYear($policyId, $selectedYearId);
+            foreach ($existingRecords as $record) {
+                $existingAllocations[(int) $record->leave_entitlement_id] = (float) $record->allocation;
+            }
+        }
+
+        $title = 'Leave Policy Details';
+        $currentPage = 'leave_policy';
+        $content = '../app/Views/leave_management/leave_setup/leave_policy_detail.php';
+        $csrf = Csrf::generate();
+        include '../app/Views/layouts/admin.php';
+    }
+
+    public function storeLeavePolicyDetail()
+    {
+        try {
+            if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+                Session::flash('error', 'Invalid request method.');
+                header('Location: /leave-policies');
+                exit;
+            }
+
+            Csrf::validate($_POST['csrf_token'] ?? '');
+
+            $policyId = isset($_POST['policy_id']) ? (int) $_POST['policy_id'] : 0;
+            $yearId = isset($_POST['year']) ? (int) $_POST['year'] : 0;
+            if ($policyId <= 0) {
+                throw new InvalidArgumentException('A valid policy is required.');
+            }
+            if ($yearId <= 0) {
+                throw new InvalidArgumentException('A valid financial year is required.');
+            }
+
+            $policy = $this->leavePolicyService->findById($policyId);
+            $financialYears = $this->leavePolicyDetailService->getAvailableFinancialYears();
+            $yearExists = false;
+            foreach ($financialYears as $year) {
+                if ((int) $year->id === $yearId) {
+                    $yearExists = true;
+                    break;
+                }
+            }
+            if (!$yearExists) {
+                throw new InvalidArgumentException('The selected financial year could not be found.');
+            }
+
+            $allEntitlements = $this->leavePolicyDetailService->getEntitlementsForYear($yearId);
+            $postedSelected = $_POST['selected'] ?? [];
+            $selectedMap = [];
+            foreach ($postedSelected as $entitlementId) {
+                $selectedMap[(int) $entitlementId] = true;
+            }
+
+            $existing = $this->leavePolicyDetailService->getPolicyDetailsForYear($policyId, $yearId);
+            $existingMap = [];
+            foreach ($existing as $row) {
+                $existingMap[(int) $row->leave_entitlement_id] = true;
+            }
+
+            foreach ($allEntitlements as $entitlement) {
+                $entitlementId = (int) $entitlement->entitlement_id;
+                $isSelected = isset($selectedMap[$entitlementId]);
+
+                if ($isSelected) {
+                    $allocationRaw = $_POST['allocation'][$entitlementId] ?? '';
+                    if (!is_numeric($allocationRaw)) {
+                        throw new InvalidArgumentException('The allocation for ' . ($entitlement->leave_type_name ?? 'selected leave type') . ' must be a numeric value.');
+                    }
+
+                    $allocation = (float) $allocationRaw;
+                    if ($allocation < 0 || $allocation > 9999.99) {
+                        throw new InvalidArgumentException('The allocation for ' . ($entitlement->leave_type_name ?? 'selected leave type') . ' is outside the valid range.');
+                    }
+
+                    $this->leavePolicyDetailService->savePolicyDetail($policyId, $entitlementId, $allocation);
+                } elseif (isset($existingMap[$entitlementId])) {
+                    $this->leavePolicyDetailService->deletePolicyDetail($policyId, $entitlementId);
+                }
+            }
+
+            Session::flash('success', 'Policy details updated successfully for ' . htmlspecialchars((string) $policy->name, ENT_QUOTES, 'UTF-8') . '.');
+            header('Location: /leave-policies/detail?id=' . urlencode((string) $policyId) . '&year=' . urlencode((string) $yearId));
+            exit;
+        } catch (InvalidArgumentException $e) {
+            Session::flash('error', $e->getMessage());
+            $redirectPolicyId = isset($_POST['policy_id']) ? (int) $_POST['policy_id'] : 0;
+            $redirectYearId = isset($_POST['year']) ? (int) $_POST['year'] : 0;
+            $redirect = '/leave-policies';
+            if ($redirectPolicyId > 0) {
+                $redirect = '/leave-policies/detail?id=' . $redirectPolicyId;
+                if ($redirectYearId > 0) {
+                    $redirect .= '&year=' . $redirectYearId;
+                }
+            }
+            header('Location: ' . $redirect);
+            exit;
+        } catch (\Exception $e) {
+            Session::flash('error', 'Unable to save policy details. Please try again.');
+            $redirectPolicyId = isset($_POST['policy_id']) ? (int) $_POST['policy_id'] : 0;
+            $redirectYearId = isset($_POST['year']) ? (int) $_POST['year'] : 0;
+            $redirect = '/leave-policies';
+            if ($redirectPolicyId > 0) {
+                $redirect = '/leave-policies/detail?id=' . $redirectPolicyId;
+                if ($redirectYearId > 0) {
+                    $redirect .= '&year=' . $redirectYearId;
+                }
+            }
+            header('Location: ' . $redirect);
+            exit;
+        }
+    }
+
+    public function storeLeavePolicy()
+    {
+        try {
+            if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+                Session::flash('error', 'Invalid request method.');
+                header('Location: /leave-policies');
+                exit;
+            }
+
+            Csrf::validate($_POST['csrf_token'] ?? '');
+
+            $name = trim((string) ($_POST['name'] ?? ''));
+            $description = trim((string) ($_POST['description'] ?? ''));
+            $isActive = isset($_POST['is_active']) ? (int) $_POST['is_active'] : 1;
+
+            if ($name === '') {
+                throw new InvalidArgumentException('Policy name is required.');
+            }
+
+            if (!in_array($isActive, [0, 1], true)) {
+                throw new InvalidArgumentException('Active status is invalid.');
+            }
+
+            $this->leavePolicyService->create([
+                'name' => $name,
+                'description' => $description,
+                'is_active' => $isActive,
+            ]);
+
+            Session::flash('success', 'Policy created successfully.');
+            header('Location: /leave-policies');
+            exit;
+        } catch (InvalidArgumentException $e) {
+            Session::flash('error', $e->getMessage());
+            header('Location: /leave-policies');
+            exit;
+        } catch (\Exception $e) {
+            Session::flash('error', 'Unable to create policy. Please try again.');
+            header('Location: /leave-policies');
+            exit;
+        }
     }
 
     public function HolidayList()
