@@ -124,6 +124,7 @@ Place your view files in the appropriate subdirectories:
 ### Basic Controller Structure
 Create a new controller in `app/Controllers/`:
 
+
 ```php
 <?php
 namespace App\Controllers;

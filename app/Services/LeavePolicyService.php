@@ -18,16 +18,6 @@ class LeavePolicyService
         return $this->leavePolicyModel->all();
     }
 
-    public function findById(int $id)
-    {
-        $policy = $this->leavePolicyModel->findById($id);
-        if (!$policy) {
-            throw new InvalidArgumentException('The selected policy could not be found.');
-        }
-
-        return $policy;
-    }
-
     public function create(array $data): int
     {
         $name = trim((string) ($data['name'] ?? ''));

@@ -52,6 +52,9 @@ $router->post('/leave-periods/delete', 'LeaveController@deleteLeavePeriod', [Aut
 $router->get('/new-leave-period', 'LeaveController@NewLeavePeriod', [AuthMiddleware::class]);
 $router->post('/new-leave-period', 'LeaveController@storeLeavePeriod', [AuthMiddleware::class]);
 $router->get('/leave-policies', 'LeaveController@LeavePolicy', [AuthMiddleware::class, [RoleMiddleware::class, 'admin']]);
+
+$router->get('/leave-policy-detail', 'LeaveController@LeavePolicyDetail', [AuthMiddleware::class, [RoleMiddleware::class, 'admin']]);
+
 $router->post('/leave-policies', 'LeaveController@storeLeavePolicy', [AuthMiddleware::class, [RoleMiddleware::class, 'admin']]);
 $router->get('/holiday-list', 'LeaveController@HolidayList', [AuthMiddleware::class]);
 
