@@ -485,9 +485,57 @@ class LeaveController extends Controller
     {
         $title = 'Leave Policies';
         $currentPage = 'leave_policy';
-        $policies = $this->leavePolicyService->all();
+        // Resolve current financial year
+        $financialYearModel = new \App\Models\FinancialYear();
+        $currentFy = $financialYearModel->getCurrentPeriod();
+        $currentFyId = $currentFy ? (int) $currentFy->id : null;
+
+        // Load policies with configured counts for the current financial year
+        $policies = $this->leavePolicyService->allWithEntitlementCounts($currentFyId);
+
+        // Summary stats
+        $totalPolicies = count($policies);
+        $activePolicies = count(array_filter($policies, fn($p) => !empty($p->is_active)));
+        $inactivePolicies = $totalPolicies - $activePolicies;
+
         $content = '../app/Views/leave_management/leave_setup/leave_policy.php';
         include '../app/Views/layouts/admin.php';
+    }
+
+    public function togglePolicyActive()
+    {
+        try {
+            if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+                Session::flash('error', 'Invalid request method.');
+                header('Location: /leave-policies');
+                exit;
+            }
+
+            Csrf::validate($_POST['csrf_token'] ?? '');
+
+            $id = (int) ($_POST['id'] ?? 0);
+            $action = $_POST['action'] ?? '';
+
+            if ($id <= 0 || !in_array($action, ['activate', 'deactivate'], true)) {
+                throw new InvalidArgumentException('Invalid request.');
+            }
+
+            $isActive = $action === 'activate' ? 1 : 0;
+
+            $this->leavePolicyService->setActive($id, $isActive);
+
+            Session::flash('success', 'Policy updated successfully.');
+            header('Location: /leave-policies');
+            exit;
+        } catch (InvalidArgumentException $e) {
+            Session::flash('error', $e->getMessage());
+            header('Location: /leave-policies');
+            exit;
+        } catch (\Exception $e) {
+            Session::flash('error', 'Unable to update policy. Please try again.');
+            header('Location: /leave-policies');
+            exit;
+        }
     }
 
     public function storeLeavePolicy()
@@ -503,21 +551,32 @@ class LeaveController extends Controller
 
             $name = trim((string) ($_POST['name'] ?? ''));
             $description = trim((string) ($_POST['description'] ?? ''));
-            $isActive = isset($_POST['is_active']) ? (int) $_POST['is_active'] : 1;
+
+            // Determine whether the user explicitly provided an is_active value.
+            $hasIsActive = array_key_exists('is_active', $_POST);
+            if ($hasIsActive) {
+                // If present, accept 0 or 1. Treat empty string as 0.
+                $isActiveRaw = $_POST['is_active'];
+                $isActive = ($isActiveRaw === '' ? 0 : (int) $isActiveRaw);
+            }
 
             if ($name === '') {
                 throw new InvalidArgumentException('Policy name is required.');
             }
 
-            if (!in_array($isActive, [0, 1], true)) {
+            if ($hasIsActive && !in_array($isActive, [0, 1], true)) {
                 throw new InvalidArgumentException('Active status is invalid.');
             }
 
-            $this->leavePolicyService->create([
+            $payload = [
                 'name' => $name,
                 'description' => $description,
-                'is_active' => $isActive,
-            ]);
+            ];
+            if ($hasIsActive) {
+                $payload['is_active'] = $isActive;
+            }
+
+            $this->leavePolicyService->create($payload);
 
             Session::flash('success', 'Policy created successfully.');
             header('Location: /leave-policies');

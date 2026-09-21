@@ -1,5 +1,13 @@
-<?php $currentPage = 'leave_policy'; ?>
-<?php $csrf = \App\Core\Csrf::generate(); ?>
+<?php
+$currentPage = 'leave_policy';
+$csrf = \App\Core\Csrf::generate();
+
+// Ensure variables provided by controller are available with safe defaults
+$policies = $policies ?? [];
+$totalPolicies = $totalPolicies ?? (is_array($policies) ? count($policies) : 0);
+$activePolicies = $activePolicies ?? (is_array($policies) ? count(array_filter($policies, fn($p) => !empty($p->is_active))) : 0);
+$inactivePolicies = $inactivePolicies ?? ($totalPolicies - $activePolicies);
+?>
 
 <nav aria-label="breadcrumb" class="mb-3">
   <ol class="breadcrumb mb-0">
@@ -45,7 +53,7 @@
           </div>
           <div>
             <p class="text-500 fs-10 mb-1">Total Policies</p>
-            <h4 class="mb-0">5</h4>
+            <h4 class="mb-0"><?= (int) $totalPolicies; ?></h4>
           </div>
         </div>
       </div>
@@ -61,7 +69,7 @@
           </div>
           <div>
             <p class="text-500 fs-10 mb-1">Active</p>
-            <h4 class="mb-0">3</h4>
+            <h4 class="mb-0"><?= (int) $activePolicies; ?></h4>
           </div>
         </div>
       </div>
@@ -77,7 +85,7 @@
           </div>
           <div>
             <p class="text-500 fs-10 mb-1">Inactive</p>
-            <h4 class="mb-0">2</h4>
+            <h4 class="mb-0"><?= (int) $inactivePolicies; ?></h4>
           </div>
         </div>
       </div>
@@ -99,7 +107,7 @@
   </div>
   <div class="col-lg-4 text-lg-end">
     <span class="d-inline-block bg-white shadow-sm rounded-3 px-3 py-2 text-600 fs-10">
-      <span class="fw-bold text-900">4</span> policies
+      <span class="fw-bold text-900"><?= (int) $totalPolicies; ?></span> policies
     </span>
   </div>
 </div>
@@ -147,23 +155,31 @@
                       <span class="fas fa-ellipsis-h fs-11"></span>
                     </button>
                     <div class="dropdown-menu dropdown-menu-end border py-2">
-                      <button class="dropdown-item" type="button"
-                              data-bs-toggle="modal"
-                              data-bs-target="#policyDetailsModal">
+                      <a class="dropdown-item" href="/leave-policy-detail?id=<?= urlencode((string) $policy->id) ?>">
                         <span class="fas fa-eye me-2 text-600" data-fa-transform="shrink-3"></span>View
-                      </button>
-                      <a class="dropdown-item" href="/leave-policy-detail">
+                      </a>
+                      <a class="dropdown-item" href="/leave-policy-detail?id=<?= urlencode((string) $policy->id) ?>">
                         <span class="fas fa-edit me-2 text-600" data-fa-transform="shrink-3"></span>Edit
                       </a>
                       <div class="dropdown-divider"></div>
                       <?php if ($isActive): ?>
-                        <a class="dropdown-item text-warning" href="#!">
-                          <span class="fas fa-ban me-2" data-fa-transform="shrink-3"></span>Deactivate
-                        </a>
+                        <form method="POST" action="/leave-policies/toggle-active" class="m-0">
+                          <input type="hidden" name="csrf_token" value="<?= htmlspecialchars($csrf, ENT_QUOTES, 'UTF-8'); ?>" />
+                          <input type="hidden" name="id" value="<?= (int) $policy->id ?>" />
+                          <input type="hidden" name="action" value="deactivate" />
+                          <button type="submit" class="dropdown-item text-warning">
+                            <span class="fas fa-ban me-2" data-fa-transform="shrink-3"></span>Deactivate
+                          </button>
+                        </form>
                       <?php else: ?>
-                        <a class="dropdown-item text-success" href="#!">
-                          <span class="fas fa-check-circle me-2" data-fa-transform="shrink-3"></span>Activate
-                        </a>
+                        <form method="POST" action="/leave-policies/toggle-active" class="m-0">
+                          <input type="hidden" name="csrf_token" value="<?= htmlspecialchars($csrf, ENT_QUOTES, 'UTF-8'); ?>" />
+                          <input type="hidden" name="id" value="<?= (int) $policy->id ?>" />
+                          <input type="hidden" name="action" value="activate" />
+                          <button type="submit" class="dropdown-item text-success">
+                            <span class="fas fa-check-circle me-2" data-fa-transform="shrink-3"></span>Activate
+                          </button>
+                        </form>
                       <?php endif; ?>
                     </div>
                   </div>
@@ -197,147 +213,7 @@
   </div>
 </div>
 
-<!-- ==========================================================
-     POLICY DETAILS MODAL
-     ========================================================== -->
-<div class="modal fade" id="policyDetailsModal" tabindex="-1" aria-labelledby="policyDetailsModalLabel" aria-hidden="true">
-  <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable" role="document">
-    <div class="modal-content">
-
-      <div class="modal-header">
-        <h5 class="modal-title" id="policyDetailsModalLabel">
-          <i data-feather="file-text" width="16" height="16" class="me-2 text-muted"></i>
-          Policy Details
-        </h5>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-      </div>
-
-      <div class="modal-body p-4">
-
-        <!-- Hero -->
-        <div class="bg-primary-subtle rounded-3 p-4 mb-4">
-          <div class="d-flex justify-content-between align-items-start flex-wrap gap-3">
-            <div>
-              <h3 class="mb-1">Executive Leave Policy</h3>
-              <p class="text-600 mb-0">Special policy for senior staff with enhanced annual leave.</p>
-            </div>
-            <div class="d-flex align-items-center">
-              <span class="bg-success rounded-circle d-inline-block me-2" style="width:8px;height:8px;"></span>
-              <span class="text-success fw-semi-bold">Active</span>
-            </div>
-          </div>
-        </div>
-
-        <!-- Stat tiles -->
-        <div class="row g-3 mb-4">
-          <div class="col-md-4">
-            <div class="bg-body-tertiary border rounded-3 p-3 h-100">
-              <p class="text-500 fs-11 mb-1">Leave Types Configured</p>
-              <h4 class="mb-0">5 <span class="text-600 fs-11 fw-normal">of 10</span></h4>
-            </div>
-          </div>
-          <div class="col-md-4">
-            <div class="bg-body-tertiary border rounded-3 p-3 h-100">
-              <p class="text-500 fs-11 mb-1">Financial Years</p>
-              <h4 class="mb-0">3 <span class="text-600 fs-11 fw-normal">covered</span></h4>
-            </div>
-          </div>
-          <div class="col-md-4">
-            <div class="bg-body-tertiary border rounded-3 p-3 h-100">
-              <p class="text-500 fs-11 mb-1">Employees Assigned</p>
-              <h4 class="mb-0">8 <span class="text-600 fs-11 fw-normal">staff</span></h4>
-            </div>
-          </div>
-        </div>
-
-        <!-- Allocations table -->
-        <h6 class="mb-2">Leave Allocations</h6>
-        <div class="border rounded-3 overflow-hidden">
-          <div class="table-responsive">
-            <table class="table table-sm fs-10 mb-0">
-              <thead class="bg-200">
-                <tr>
-                  <th class="text-900 ps-3 text-nowrap">Leave Type</th>
-                  <th class="text-900 text-end text-nowrap">Base</th>
-                  <th class="text-900 text-end text-nowrap">Allocation</th>
-                  <th class="text-900 pe-3 text-nowrap">Status</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr>
-                  <td class="ps-3 py-3 fw-semi-bold text-nowrap">Annual Leave</td>
-                  <td class="text-end py-3 text-nowrap">30 <span class="text-600">days</span></td>
-                  <td class="text-end py-3 fw-semi-bold text-nowrap">35 <span class="text-600 fw-normal">days</span></td>
-                  <td class="pe-3 py-3 text-nowrap">
-                    <span class="badge rounded-pill badge-subtle-success">Configured</span>
-                  </td>
-                </tr>
-                <tr>
-                  <td class="ps-3 py-3 fw-semi-bold text-nowrap">Sick Leave</td>
-                  <td class="text-end py-3 text-nowrap">10 <span class="text-600">days</span></td>
-                  <td class="text-end py-3 fw-semi-bold text-nowrap">15 <span class="text-600 fw-normal">days</span></td>
-                  <td class="pe-3 py-3 text-nowrap">
-                    <span class="badge rounded-pill badge-subtle-success">Configured</span>
-                  </td>
-                </tr>
-                <tr>
-                  <td class="ps-3 py-3 fw-semi-bold text-nowrap">Maternity Leave</td>
-                  <td class="text-end py-3 text-nowrap">90 <span class="text-600">days</span></td>
-                  <td class="text-end py-3 fw-semi-bold text-nowrap">90 <span class="text-600 fw-normal">days</span></td>
-                  <td class="pe-3 py-3 text-nowrap">
-                    <span class="badge rounded-pill badge-subtle-success">Configured</span>
-                  </td>
-                </tr>
-                <tr>
-                  <td class="ps-3 py-3 fw-semi-bold text-nowrap">Paternity Leave</td>
-                  <td class="text-end py-3 text-nowrap">10 <span class="text-600">days</span></td>
-                  <td class="text-end py-3 fw-semi-bold text-nowrap">10 <span class="text-600 fw-normal">days</span></td>
-                  <td class="pe-3 py-3 text-nowrap">
-                    <span class="badge rounded-pill badge-subtle-success">Configured</span>
-                  </td>
-                </tr>
-                <tr>
-                  <td class="ps-3 py-3 fw-semi-bold text-nowrap">Study Leave</td>
-                  <td class="text-end py-3 text-nowrap">5 <span class="text-600">days</span></td>
-                  <td class="text-end py-3 fw-semi-bold text-nowrap">10 <span class="text-600 fw-normal">days</span></td>
-                  <td class="pe-3 py-3 text-nowrap">
-                    <span class="badge rounded-pill badge-subtle-success">Configured</span>
-                  </td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
-        </div>
-
-        <!-- Timeline -->
-        <div class="row g-3 mt-4">
-          <div class="col-md-6">
-            <div class="bg-body-tertiary border rounded-3 p-3">
-              <p class="text-500 fs-11 mb-1">Created</p>
-              <p class="mb-0 fw-semi-bold">01 Jul 2024</p>
-            </div>
-          </div>
-          <div class="col-md-6">
-            <div class="bg-body-tertiary border rounded-3 p-3">
-              <p class="text-500 fs-11 mb-1">Last Updated</p>
-              <p class="mb-0 fw-semi-bold">12 Aug 2026</p>
-            </div>
-          </div>
-        </div>
-
-      </div>
-
-      <div class="modal-footer border-top bg-body-tertiary">
-        <button type="button" class="btn btn-falcon-default" data-bs-dismiss="modal">Close</button>
-        <a href="/leave-policy-detail?id=2" class="btn btn-primary">
-          <i data-feather="edit-2" width="14" height="14" class="me-1"></i>
-          Edit policy
-        </a>
-      </div>
-
-    </div>
-  </div>
-</div>
+<!-- Policy details modal removed: details handled on separate page (/leave-policy-detail?id=... ) -->
 
 <div class="offcanvas offcanvas-end" tabindex="-1" id="addPolicyOffcanvas" aria-labelledby="addPolicyOffcanvasLabel">
   <div class="offcanvas-header">
@@ -358,6 +234,7 @@
         </div>
 
         <div class="form-check form-switch mb-3">
+          <input type="hidden" name="is_active" value="0" />
           <input class="form-check-input" type="checkbox" id="policyActive" name="is_active" value="1" checked>
           <label class="form-check-label" for="policyActive">Active policy</label>
         </div>

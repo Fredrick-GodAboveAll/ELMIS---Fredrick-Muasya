@@ -1,4 +1,12 @@
-<?php $currentPage = 'leave_entitlement'; ?>
+<?php
+$currentPage = 'leave_entitlement';
+
+// Ensure variables expected by the view are defined with safe defaults
+$financialYears = $financialYears ?? [];
+$financialYearCount = $financialYearCount ?? (is_array($financialYears) ? count($financialYears) : 0);
+$activeYearCount = $activeYearCount ?? (is_array($financialYears) ? count(array_filter($financialYears, fn($year) => isset($year->is_current) && (int) $year->is_current === 1)) : 0);
+$totalEntitlementRules = $totalEntitlementRules ?? (is_array($financialYears) ? array_sum(array_map(fn($year) => (int) ($year->entitlement_rule_count ?? 0), $financialYears)) : 0);
+?>
 
 <div class="row align-items-end justify-content-between g-3 mb-3">
   <div class="col-md-8">

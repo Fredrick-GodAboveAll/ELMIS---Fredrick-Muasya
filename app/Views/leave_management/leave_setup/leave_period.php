@@ -1,4 +1,5 @@
-<?php $currentPage = 'leave_period'; $csrfToken = \App\Core\Csrf::generate(); ?>
+<?php $currentPage = 'leave_period'; 
+$csrfToken = \App\Core\Csrf::generate(); ?>
 
     <nav aria-label="breadcrumb" class="mb-3">
     <ol class="breadcrumb mb-0">
