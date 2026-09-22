@@ -24,5 +24,8 @@
             "Composer\\Config::disableProcessTimeout",
             "php -S localhost:8000 -t public"
         ]
+    },
+    "require-dev": {
+        "phpunit/phpunit": "*"
     }
 }

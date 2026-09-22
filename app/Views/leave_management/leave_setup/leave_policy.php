@@ -2,6 +2,11 @@
 $currentPage = 'leave_policy';
 $csrf = \App\Core\Csrf::generate();
 
+// Old input: not currently provided by this flow; created locally for Leave Policies only.
+$old = $old ?? [];
+$oldIsActive = isset($old['is_active']) ? (string) $old['is_active'] : '1';
+$policyActiveChecked = ($oldIsActive === '1' || (int) $oldIsActive === 1) ? 'checked' : '';
+
 // Ensure variables provided by controller are available with safe defaults
 $policies = $policies ?? [];
 $totalPolicies = $totalPolicies ?? (is_array($policies) ? count($policies) : 0);
@@ -191,7 +196,7 @@ $inactivePolicies = $inactivePolicies ?? ($totalPolicies - $activePolicies);
 
                 <div class="mt-auto border-top pt-2 d-flex justify-content-between align-items-center">
                   <p class="text-500 fs-11 mb-0">Configured <span class="text-900 fw-semi-bold">5</span> of 10</p>
-                  <a class="text-primary fs-11 fw-semi-bold text-decoration-none" href="/leave-policy-detail">
+                  <a class="text-primary fs-11 fw-semi-bold text-decoration-none" href="/leave-policy-detail?id=<?= urlencode((string) $policy->id) ?>">
                     Open policy
                     <span class="fas fa-chevron-right ms-1" data-fa-transform="shrink-4"></span>
                   </a>
@@ -235,7 +240,7 @@ $inactivePolicies = $inactivePolicies ?? ($totalPolicies - $activePolicies);
 
         <div class="form-check form-switch mb-3">
           <input type="hidden" name="is_active" value="0" />
-          <input class="form-check-input" type="checkbox" id="policyActive" name="is_active" value="1" checked>
+          <input class="form-check-input" type="checkbox" id="policyActive" name="is_active" value="1" <?= $policyActiveChecked ?>>
           <label class="form-check-label" for="policyActive">Active policy</label>
         </div>
 

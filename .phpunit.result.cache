@@ -1,0 +1,1 @@
+{"version":2,"defects":[],"times":{"LeavePolicyCheckboxTest::testMissingIsActiveResolvesToZero":0.003,"LeavePolicyCheckboxTest::testSubmittedZeroResolvesToZero":0,"LeavePolicyCheckboxTest::testSubmittedOneResolvesToOne":0}}

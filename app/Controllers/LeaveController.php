@@ -485,6 +485,8 @@ class LeaveController extends Controller
     {
         $title = 'Leave Policies';
         $currentPage = 'leave_policy';
+        $old = \App\Core\Session::flash('leave_policy_old') ?: [];
+
         // Resolve current financial year
         $financialYearModel = new \App\Models\FinancialYear();
         $currentFy = $financialYearModel->getCurrentPeriod();
@@ -540,6 +542,10 @@ class LeaveController extends Controller
 
     public function storeLeavePolicy()
     {
+        $name = trim((string) ($_POST['name'] ?? ''));
+        $description = trim((string) ($_POST['description'] ?? ''));
+        $isActive = $this->boolFromCheckbox($_POST, 'is_active');
+
         try {
             if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
                 Session::flash('error', 'Invalid request method.');
@@ -551,30 +557,17 @@ class LeaveController extends Controller
 
             $name = trim((string) ($_POST['name'] ?? ''));
             $description = trim((string) ($_POST['description'] ?? ''));
-
-            // Determine whether the user explicitly provided an is_active value.
-            $hasIsActive = array_key_exists('is_active', $_POST);
-            if ($hasIsActive) {
-                // If present, accept 0 or 1. Treat empty string as 0.
-                $isActiveRaw = $_POST['is_active'];
-                $isActive = ($isActiveRaw === '' ? 0 : (int) $isActiveRaw);
-            }
+            $isActive = $this->boolFromCheckbox($_POST, 'is_active');
 
             if ($name === '') {
                 throw new InvalidArgumentException('Policy name is required.');
             }
 
-            if ($hasIsActive && !in_array($isActive, [0, 1], true)) {
-                throw new InvalidArgumentException('Active status is invalid.');
-            }
-
             $payload = [
                 'name' => $name,
                 'description' => $description,
+                'is_active' => $isActive,
             ];
-            if ($hasIsActive) {
-                $payload['is_active'] = $isActive;
-            }
 
             $this->leavePolicyService->create($payload);
 
@@ -582,24 +575,66 @@ class LeaveController extends Controller
             header('Location: /leave-policies');
             exit;
         } catch (InvalidArgumentException $e) {
+            Session::flash('leave_policy_old', [
+                'name' => $name,
+                'description' => $description,
+                'is_active' => $isActive,
+            ]);
             Session::flash('error', $e->getMessage());
             header('Location: /leave-policies');
             exit;
         } catch (\Exception $e) {
+            Session::flash('leave_policy_old', [
+                'name' => $name,
+                'description' => $description,
+                'is_active' => $isActive,
+            ]);
             Session::flash('error', 'Unable to create policy. Please try again.');
             header('Location: /leave-policies');
             exit;
         }
     }
 
-    public function LeavePolicyDetail()
+    public function leavePolicyDetail()
     {
         $title = 'Leave Policy Detail';
-        $currentPage = 'leave_policy';
+        $currentPage = 'leave-policy-detail';
+        $csrf = Csrf::generate();
+
+        $policyId = isset($_GET['id']) ? (int) $_GET['id'] : 0;
+        $policy = $this->leavePolicyService->findPolicy($policyId);
+
+        if (!$policy) {
+            Session::flash('error', 'Policy not found');
+            header('Location: /leave-policies');
+            exit;
+        }
+
+        $financialYearModel = new \App\Models\FinancialYear();
+        $financialYears = $financialYearModel->all();
+        $currentFy = $financialYearModel->getCurrentPeriod();
+
+        $requestedFyId = isset($_GET['fy']) ? (int) $_GET['fy'] : 0;
+        $validFyIds = array_map(static fn($fy) => (int) $fy->id, $financialYears);
+
+        if ($requestedFyId <= 0 || !in_array($requestedFyId, $validFyIds, true)) {
+            $requestedFyId = $currentFy ? (int) $currentFy->id : (int) ($financialYears[0]->id ?? 0);
+        }
+
+        $currentFyId = $requestedFyId;
+        $currentFy = null;
+        foreach ($financialYears as $fy) {
+            if ((int) $fy->id === $currentFyId) {
+                $currentFy = $fy;
+                break;
+            }
+        }
+
+        $rows = $this->leavePolicyService->getEntitlementsWithDetails($policyId, $currentFyId);
+
         $content = '../app/Views/leave_management/leave_setup/leave_policy_details.php';
         include '../app/Views/layouts/admin.php';
     }
-
 
     public function HolidayList()
     {

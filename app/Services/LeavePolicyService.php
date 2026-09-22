@@ -1,8 +1,10 @@
 <?php
 namespace App\Services;
 
+use App\Core\Database;
 use App\Models\LeavePolicy;
 use InvalidArgumentException;
+use PDO;
 
 class LeavePolicyService
 {
@@ -37,6 +39,44 @@ class LeavePolicyService
         }
 
         return $this->leavePolicyModel->setActive($id, $isActive);
+    }
+
+    public function findPolicy(int $id): ?object
+    {
+        $stmt = $this->leavePolicyModel->findById($id);
+        return $stmt ?: null;
+    }
+
+    public function getEntitlementsWithDetails(int $policyId, int $fyId): array
+    {
+        if ($policyId <= 0 || $fyId <= 0) {
+            return [];
+        }
+
+        $sql = "SELECT
+                le.id AS entitlement_id,
+                lt.name AS leave_type_name,
+                lt.calculation_method,
+                le.entitlement AS base_entitlement,
+                le.carry_forward,
+                le.carry_forward_limit,
+                lpd.id AS detail_id,
+                lpd.allocation AS allocation
+            FROM leave_entitlements le
+            JOIN leave_types lt ON lt.id = le.leave_type_id
+            LEFT JOIN leave_policy_details lpd
+                ON lpd.leave_entitlement_id = le.id
+                AND lpd.leave_policy_id = :policy_id
+            WHERE le.financial_year_id = :fy_id
+            ORDER BY lt.name ASC";
+
+        $stmt = Database::getInstance()->prepare($sql);
+        $stmt->execute([
+            'policy_id' => $policyId,
+            'fy_id' => $fyId,
+        ]);
+
+        return $stmt->fetchAll(PDO::FETCH_OBJ);
     }
 
     public function create(array $data): int

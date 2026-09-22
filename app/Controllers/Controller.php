@@ -1,6 +1,10 @@
 <?php
 namespace App\Controllers;
+
 class Controller
 {
- // Base controller (can add common methods later)
+    protected function boolFromCheckbox(array $post, string $key): int
+    {
+        return isset($post[$key]) && $post[$key] == '1' ? 1 : 0;
+    }
 }
