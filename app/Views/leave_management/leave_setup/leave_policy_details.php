@@ -1,6 +1,7 @@
 <?php
 $currentPage = 'leave-policy-detail';
 $csrf = \App\Core\Csrf::generate();
+$old = $old ?? [];
 
 $policy = $policy ?? (object) ['id' => 0, 'name' => 'Policy', 'description' => '', 'is_active' => 0];
 $financialYears = $financialYears ?? [];
@@ -101,87 +102,110 @@ $isActive = !empty($policy->is_active);
       </div>
 
       <div class="card-body px-0 pt-0">
-        <table id="allocations-table" class="table table-sm mb-0 overflow-hidden fs-10">
-          <thead class="bg-200">
-            <tr>
-              <th class="text-900 sort pe-1 align-middle white-space-nowrap text-start">Leave Type</th>
-              <th class="text-900 sort pe-1 align-middle white-space-nowrap text-end">Base Entitlement</th>
-              <th class="text-900 sort pe-1 align-middle white-space-nowrap text-end">Policy Allocation</th>
-              <th class="text-900 sort pe-1 align-middle white-space-nowrap text-start">Status</th>
-              <th class="no-export text-900 no-sort pe-1 align-middle data-table-row-action text-end" data-orderable="false">Actions</th>
-            </tr>
-          </thead>
+        <form method="POST" action="/leave-policy-detail" id="allocationsForm">
+          <input type="hidden" name="csrf_token" value="<?= htmlspecialchars($csrf, ENT_QUOTES, 'UTF-8') ?>">
+          <input type="hidden" name="policy_id" value="<?= (int) $policy->id ?>">
+          <input type="hidden" name="financial_year_id" value="<?= (int) $currentFyId ?>">
 
-          <tbody>
-            <?php if (empty($rows)): ?>
+          <table id="allocations-table" class="table table-sm mb-0 overflow-hidden fs-10">
+            <thead class="bg-200">
               <tr>
-                <td colspan="5">
-                  <div class="text-center py-5">
-                    <span class="fas fa-inbox fs-4 text-400 mb-2 d-block"></span>
-                    <p class="mb-1 fw-semi-bold text-700">No entitlements for this Financial Year</p>
-                    <p class="text-600 fs-10 mb-0">Add entitlements first. They will appear here automatically.</p>
-                  </div>
-                </td>
+                <th class="text-900 sort pe-1 align-middle white-space-nowrap text-start">Leave Type</th>
+                <th class="text-900 sort pe-1 align-middle white-space-nowrap text-end">Base Entitlement</th>
+                <th class="text-900 sort pe-1 align-middle white-space-nowrap text-end">Policy Allocation</th>
+                <th class="text-900 sort pe-1 align-middle white-space-nowrap text-start">Status</th>
+                <th class="no-export text-900 no-sort pe-1 align-middle data-table-row-action text-end" data-orderable="false">Actions</th>
               </tr>
-            <?php else: ?>
-              <?php foreach ($rows as $row): ?>
-                <tr class="btn-reveal-trigger">
-                  <td class="align-middle white-space-nowrap fw-semi-bold">
-                    <?= htmlspecialchars((string) ($row->leave_type_name ?? '')) ?>
-                  </td>
+            </thead>
 
-                  <td class="align-middle white-space-nowrap text-end">
-                    <?= (int) ($row->base_entitlement ?? 0) ?> <span class="text-600 fs-11">days</span>
-                  </td>
-
-                  <td class="align-middle white-space-nowrap text-end">
-                    <?php if ($row->allocation !== null): ?>
-                      <span class="fw-semi-bold"><?= (float) $row->allocation ?></span>
-                      <span class="text-600 fs-11">days</span>
-                    <?php else: ?>
-                      <span class="text-600 fs-11 fst-italic">Not set</span>
-                    <?php endif; ?>
-                  </td>
-
-                  <td class="align-middle white-space-nowrap text-start fs-9">
-                    <?php if ($row->allocation !== null): ?>
-                      <span class="badge rounded-pill badge-subtle-success">Configured</span>
-                    <?php else: ?>
-                      <span class="badge rounded-pill badge-subtle-secondary">Not configured</span>
-                    <?php endif; ?>
-                  </td>
-
-                  <td class="align-middle white-space-nowrap text-end">
-                    <div class="dropstart font-sans-serif position-static d-inline-block">
-                      <button class="btn btn-link text-600 btn-sm dropdown-toggle btn-reveal float-end"
-                              type="button"
-                              id="dropdown-allocation-item-<?= (int) ($row->entitlement_id ?? 0) ?>"
-                              data-bs-toggle="dropdown"
-                              data-boundary="window"
-                              aria-haspopup="true"
-                              aria-expanded="false"
-                              data-bs-reference="parent">
-                        <span class="fas fa-ellipsis-h fs-10"></span>
-                      </button>
-                      <div class="dropdown-menu dropdown-menu-end border py-2" aria-labelledby="dropdown-allocation-item-<?= (int) ($row->entitlement_id ?? 0) ?>">
-                        <button class="dropdown-item js-view-allocation" type="button"
-                                data-bs-toggle="modal"
-                                data-bs-target="#viewAllocationModal"
-                                data-leave-type="<?= htmlspecialchars((string) ($row->leave_type_name ?? '')) ?>"
-                                data-base="<?= (float) ($row->base_entitlement ?? 0) ?>"
-                                data-allocation="<?= $row->allocation !== null ? (float) $row->allocation : '' ?>"
-                                data-status="<?= $row->allocation !== null ? 'configured' : 'not_configured' ?>"
-                                data-fy="<?= htmlspecialchars((string) ($currentFy->label ?? '')) ?>">
-                          <span class="fas fa-eye me-2 text-600" data-fa-transform="shrink-3"></span>View
-                        </button>
-                      </div>
+            <tbody>
+              <?php if (empty($rows)): ?>
+                <tr>
+                  <td colspan="5">
+                    <div class="text-center py-5">
+                      <span class="fas fa-inbox fs-4 text-400 mb-2 d-block"></span>
+                      <p class="mb-1 fw-semi-bold text-700">No entitlements for this Financial Year</p>
+                      <p class="text-600 fs-10 mb-0">Add entitlements first. They will appear here automatically.</p>
                     </div>
                   </td>
                 </tr>
-              <?php endforeach; ?>
-            <?php endif; ?>
-          </tbody>
-        </table>
+              <?php else: ?>
+                <?php foreach ($rows as $row): ?>
+                  <tr class="btn-reveal-trigger">
+                    <td class="align-middle white-space-nowrap fw-semi-bold">
+                      <?= htmlspecialchars((string) ($row->leave_type_name ?? '')) ?>
+                    </td>
+
+                    <td class="align-middle white-space-nowrap text-end">
+                      <?= (int) ($row->base_entitlement ?? 0) ?> <span class="text-600 fs-11">days</span>
+                    </td>
+
+                    <td class="align-middle white-space-nowrap text-end">
+                      <input type="number"
+                             name="allocations[<?= (int) ($row->entitlement_id ?? 0) ?>]"
+                             value="<?php
+                                 if (isset($old['allocations'][$row->entitlement_id])) {
+                                     echo htmlspecialchars((string) $old['allocations'][$row->entitlement_id]);
+                                 } elseif ($row->allocation !== null) {
+                                     echo htmlspecialchars((string) (float) $row->allocation);
+                                 } else {
+                                     echo '';
+                                 }
+                             ?>"
+                             min="0" step="1"
+                             placeholder="—"
+                             class="form-control form-control-sm text-end d-inline-block"
+                             style="max-width:110px;">
+                    </td>
+
+                    <td class="align-middle white-space-nowrap text-start fs-9">
+                      <?php if ($row->allocation !== null): ?>
+                        <span class="badge rounded-pill badge-subtle-success">Configured</span>
+                      <?php else: ?>
+                        <span class="badge rounded-pill badge-subtle-secondary">Not configured</span>
+                      <?php endif; ?>
+                    </td>
+
+                    <td class="align-middle white-space-nowrap text-end">
+                      <div class="dropstart font-sans-serif position-static d-inline-block">
+                        <button class="btn btn-link text-600 btn-sm dropdown-toggle btn-reveal float-end"
+                                type="button"
+                                id="dropdown-allocation-item-<?= (int) ($row->entitlement_id ?? 0) ?>"
+                                data-bs-toggle="dropdown"
+                                data-boundary="window"
+                                aria-haspopup="true"
+                                aria-expanded="false"
+                                data-bs-reference="parent">
+                          <span class="fas fa-ellipsis-h fs-10"></span>
+                        </button>
+                        <div class="dropdown-menu dropdown-menu-end border py-2" aria-labelledby="dropdown-allocation-item-<?= (int) ($row->entitlement_id ?? 0) ?>">
+                          <button class="dropdown-item js-view-allocation" type="button"
+                                  data-bs-toggle="modal"
+                                  data-bs-target="#viewAllocationModal"
+                                  data-leave-type="<?= htmlspecialchars((string) ($row->leave_type_name ?? '')) ?>"
+                                  data-base="<?= (float) ($row->base_entitlement ?? 0) ?>"
+                                  data-allocation="<?= $row->allocation !== null ? (float) $row->allocation : '' ?>"
+                                  data-status="<?= $row->allocation !== null ? 'configured' : 'not_configured' ?>"
+                                  data-fy="<?= htmlspecialchars((string) ($currentFy->label ?? '')) ?>">
+                            <span class="fas fa-eye me-2 text-600" data-fa-transform="shrink-3"></span>View
+                          </button>
+                        </div>
+                      </div>
+                    </td>
+                  </tr>
+                <?php endforeach; ?>
+              <?php endif; ?>
+            </tbody>
+          </table>
+
+          <div class="card-footer bg-white border-top d-flex justify-content-end gap-2 p-3">
+            <a href="/leave-policies" class="btn btn-falcon-default">Cancel</a>
+            <button type="submit" form="allocationsForm" class="btn btn-primary">
+              <span class="fas fa-save me-1" data-fa-transform="shrink-3"></span>
+              Save Allocations
+            </button>
+          </div>
+        </form>
       </div>
     </div>
   </div>

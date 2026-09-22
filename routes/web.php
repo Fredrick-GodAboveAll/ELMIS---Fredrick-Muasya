@@ -54,6 +54,7 @@ $router->post('/new-leave-period', 'LeaveController@storeLeavePeriod', [AuthMidd
 $router->get('/leave-policies', 'LeaveController@LeavePolicy', [AuthMiddleware::class, [RoleMiddleware::class, 'admin']]);
 
 $router->get('/leave-policy-detail', 'LeaveController@leavePolicyDetail', [AuthMiddleware::class, [RoleMiddleware::class, 'admin']]);
+$router->post('/leave-policy-detail', 'LeaveController@saveLeavePolicyDetails', [AuthMiddleware::class, [RoleMiddleware::class, 'admin']]);
 
 $router->post('/leave-policies', 'LeaveController@storeLeavePolicy', [AuthMiddleware::class, [RoleMiddleware::class, 'admin']]);
 // Activate/deactivate policy

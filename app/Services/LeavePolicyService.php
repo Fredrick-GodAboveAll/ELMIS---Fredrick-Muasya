@@ -79,6 +79,42 @@ class LeavePolicyService
         return $stmt->fetchAll(PDO::FETCH_OBJ);
     }
 
+    public function upsertDetail(int $policyId, int $entitlementId, float $allocation): void
+    {
+        if ($policyId <= 0 || $entitlementId <= 0) {
+            throw new InvalidArgumentException('Invalid policy or entitlement id.');
+        }
+
+        $sql = "INSERT INTO leave_policy_details
+                (leave_policy_id, leave_entitlement_id, allocation)
+                VALUES (:policy_id, :entitlement_id, :allocation)
+                ON DUPLICATE KEY UPDATE allocation = VALUES(allocation)";
+
+        $stmt = Database::getInstance()->prepare($sql);
+        $stmt->execute([
+            'policy_id' => $policyId,
+            'entitlement_id' => $entitlementId,
+            'allocation' => (float) $allocation,
+        ]);
+    }
+
+    public function deleteDetail(int $policyId, int $entitlementId): void
+    {
+        if ($policyId <= 0 || $entitlementId <= 0) {
+            throw new InvalidArgumentException('Invalid policy or entitlement id.');
+        }
+
+        $sql = "DELETE FROM leave_policy_details
+                WHERE leave_policy_id = :policy_id
+                  AND leave_entitlement_id = :entitlement_id";
+
+        $stmt = Database::getInstance()->prepare($sql);
+        $stmt->execute([
+            'policy_id' => $policyId,
+            'entitlement_id' => $entitlementId,
+        ]);
+    }
+
     public function create(array $data): int
     {
         $name = trim((string) ($data['name'] ?? ''));
