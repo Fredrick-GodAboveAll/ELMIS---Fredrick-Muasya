@@ -491,9 +491,14 @@ class LeaveController extends Controller
         $financialYearModel = new \App\Models\FinancialYear();
         $currentFy = $financialYearModel->getCurrentPeriod();
         $currentFyId = $currentFy ? (int) $currentFy->id : null;
+        $currentFyLabel = $currentFy ? (string) $currentFy->label : '—';
 
         // Load policies with configured counts for the current financial year
         $policies = $this->leavePolicyService->allWithEntitlementCounts($currentFyId);
+
+        foreach ($policies as $policy) {
+            $policy->card = $this->leavePolicyService->getPolicyCardData((int) $policy->id);
+        }
 
         // Summary stats
         $totalPolicies = count($policies);
@@ -641,14 +646,8 @@ class LeaveController extends Controller
     {
         $policyId = (int) ($_POST['policy_id'] ?? 0);
         $financialYearId = (int) ($_POST['financial_year_id'] ?? 0);
-        $allocations = $_POST['allocations'] ?? [];
-        $old = [
-            'policy_id' => $policyId,
-            'financial_year_id' => $financialYearId,
-            'allocations' => is_array($allocations) ? $allocations : [],
-        ];
-
-        $pdo = \App\Core\Database::getInstance();
+        $entitlementId = (int) ($_POST['entitlement_id'] ?? 0);
+        $allocation = isset($_POST['allocation']) ? trim((string) $_POST['allocation']) : '';
 
         try {
             if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
@@ -656,6 +655,11 @@ class LeaveController extends Controller
             }
 
             Csrf::validate($_POST['csrf_token'] ?? '');
+
+            $userRole = \App\Core\Session::get('user_role');
+            if (!$userRole || !in_array($userRole, ['admin', 'super_admin'], true)) {
+                throw new InvalidArgumentException('Access denied.');
+            }
 
             if ($policyId <= 0) {
                 throw new InvalidArgumentException('A valid policy is required.');
@@ -676,58 +680,39 @@ class LeaveController extends Controller
                 throw new InvalidArgumentException('Financial year not found.');
             }
 
-            if (!is_array($allocations)) {
-                throw new InvalidArgumentException('Invalid allocation payload.');
+            if ($entitlementId <= 0) {
+                throw new InvalidArgumentException('A valid entitlement is required.');
             }
 
             $rows = $this->leavePolicyService->getEntitlementsWithDetails($policyId, $financialYearId);
-
-            $pdo->beginTransaction();
-
+            $rowExists = false;
             foreach ($rows as $row) {
-                $entitlementId = (int) ($row->entitlement_id ?? 0);
-                if ($entitlementId <= 0) {
-                    continue;
+                if ((int) ($row->entitlement_id ?? 0) === $entitlementId) {
+                    $rowExists = true;
+                    break;
                 }
-
-                $postedKey = (string) $entitlementId;
-                $postedValue = array_key_exists($postedKey, $allocations)
-                    ? $allocations[$postedKey]
-                    : (array_key_exists($entitlementId, $allocations) ? $allocations[$entitlementId] : null);
-
-                if ($postedValue === null) {
-                    continue;
-                }
-
-                $formattedValue = trim((string) $postedValue);
-                $leaveTypeName = (string) ($row->leave_type_name ?? 'this leave type');
-
-                if ($formattedValue === '') {
-                    $this->leavePolicyService->deleteDetail($policyId, $entitlementId);
-                    continue;
-                }
-
-                if (!is_numeric($formattedValue)) {
-                    throw new InvalidArgumentException('Invalid allocation value for ' . $leaveTypeName);
-                }
-
-                $numericValue = (float) $formattedValue;
-                if ($numericValue < 0) {
-                    throw new InvalidArgumentException('Invalid allocation value for ' . $leaveTypeName);
-                }
-
-                $this->leavePolicyService->upsertDetail($policyId, $entitlementId, $numericValue);
             }
 
-            $pdo->commit();
-            Session::flash('success', 'Allocations saved');
+            if (!$rowExists) {
+                throw new InvalidArgumentException('Entitlement not found for this financial year.');
+            }
+
+            if ($allocation === '') {
+                $this->leavePolicyService->deleteDetail($policyId, $entitlementId);
+                Session::flash('success', 'Allocation saved');
+                header('Location: /leave-policy-detail?id=' . $policyId . '&fy=' . $financialYearId);
+                exit;
+            }
+
+            if (!is_numeric($allocation) || (float) $allocation < 0) {
+                throw new InvalidArgumentException('Invalid allocation value.');
+            }
+
+            $this->leavePolicyService->upsertDetail($policyId, $entitlementId, (float) $allocation);
+            Session::flash('success', 'Allocation saved');
             header('Location: /leave-policy-detail?id=' . $policyId . '&fy=' . $financialYearId);
             exit;
         } catch (InvalidArgumentException $e) {
-            if ($pdo->inTransaction()) {
-                $pdo->rollBack();
-            }
-            Session::flash('leave_policy_detail_old', $old);
             Session::flash('error', $e->getMessage());
             $redirectTarget = $policyId > 0
                 ? '/leave-policy-detail?id=' . $policyId . '&fy=' . $financialYearId
@@ -735,10 +720,6 @@ class LeaveController extends Controller
             header('Location: ' . $redirectTarget);
             exit;
         } catch (\Throwable $e) {
-            if ($pdo->inTransaction()) {
-                $pdo->rollBack();
-            }
-            Session::flash('leave_policy_detail_old', $old);
             Session::flash('error', 'Unable to save allocations. Please try again.');
             $redirectTarget = $policyId > 0
                 ? '/leave-policy-detail?id=' . $policyId . '&fy=' . $financialYearId

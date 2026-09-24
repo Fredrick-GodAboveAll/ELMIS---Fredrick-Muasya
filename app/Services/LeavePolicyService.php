@@ -47,6 +47,97 @@ class LeavePolicyService
         return $stmt ?: null;
     }
 
+    public function getPolicyCardData(int $policyId): object
+    {
+        $policyId = (int) $policyId;
+
+        $base = (object) [
+            'configured_count' => 0,
+            'total_entitlements' => 0,
+            'financial_years_count' => 0,
+            'employees_assigned' => 0,
+            'created_at' => '—',
+            'updated_at' => '—',
+            'allocations' => [],
+        ];
+
+        if ($policyId <= 0) {
+            return $base;
+        }
+
+        $db = Database::getInstance();
+
+        $policyStmt = $db->prepare("SELECT created_at, updated_at FROM leave_policies WHERE id = :policy_id LIMIT 1");
+        $policyStmt->execute(['policy_id' => $policyId]);
+        $policyRow = $policyStmt->fetch(PDO::FETCH_OBJ);
+
+        if (!$policyRow) {
+            return $base;
+        }
+
+        $configuredStmt = $db->prepare("SELECT COUNT(*) FROM leave_policy_details WHERE leave_policy_id = :policy_id");
+        $configuredStmt->execute(['policy_id' => $policyId]);
+        $configuredCount = (int) $configuredStmt->fetchColumn();
+
+        $totalEntitlementsStmt = $db->prepare("SELECT COUNT(*) FROM leave_entitlements");
+        $totalEntitlementsStmt->execute();
+        $totalEntitlements = (int) $totalEntitlementsStmt->fetchColumn();
+
+        $financialYearsStmt = $db->prepare(
+            "SELECT COUNT(DISTINCT le.financial_year_id)
+             FROM leave_policy_details lpd
+             JOIN leave_entitlements le ON le.id = lpd.leave_entitlement_id
+             WHERE lpd.leave_policy_id = :policy_id"
+        );
+        $financialYearsStmt->execute(['policy_id' => $policyId]);
+        $financialYearsCount = (int) $financialYearsStmt->fetchColumn();
+
+        $employeesAssignedStmt = $db->prepare(
+            "SELECT COUNT(*)
+             FROM leave_policy_assignments
+             WHERE leave_policy_id = :policy_id
+               AND status = 'active'"
+        );
+        $employeesAssignedStmt->execute(['policy_id' => $policyId]);
+        $employeesAssigned = (int) $employeesAssignedStmt->fetchColumn();
+
+        $currentFy = (new \App\Models\FinancialYear())->getCurrentPeriod();
+        $currentFyId = $currentFy ? (int) $currentFy->id : 0;
+
+        $allocations = [];
+        if ($currentFyId > 0) {
+            $allocationsSql = "SELECT
+                    lt.name AS leave_type_name,
+                    le.entitlement AS base_entitlement,
+                    lpd.allocation AS allocation,
+                    CASE WHEN lpd.allocation IS NOT NULL THEN 'configured' ELSE 'not_configured' END AS status
+                FROM leave_entitlements le
+                JOIN leave_types lt ON lt.id = le.leave_type_id
+                LEFT JOIN leave_policy_details lpd
+                    ON lpd.leave_entitlement_id = le.id
+                   AND lpd.leave_policy_id = :policy_id
+                WHERE le.financial_year_id = :fy_id
+                ORDER BY lt.name ASC";
+
+            $allocationsStmt = $db->prepare($allocationsSql);
+            $allocationsStmt->execute([
+                'policy_id' => $policyId,
+                'fy_id' => $currentFyId,
+            ]);
+            $allocations = $allocationsStmt->fetchAll(PDO::FETCH_OBJ);
+        }
+
+        return (object) [
+            'configured_count' => $configuredCount,
+            'total_entitlements' => $totalEntitlements,
+            'financial_years_count' => $financialYearsCount,
+            'employees_assigned' => $employeesAssigned,
+            'created_at' => $policyRow->created_at ? (new \DateTimeImmutable($policyRow->created_at))->format('d M Y') : '—',
+            'updated_at' => $policyRow->updated_at ? (new \DateTimeImmutable($policyRow->updated_at))->format('d M Y') : '—',
+            'allocations' => $allocations,
+        ];
+    }
+
     public function getEntitlementsWithDetails(int $policyId, int $fyId): array
     {
         if ($policyId <= 0 || $fyId <= 0) {
