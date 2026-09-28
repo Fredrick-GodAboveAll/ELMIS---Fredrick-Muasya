@@ -4,6 +4,7 @@ namespace App\Controllers;
 use App\Core\Csrf;
 use App\Core\Session;
 use App\Models\FinancialYear;
+use App\Services\HolidayService;
 use App\Services\LeaveEntitlementService;
 use App\Services\LeavePolicyService;
 use App\Services\LeaveTypeService;
@@ -16,6 +17,7 @@ class LeaveController extends Controller
     protected $leaveTypeService;
     protected $leaveEntitlementService;
     protected $leavePolicyService;
+    protected $holidayService;
 
     public function __construct()
     {
@@ -23,6 +25,7 @@ class LeaveController extends Controller
         $this->leaveTypeService = new LeaveTypeService();
         $this->leaveEntitlementService = new LeaveEntitlementService();
         $this->leavePolicyService = new LeavePolicyService();
+        $this->holidayService = new HolidayService();
     }
 
     public function index()
@@ -153,41 +156,9 @@ class LeaveController extends Controller
                 throw new \InvalidArgumentException('Entitlement must be 0 or greater.');
             }
 
-            // Carry forward must be explicitly 'Yes' or 'No'
-            if (!isset($_POST['carry_forward']) || !in_array($_POST['carry_forward'], ['Yes', 'No'], true)) {
-                throw new \InvalidArgumentException('Carry Forward selection is required.');
-            }
-            $carryForwardRaw = $_POST['carry_forward'];
-            $carryForward = $carryForwardRaw === 'Yes' ? 1 : 0;
-
-            // Carry forward limit validation
-            $carryForwardLimitRaw = $_POST['carry_forward_limit'] ?? '';
-            if ($carryForward === 0) {
-                // When carry_forward is No, the submitted limit MUST be exactly 0 or empty
-                $limitVal = $carryForwardLimitRaw === '' ? 0 : $carryForwardLimitRaw;
-                if (!is_numeric($limitVal) || (int) $limitVal !== 0) {
-                    throw new \InvalidArgumentException('Maximum carry forward must be 0 when carry forward is disabled.');
-                }
-                $carryForwardLimit = 0;
-            } else {
-                // When Yes: required, numeric, whole number, >= 0
-                if ($carryForwardLimitRaw === '' || !is_numeric($carryForwardLimitRaw)) {
-                    throw new \InvalidArgumentException('Please provide a numeric maximum carry forward value.');
-                }
-                if ((float) $carryForwardLimitRaw != (int) $carryForwardLimitRaw) {
-                    throw new \InvalidArgumentException('Maximum carry forward must be a whole number.');
-                }
-                $carryForwardLimit = (int) $carryForwardLimitRaw;
-                if ($carryForwardLimit < 0) {
-                    throw new \InvalidArgumentException('Maximum carry forward must be 0 or greater.');
-                }
-            }
-
             $data = [
                 'leave_type_id' => $leaveTypeId,
                 'entitlement' => $entitlementDays,
-                'carry_forward' => $carryForward,
-                'carry_forward_limit' => $carryForwardLimit,
             ];
 
             $createdId = $this->leaveEntitlementService->create((string) $year, $data);
@@ -648,12 +619,14 @@ class LeaveController extends Controller
         $financialYearId = (int) ($_POST['financial_year_id'] ?? 0);
         $entitlementId = (int) ($_POST['entitlement_id'] ?? 0);
         $allocation = isset($_POST['allocation']) ? trim((string) $_POST['allocation']) : '';
+        $carryForwardInput = isset($_POST['carry_forward']) ? strtolower(trim((string) $_POST['carry_forward'])) : 'no';
+        $carryForward = in_array($carryForwardInput, ['1', 'yes', 'true'], true) ? 1 : 0;
+        $carryForwardLimitRaw = isset($_POST['carry_forward_limit']) ? trim((string) $_POST['carry_forward_limit']) : '';
+        $carryForwardLimit = $carryForward === 1 && $carryForwardLimitRaw !== '' && is_numeric($carryForwardLimitRaw)
+            ? (float) $carryForwardLimitRaw
+            : 0.0;
 
         try {
-            if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
-                throw new InvalidArgumentException('Invalid request method.');
-            }
-
             Csrf::validate($_POST['csrf_token'] ?? '');
 
             $userRole = \App\Core\Session::get('user_role');
@@ -708,7 +681,15 @@ class LeaveController extends Controller
                 throw new InvalidArgumentException('Invalid allocation value.');
             }
 
-            $this->leavePolicyService->upsertDetail($policyId, $entitlementId, (float) $allocation);
+            if ($carryForward === 1 && ($carryForwardLimitRaw === '' || !is_numeric($carryForwardLimitRaw) || (float) $carryForwardLimitRaw < 0)) {
+                throw new InvalidArgumentException('Invalid carry forward limit value.');
+            }
+
+            if ($carryForward === 0 && $carryForwardLimitRaw !== '' && is_numeric($carryForwardLimitRaw) && (float) $carryForwardLimitRaw !== 0.0) {
+                throw new InvalidArgumentException('Carry forward limit must be 0 when carry forward is disabled.');
+            }
+
+            $this->leavePolicyService->upsertDetail($policyId, $entitlementId, (float) $allocation, $carryForward, $carryForwardLimit);
             Session::flash('success', 'Allocation saved');
             header('Location: /leave-policy-detail?id=' . $policyId . '&fy=' . $financialYearId);
             exit;
@@ -734,7 +715,255 @@ class LeaveController extends Controller
         $title = 'Holiday Lists';
         $currentPage = 'holiday_list';
         $content = '../app/Views/leave_management/leave_setup/holiday_list.php';
+        $financialYears = $this->leaveModel->all();
+        $csrf = Csrf::generate();
+        $holidayLists = (new \App\Models\HolidayListModel())->allWithFinancialYearAndCount();
         include '../app/Views/layouts/admin.php';
+    }
+
+    public function storeHolidayList()
+    {
+        $name = trim((string) ($_POST['holiday_list_name'] ?? ''));
+        $financialYearId = (int) ($_POST['financial_year_id'] ?? 0);
+        $isDefault = $this->boolFromCheckbox($_POST, 'is_default');
+        $isActive = $this->boolFromCheckbox($_POST, 'is_active');
+
+        try {
+            if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+                Session::flash('error', 'Invalid request method.');
+                header('Location: /holiday-list');
+                exit;
+            }
+
+            Csrf::validate($_POST['csrf_token'] ?? '');
+
+            if ($name === '') {
+                throw new InvalidArgumentException('Holiday list name is required.');
+            }
+
+            if ($financialYearId <= 0) {
+                throw new InvalidArgumentException('Financial year is required.');
+            }
+
+            $financialYear = $this->leaveModel->find($financialYearId);
+            if (!$financialYear) {
+                throw new InvalidArgumentException('Financial year not found.');
+            }
+
+            if (!in_array($isDefault, [0, 1], true)) {
+                throw new InvalidArgumentException('Default / Primary value is invalid.');
+            }
+
+            if (!in_array($isActive, [0, 1], true)) {
+                throw new InvalidArgumentException('Active / Inactive value is invalid.');
+            }
+
+            $holidayListModel = new \App\Models\HolidayListModel();
+            $holidayListModel->create([
+                'name' => $name,
+                'financial_year_id' => $financialYearId,
+                'is_default' => $isDefault,
+                'is_active' => $isActive,
+            ]);
+
+            Session::flash('success', 'Holiday list created successfully.');
+            header('Location: /holiday-list');
+            exit;
+        } catch (InvalidArgumentException $e) {
+            Session::flash('holiday_list_old', [
+                'holiday_list_name' => $name,
+                'financial_year_id' => $financialYearId,
+                'is_default' => $isDefault,
+                'is_active' => $isActive,
+            ]);
+            Session::flash('error', $e->getMessage());
+            header('Location: /holiday-list');
+            exit;
+        } catch (\PDOException $e) {
+            Session::flash('holiday_list_old', [
+                'holiday_list_name' => $name,
+                'financial_year_id' => $financialYearId,
+                'is_default' => $isDefault,
+                'is_active' => $isActive,
+            ]);
+            Session::flash('error', 'A holiday list with this name already exists for the selected financial year.');
+            header('Location: /holiday-list');
+            exit;
+        } catch (\Throwable $e) {
+            Session::flash('holiday_list_old', [
+                'holiday_list_name' => $name,
+                'financial_year_id' => $financialYearId,
+                'is_default' => $isDefault,
+                'is_active' => $isActive,
+            ]);
+            Session::flash('error', 'Unable to create holiday list. Please try again.');
+            header('Location: /holiday-list');
+            exit;
+        }
+    }
+
+    public function toggleHolidayListActive()
+    {
+        try {
+            if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+                Session::flash('error', 'Invalid request method.');
+                header('Location: /holiday-list');
+                exit;
+            }
+
+            Csrf::validate($_POST['csrf_token'] ?? '');
+
+            $id = (int) ($_POST['id'] ?? 0);
+            $action = $_POST['action'] ?? '';
+
+            if ($id <= 0 || !in_array($action, ['activate', 'deactivate'], true)) {
+                throw new InvalidArgumentException('Invalid request.');
+            }
+
+            $isActive = $action === 'activate' ? 1 : 0;
+            (new \App\Models\HolidayListModel())->setActive($id, $isActive);
+
+            Session::flash('success', 'Holiday list updated successfully.');
+            header('Location: /holiday-list');
+            exit;
+        } catch (InvalidArgumentException $e) {
+            Session::flash('error', $e->getMessage());
+            header('Location: /holiday-list');
+            exit;
+        } catch (\Throwable $e) {
+            Session::flash('error', 'Unable to update holiday list. Please try again.');
+            header('Location: /holiday-list');
+            exit;
+        }
+    }
+
+    public function deleteHolidayList()
+    {
+        try {
+            if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+                Session::flash('error', 'Invalid request method.');
+                header('Location: /holiday-list');
+                exit;
+            }
+
+            Csrf::validate($_POST['csrf_token'] ?? '');
+
+            $id = (int) ($_POST['id'] ?? 0);
+            if ($id <= 0) {
+                throw new InvalidArgumentException('A valid holiday list is required.');
+            }
+
+            $holidayListModel = new \App\Models\HolidayListModel();
+            $holidayList = $holidayListModel->find($id);
+            if (!$holidayList) {
+                throw new InvalidArgumentException('Holiday list not found.');
+            }
+
+            $holidayListModel->deleteWithChildren($id);
+
+            Session::flash('success', 'Holiday list deleted successfully.');
+            header('Location: /holiday-list');
+            exit;
+        } catch (InvalidArgumentException $e) {
+            Session::flash('error', $e->getMessage());
+            header('Location: /holiday-list');
+            exit;
+        } catch (\Throwable $e) {
+            Session::flash('error', 'Unable to delete holiday list. Please try again.');
+            header('Location: /holiday-list');
+            exit;
+        }
+    }
+
+    public function holidayListDetail()
+    {
+        $holidayListId = isset($_GET['id']) ? (int) $_GET['id'] : 0;
+
+        if ($holidayListId <= 0) {
+            Session::flash('error', 'Holiday list not found.');
+            header('Location: /holiday-list');
+            exit;
+        }
+
+        $holidayList = $this->holidayService->getHolidayListDetailById($holidayListId);
+
+        if (!$holidayList) {
+            Session::flash('error', 'Holiday list not found.');
+            header('Location: /holiday-list');
+            exit;
+        }
+
+        $title = 'Holiday List Detail';
+        $currentPage = 'holiday_list_detail';
+        $content = '../app/Views/leave_management/leave_setup/holiday_list_detail.php';
+        $csrf = Csrf::generate();
+        $holidays = $this->holidayService->getHolidaysForList($holidayListId);
+        include '../app/Views/layouts/admin.php';
+    }
+
+    public function storeHoliday()
+    {
+        $holidayListId = (int) ($_POST['holiday_list_id'] ?? 0);
+        $name = trim((string) ($_POST['holiday_name'] ?? ''));
+        $holidayDate = trim((string) ($_POST['holiday_date'] ?? ''));
+        $isWeeklyOff = $this->boolFromCheckbox($_POST, 'is_weekly_off');
+
+        try {
+            if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+                Session::flash('error', 'Invalid request method.');
+                header('Location: /holiday-lists/detail?id=' . $holidayListId);
+                exit;
+            }
+
+            Csrf::validate($_POST['csrf_token'] ?? '');
+
+            if ($holidayListId <= 0) {
+                throw new InvalidArgumentException('Holiday list not found.');
+            }
+
+            if ($name === '') {
+                throw new InvalidArgumentException('Holiday name is required.');
+            }
+
+            if ($holidayDate === '') {
+                throw new InvalidArgumentException('Holiday date is required.');
+            }
+
+            if (!in_array($isWeeklyOff, [0, 1], true)) {
+                throw new InvalidArgumentException('Weekly off flag is invalid.');
+            }
+
+            $holiday = $this->holidayService->createHoliday([
+                'holiday_list_id' => $holidayListId,
+                'name' => $name,
+                'holiday_date' => $holidayDate,
+                'is_weekly_off' => $isWeeklyOff,
+            ]);
+
+            if ($holiday === false) {
+                throw new \RuntimeException('Unable to create holiday.');
+            }
+
+            Session::flash('success', 'Holiday created successfully.');
+            header('Location: /holiday-lists/detail?id=' . $holidayListId);
+            exit;
+        } catch (InvalidArgumentException $e) {
+            Session::flash('error', $e->getMessage());
+            header('Location: /holiday-lists/detail?id=' . $holidayListId);
+            exit;
+        } catch (\PDOException $e) {
+            if ((int) $e->getCode() === 23000 || str_contains($e->getMessage(), 'Duplicate entry') || str_contains($e->getMessage(), 'uq_holiday_list_date')) {
+                Session::flash('error', 'A holiday already exists for that date in this holiday list.');
+            } else {
+                Session::flash('error', 'Unable to create holiday. Please try again.');
+            }
+            header('Location: /holiday-lists/detail?id=' . $holidayListId);
+            exit;
+        } catch (\Throwable $e) {
+            Session::flash('error', 'Unable to create holiday. Please try again.');
+            header('Location: /holiday-lists/detail?id=' . $holidayListId);
+            exit;
+        }
     }
 }
 

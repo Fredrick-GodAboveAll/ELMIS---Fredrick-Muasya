@@ -155,6 +155,8 @@ $isActive = !empty($policy->is_active);
                 <th class="text-900 sort pe-1 align-middle white-space-nowrap text-start">Leave Type</th>
                 <th class="text-900 sort pe-1 align-middle white-space-nowrap text-end">Base Entitlement</th>
                 <th class="text-900 sort pe-1 align-middle white-space-nowrap text-end">Policy Allocation</th>
+                <th class="text-900 sort pe-1 align-middle white-space-nowrap text-start">Carry Forward</th>
+                <th class="text-900 sort pe-1 align-middle white-space-nowrap text-end">Max Carry Forward</th>
                 <th class="text-900 sort pe-1 align-middle white-space-nowrap text-start">Status</th>
                 <th class="no-export text-900 no-sort pe-1 align-middle data-table-row-action text-end" data-orderable="false"></th>
               </tr>
@@ -183,6 +185,23 @@ $isActive = !empty($policy->is_active);
                   <td class="align-middle white-space-nowrap text-end">
                     <?php if ($row->allocation !== null): ?>
                       <span class="fw-semi-bold"><?= (float) $row->allocation ?></span>
+                      <span class="text-600 fs-11">days</span>
+                    <?php else: ?>
+                      <span class="text-600 fs-11 fst-italic">Not set</span>
+                    <?php endif; ?>
+                  </td>
+
+                  <td class="align-middle white-space-nowrap text-start fs-9">
+                    <?php if (isset($row->carry_forward) && (int) $row->carry_forward === 1): ?>
+                      <span class="badge rounded-pill badge-subtle-success">Yes</span>
+                    <?php else: ?>
+                      <span class="badge rounded-pill badge-subtle-secondary">No</span>
+                    <?php endif; ?>
+                  </td>
+
+                  <td class="align-middle white-space-nowrap text-end">
+                    <?php if (isset($row->carry_forward_limit)): ?>
+                      <span class="fw-semi-bold"><?= (float) $row->carry_forward_limit ?></span>
                       <span class="text-600 fs-11">days</span>
                     <?php else: ?>
                       <span class="text-600 fs-11 fst-italic">Not set</span>
@@ -418,6 +437,33 @@ $isActive = !empty($policy->is_active);
               </div>
               <div class="form-text">
                 Leave blank to remove the allocation and set this leave type back to "Not configured".
+              </div>
+            </div>
+
+            <div class="mb-3">
+              <label class="form-label">Carry Forward</label>
+              <div class="d-flex gap-3">
+                <div class="form-check">
+                  <input class="form-check-input" type="radio" name="carry_forward" id="carryForwardNo-<?= $entId ?>" value="0" <?= empty($row->carry_forward) ? 'checked' : '' ?>>
+                  <label class="form-check-label" for="carryForwardNo-<?= $entId ?>">No</label>
+                </div>
+                <div class="form-check">
+                  <input class="form-check-input" type="radio" name="carry_forward" id="carryForwardYes-<?= $entId ?>" value="1" <?= !empty($row->carry_forward) ? 'checked' : '' ?>>
+                  <label class="form-check-label" for="carryForwardYes-<?= $entId ?>">Yes</label>
+                </div>
+              </div>
+            </div>
+
+            <div class="mb-2">
+              <label for="carryForwardLimit-<?= $entId ?>" class="form-label">Max Carry Forward</label>
+              <div class="input-group">
+                <input type="number"
+                       class="form-control"
+                       id="carryForwardLimit-<?= $entId ?>"
+                       name="carry_forward_limit"
+                       value="<?= !empty($row->carry_forward) ? (float) ($row->carry_forward_limit ?? 0) : 0 ?>"
+                       min="0" step="1">
+                <span class="input-group-text">days</span>
               </div>
             </div>
           </div>

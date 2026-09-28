@@ -60,6 +60,18 @@ $router->post('/leave-policies', 'LeaveController@storeLeavePolicy', [AuthMiddle
 // Activate/deactivate policy
 $router->post('/leave-policies/toggle-active', 'LeaveController@togglePolicyActive', [AuthMiddleware::class, [RoleMiddleware::class, 'admin']]);
 $router->get('/holiday-list', 'LeaveController@HolidayList', [AuthMiddleware::class]);
+$router->post('/holiday-list', 'LeaveController@storeHolidayList', [AuthMiddleware::class]);
+$router->post('/holiday-lists', 'LeaveController@storeHolidayList', [AuthMiddleware::class, [RoleMiddleware::class, 'admin']]);
+$router->post('/holiday-lists/toggle-active', 'LeaveController@toggleHolidayListActive', [
+    AuthMiddleware::class,
+    [RoleMiddleware::class, 'admin']
+]);
+$router->post('/holiday-lists/delete', 'LeaveController@deleteHolidayList', [
+    AuthMiddleware::class,
+    [RoleMiddleware::class, 'admin']
+]);
+$router->get('/holiday-lists/detail', 'LeaveController@holidayListDetail', [AuthMiddleware::class]);
+$router->post('/holiday-lists/add-holiday', 'LeaveController@storeHoliday', [AuthMiddleware::class]);
 
 // Tools: Leave Calculator test (isolated)
 $router->get('/tools/leave-calculator', 'ToolsController@leaveCalculator', [AuthMiddleware::class]);

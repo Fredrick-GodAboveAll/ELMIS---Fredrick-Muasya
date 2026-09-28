@@ -47,8 +47,6 @@ class LeaveEntitlement extends Model
                     lt.calculation_method,
                     le.id AS entitlement_id,
                     le.entitlement,
-                    le.carry_forward,
-                    le.carry_forward_limit,
                     le.pro_rata_allowed,
                     le.created_at,
                     le.updated_at
@@ -79,9 +77,18 @@ class LeaveEntitlement extends Model
         return (bool) $stmt->fetchColumn();
     }
 
+    public static function calculationLabelFromMethod(?string $calculationMethod): string
+    {
+        $method = strtolower(trim((string) ($calculationMethod ?? 'working_days')));
+
+        return $method === 'calendar_days'
+            ? 'Calendar Days'
+            : 'Working Days';
+    }
+
     public function create(array $data)
     {
-        $sql = "INSERT INTO {$this->table} (financial_year_id, leave_type_id, entitlement, carry_forward, carry_forward_limit, created_at, updated_at) VALUES (:financial_year_id, :leave_type_id, :entitlement, :carry_forward, :carry_forward_limit, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP)";
+        $sql = "INSERT INTO {$this->table} (financial_year_id, leave_type_id, entitlement, created_at, updated_at) VALUES (:financial_year_id, :leave_type_id, :entitlement, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP)";
 
         $stmt = $this->db->prepare($sql);
 
@@ -89,8 +96,6 @@ class LeaveEntitlement extends Model
             'financial_year_id' => $data['financial_year_id'],
             'leave_type_id' => $data['leave_type_id'],
             'entitlement' => $data['entitlement'],
-            'carry_forward' => $data['carry_forward'],
-            'carry_forward_limit' => $data['carry_forward_limit'],
         ]);
 
         if (!$ok) {

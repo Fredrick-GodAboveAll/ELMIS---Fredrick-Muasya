@@ -138,21 +138,38 @@ class LeavePolicyService
         ];
     }
 
+    private function hasPolicyDetailColumn(string $column): bool
+    {
+        $stmt = Database::getInstance()->prepare("SHOW COLUMNS FROM leave_policy_details LIKE :column");
+        $stmt->execute(['column' => $column]);
+
+        return (bool) $stmt->fetchColumn();
+    }
+
     public function getEntitlementsWithDetails(int $policyId, int $fyId): array
     {
         if ($policyId <= 0 || $fyId <= 0) {
             return [];
         }
 
-        $sql = "SELECT
-                le.id AS entitlement_id,
-                lt.name AS leave_type_name,
-                lt.calculation_method,
-                le.entitlement AS base_entitlement,
-                le.carry_forward,
-                le.carry_forward_limit,
-                lpd.id AS detail_id,
-                lpd.allocation AS allocation
+        $selectColumns = [
+            'le.id AS entitlement_id',
+            'lt.name AS leave_type_name',
+            'lt.calculation_method',
+            'le.entitlement AS base_entitlement',
+            'lpd.id AS detail_id',
+            'lpd.allocation AS allocation',
+        ];
+
+        if ($this->hasPolicyDetailColumn('carry_forward')) {
+            $selectColumns[] = 'lpd.carry_forward';
+        }
+
+        if ($this->hasPolicyDetailColumn('carry_forward_limit')) {
+            $selectColumns[] = 'lpd.carry_forward_limit';
+        }
+
+        $sql = "SELECT " . implode(",\n", $selectColumns) . "
             FROM leave_entitlements le
             JOIN leave_types lt ON lt.id = le.leave_type_id
             LEFT JOIN leave_policy_details lpd
@@ -170,23 +187,53 @@ class LeavePolicyService
         return $stmt->fetchAll(PDO::FETCH_OBJ);
     }
 
-    public function upsertDetail(int $policyId, int $entitlementId, float $allocation): void
+    public function upsertDetail(int $policyId, int $entitlementId, float $allocation, int $carryForward = 0, float $carryForwardLimit = 0.0): void
     {
         if ($policyId <= 0 || $entitlementId <= 0) {
             throw new InvalidArgumentException('Invalid policy or entitlement id.');
         }
 
-        $sql = "INSERT INTO leave_policy_details
-                (leave_policy_id, leave_entitlement_id, allocation)
-                VALUES (:policy_id, :entitlement_id, :allocation)
-                ON DUPLICATE KEY UPDATE allocation = VALUES(allocation)";
+        $carryForward = in_array((int) $carryForward, [0, 1], true) ? (int) $carryForward : 0;
+        $carryForwardLimit = (float) $carryForwardLimit;
+        if ($carryForward === 0) {
+            $carryForwardLimit = 0.0;
+        }
 
-        $stmt = Database::getInstance()->prepare($sql);
-        $stmt->execute([
+        $columns = ['leave_policy_id', 'leave_entitlement_id', 'allocation'];
+        $values = [':policy_id', ':entitlement_id', ':allocation'];
+        $params = [
             'policy_id' => $policyId,
             'entitlement_id' => $entitlementId,
             'allocation' => (float) $allocation,
-        ]);
+        ];
+
+        if ($this->hasPolicyDetailColumn('carry_forward')) {
+            $columns[] = 'carry_forward';
+            $values[] = ':carry_forward';
+            $params['carry_forward'] = $carryForward;
+        }
+
+        if ($this->hasPolicyDetailColumn('carry_forward_limit')) {
+            $columns[] = 'carry_forward_limit';
+            $values[] = ':carry_forward_limit';
+            $params['carry_forward_limit'] = $carryForwardLimit;
+        }
+
+        $updates = ['allocation = VALUES(allocation)'];
+        if ($this->hasPolicyDetailColumn('carry_forward')) {
+            $updates[] = 'carry_forward = VALUES(carry_forward)';
+        }
+        if ($this->hasPolicyDetailColumn('carry_forward_limit')) {
+            $updates[] = 'carry_forward_limit = VALUES(carry_forward_limit)';
+        }
+
+        $sql = "INSERT INTO leave_policy_details
+                (" . implode(', ', $columns) . ")
+                VALUES (" . implode(', ', $values) . ")
+                ON DUPLICATE KEY UPDATE " . implode(', ', $updates);
+
+        $stmt = Database::getInstance()->prepare($sql);
+        $stmt->execute($params);
     }
 
     public function deleteDetail(int $policyId, int $entitlementId): void

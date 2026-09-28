@@ -1,3 +1,11 @@
+
+<?php
+/** @var string $title */
+/** @var string $currentPage */
+/** @var string $content */
+?>
+
+
 <!DOCTYPE html>
 <html data-bs-theme="light" lang="en-US" dir="ltr">
 

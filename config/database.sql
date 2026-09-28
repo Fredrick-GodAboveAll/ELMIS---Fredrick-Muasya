@@ -195,13 +195,18 @@ INSERT INTO `leave_types` (`name`, `calculation_method`, `is_active`) VALUES
 
 CREATE TABLE `holiday_lists` (
   `id` INT UNSIGNED NOT NULL AUTO_INCREMENT,
+  `financial_year_id` INT UNSIGNED NOT NULL,
   `name` VARCHAR(100) NOT NULL,
   `is_default` TINYINT(1) NOT NULL DEFAULT 0,
   `is_active` TINYINT(1) NOT NULL DEFAULT 1,
   `created_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `updated_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`),
-  UNIQUE KEY `uq_holiday_list_name` (`name`)
+  UNIQUE KEY `uq_holiday_list_name` (`name`),
+  KEY `idx_holiday_lists_financial_year_id` (`financial_year_id`),
+  CONSTRAINT `fk_holiday_lists_financial_year`
+    FOREIGN KEY (`financial_year_id`) REFERENCES `financial_years` (`id`)
+    ON UPDATE CASCADE ON DELETE RESTRICT
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 CREATE TABLE `holidays` (
@@ -218,28 +223,11 @@ CREATE TABLE `holidays` (
     ON UPDATE CASCADE ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
-CREATE TABLE `financial_year_holiday_lists` (
-  `id` INT UNSIGNED NOT NULL AUTO_INCREMENT,
-  `financial_year_id` INT UNSIGNED NOT NULL,
-  `holiday_list_id` INT UNSIGNED NOT NULL,
-  `is_primary` TINYINT(1) NOT NULL DEFAULT 1,
-  PRIMARY KEY (`id`),
-  UNIQUE KEY `uq_year_holiday_list` (`financial_year_id`, `holiday_list_id`),
-  CONSTRAINT `fk_fy_holiday_year`
-    FOREIGN KEY (`financial_year_id`) REFERENCES `financial_years` (`id`)
-    ON UPDATE CASCADE ON DELETE CASCADE,
-  CONSTRAINT `fk_fy_holiday_list`
-    FOREIGN KEY (`holiday_list_id`) REFERENCES `holiday_lists` (`id`)
-    ON UPDATE CASCADE ON DELETE RESTRICT
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
-
 CREATE TABLE `leave_entitlements` (
   `id` INT UNSIGNED NOT NULL AUTO_INCREMENT,
   `financial_year_id` INT UNSIGNED NOT NULL,
   `leave_type_id` INT UNSIGNED NOT NULL,
   `entitlement` DECIMAL(6,2) NOT NULL DEFAULT 0.00,
-  `carry_forward` TINYINT(1) NOT NULL DEFAULT 0,
-  `carry_forward_limit` DECIMAL(6,2) NOT NULL DEFAULT 0.00,
   `pro_rata_allowed` TINYINT(1) NOT NULL DEFAULT 1,
   `created_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `updated_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
@@ -269,6 +257,8 @@ CREATE TABLE `leave_policy_details` (
   `leave_policy_id` INT UNSIGNED NOT NULL,
   `leave_entitlement_id` INT UNSIGNED NOT NULL,
   `allocation` DECIMAL(6,2) NOT NULL DEFAULT 0.00,
+  `carry_forward` TINYINT(1) NOT NULL DEFAULT 0,
+  `carry_forward_limit` DECIMAL(6,2) NOT NULL DEFAULT 0.00,
   `created_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `updated_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`),
@@ -614,9 +604,9 @@ INSERT INTO `financial_years` (`id`, `label`, `start_date`, `end_date`, `is_curr
 (1, '2025/2026', '2025-07-01', '2026-06-30', 0),
 (2, '2026/2027', '2026-07-01', '2027-06-30', 1);
 
-INSERT INTO `holiday_lists` (`id`, `name`, `is_default`, `is_active`) VALUES
-(1, 'National Holidays 2026', 1, 1),
-(2, 'Regional Holidays 2026', 0, 1);
+INSERT INTO `holiday_lists` (`id`, `financial_year_id`, `name`, `is_default`, `is_active`) VALUES
+(1, 2, 'National Holidays 2026', 1, 1),
+(2, 2, 'Regional Holidays 2026', 0, 1);
 
 INSERT INTO `holidays` (`id`, `holiday_list_id`, `holiday_date`, `name`, `is_weekly_off`) VALUES
 (1, 1, '2026-01-01', 'New Year Day', 0),
@@ -625,30 +615,25 @@ INSERT INTO `holidays` (`id`, `holiday_list_id`, `holiday_date`, `name`, `is_wee
 (4, 1, '2026-06-01', 'Madaraka Day', 0),
 (5, 2, '2026-08-15', 'Assumption Day', 0);
 
-INSERT INTO `financial_year_holiday_lists` (`id`, `financial_year_id`, `holiday_list_id`, `is_primary`) VALUES
-(1, 1, 1, 1),
-(2, 2, 1, 1),
-(3, 2, 2, 0);
-
-INSERT INTO `leave_entitlements` (`id`, `financial_year_id`, `leave_type_id`, `entitlement`, `carry_forward`, `carry_forward_limit`, `pro_rata_allowed`) VALUES
-(1, 2, 1, 30.00, 1, 15.00, 1),
-(2, 2, 2, 10.00, 0, 0.00, 1),
-(3, 2, 3, 90.00, 0, 0.00, 1),
-(4, 2, 4, 10.00, 0, 0.00, 1),
-(5, 2, 5, 5.00, 0, 0.00, 1),
-(6, 2, 6, 0.00, 0, 0.00, 1);
+INSERT INTO `leave_entitlements` (`id`, `financial_year_id`, `leave_type_id`, `entitlement`, `pro_rata_allowed`) VALUES
+(1, 2, 1, 30.00, 1),
+(2, 2, 2, 10.00, 1),
+(3, 2, 3, 90.00, 1),
+(4, 2, 4, 10.00, 1),
+(5, 2, 5, 5.00, 1),
+(6, 2, 6, 0.00, 1);
 
 INSERT INTO `leave_policies` (`id`, `name`, `description`, `is_active`) VALUES
 (1, 'Standard Staff Leave Policy', 'Default ELMIS leave policy for all staff', 1),
 (2, 'Executive Leave Policy', 'Special policy for senior staff', 1);
 
-INSERT INTO `leave_policy_details` (`id`, `leave_policy_id`, `leave_entitlement_id`, `allocation`) VALUES
-(1, 1, 1, 30.00),
-(2, 1, 2, 10.00),
-(3, 1, 3, 90.00),
-(4, 1, 4, 10.00),
-(5, 1, 5, 5.00),
-(6, 1, 6, 0.00);
+INSERT INTO `leave_policy_details` (`id`, `leave_policy_id`, `leave_entitlement_id`, `allocation`, `carry_forward`, `carry_forward_limit`) VALUES
+(1, 1, 1, 30.00, 1, 15.00),
+(2, 1, 2, 10.00, 0, 0.00),
+(3, 1, 3, 90.00, 0, 0.00),
+(4, 1, 4, 10.00, 0, 0.00),
+(5, 1, 5, 5.00, 0, 0.00),
+(6, 1, 6, 0.00, 0, 0.00);
 
 INSERT INTO `leave_policy_assignments` (`id`, `employee_id`, `leave_policy_id`, `financial_year_id`, `effective_from`, `effective_to`, `status`) VALUES
 (1, 1, 1, 2, '2026-07-01', NULL, 'active'),
