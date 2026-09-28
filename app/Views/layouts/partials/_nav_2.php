@@ -66,10 +66,10 @@
                   </a><!-- parent pages-->
                   
                   <a class="nav-link dropdown-indicator <?php echo (in_array($currentPage, 
-                    ['holiday_list','leave_types', 'leave_entitlement', 'leave_period', 'leave_policy', 'leave_applications'])) ? '' : 'collapsed'; ?>" href="#leave"
+                    ['holiday_list','leave_types', 'leave_entitlement', 'leave_period', 'leave_policy', 'leave_applications', 'policy_assignments'])) ? '' : 'collapsed'; ?>" href="#leave"
                     role="button" data-bs-toggle="collapse" 
                     aria-expanded="<?php echo (in_array($currentPage, 
-                    ['holiday_list','leave_types', 'leave_entitlement', 'leave_period', 'leave_policy', 'leave_applications'])) ? 'true' : 'false'; ?>" aria-controls="user">
+                    ['holiday_list','leave_types', 'leave_entitlement', 'leave_period', 'leave_policy', 'leave_applications', 'policy_assignments'])) ? 'true' : 'false'; ?>" aria-controls="user">
                     
                     <div class="d-flex align-items-center">
                       <span class="nav-link-icon">
@@ -77,7 +77,7 @@
                       </span><span class="nav-link-text ps-1">Setup</span></div>
                   </a>
                   <ul class="nav collapse <?php echo (in_array($currentPage, 
-                    ['holiday_list', 'leave_types', 'leave_entitlement', 'leave_period', 'leave_policy', 'leave_applications'])) ? 'show' : ''; ?>" id="leave">
+                    ['holiday_list', 'leave_types', 'leave_entitlement', 'leave_period', 'leave_policy', 'leave_applications', 'policy_assignments'])) ? 'show' : ''; ?>" id="leave">
 
                     <li class="nav-item">
                       <a class="nav-link <?php echo ($currentPage === 'holiday_list') ? 'active' : ''; ?>" href="/holiday-list">
@@ -114,6 +114,12 @@
                         <a class="nav-link <?php echo ($currentPage === 'leave_policy') ? 'active' : ''; ?>" href="/leave-policies">
                         <div class="d-flex align-items-center"><span class="nav-link-text ps-1">leave policy</span></div>
                       </a><!-- more inner pages--></li>
+
+                      <li class="nav-item">
+                        <a class="nav-link <?php echo ($currentPage === 'policy_assignments') ? 'active' : ''; ?>" href="/policy-assignments">
+                          <div class="d-flex align-items-center"><span class="nav-link-text ps-1">policy assignments</span></div>
+                        </a>
+                      </li>
 
                   </ul><!-- parent pages-->
 

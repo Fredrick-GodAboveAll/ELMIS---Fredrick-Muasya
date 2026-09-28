@@ -613,6 +613,55 @@ class LeaveController extends Controller
         include '../app/Views/layouts/admin.php';
     }
 
+    /**
+     * Policy Assignments page (UI)
+     */
+    public function policyAssignments()
+    {
+        $title = 'Policy Assignments';
+        $currentPage = 'policy_assignments';
+        // Minimal data for initial page - policies and departments/employees for selection
+        $policies = $this->leavePolicyService->all();
+        $departments = (new \App\Models\Department())->all();
+        $employees = (new \App\Models\Employee())->all();
+        $csrf = Csrf::generate();
+
+        $content = '../app/Views/leave_management/leave_setup/policy_assignments.php';
+        include '../app/Views/layouts/admin.php';
+    }
+
+    public function savePolicyAssignment()
+    {
+        try {
+            if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+                \App\Core\Session::flash('error', 'Invalid request method.');
+                header('Location: /policy-assignments');
+                exit;
+            }
+
+            Csrf::validate($_POST['csrf_token'] ?? '');
+
+            // Minimal save handler placeholder - in future call a service to persist
+            // Validate required inputs
+            $policyId = (int) ($_POST['policy_id'] ?? 0);
+            $scopeType = trim((string) ($_POST['scope_type'] ?? ''));
+            $scopeId = (int) ($_POST['scope_id'] ?? 0);
+
+            if ($policyId <= 0 || $scopeType === '' || $scopeId <= 0) {
+                throw new \InvalidArgumentException('Please select policy and target for assignment.');
+            }
+
+            // TODO: persist assignment via a service/model
+            \App\Core\Session::flash('success', 'Policy assignment saved (placeholder).');
+            header('Location: /policy-assignments');
+            exit;
+        } catch (\Exception $e) {
+            \App\Core\Session::flash('error', $e->getMessage());
+            header('Location: /policy-assignments');
+            exit;
+        }
+    }
+
     public function saveLeavePolicyDetails()
     {
         $policyId = (int) ($_POST['policy_id'] ?? 0);
