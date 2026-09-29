@@ -77,7 +77,7 @@
                 Personal No
               </th>
 
-              <th class="text-900 sort pe-1 align-middle white-space-nowrap">
+              <th class="text-900 sort  pe-1 align-middle white-space-nowrap">
                 Designation
               </th>
 
