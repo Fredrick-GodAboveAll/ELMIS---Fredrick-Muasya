@@ -15,5 +15,13 @@ class EmployeeController extends Controller
         $content = '../app/Views/employees/index.php';
         include '../app/Views/layouts/admin.php';
     }
+
+    public function categories()
+    {
+        $title = 'Employee Categories';
+        $currentPage = 'employee_categories';
+        $content = '../app/Views/employees/categories.php';
+        include '../app/Views/layouts/admin.php';
+    }
 }
 

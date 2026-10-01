@@ -146,10 +146,14 @@
                     <div class="d-flex align-items-center"><span class="nav-link-icon">
                       <span class="fas fa-users"></span></span><span class="nav-link-text ps-1"> Employees </span></div>
                   </a>
-                  <ul class="nav collapse <?php echo (in_array($currentPage, ['employees'])) ? 'show' : ''; ?>" id="employees">
+                  <ul class="nav collapse <?php echo (in_array($currentPage, ['employees', 'employee_categories'])) ? 'show' : ''; ?>" id="employees">
                     <li class="nav-item"><a class="nav-link <?php echo ($currentPage === 'employees') ? 'active' : ''; ?>" href="/employees">
                         <div class="d-flex align-items-center"><span class="nav-link-text ps-1">employee list</span></div>
                       </a><!-- more inner pages--></li>
+
+                    <li class="nav-item"><a class="nav-link <?php echo ($currentPage === 'employee_categories') ? 'active' : ''; ?>" href="/employee-categories">
+                        <div class="d-flex align-items-center"><span class="nav-link-text ps-1">Employee categories</span></div>
+                      </a></li>
 
                     <!-- <li class="nav-item"><a class="nav-link" href="/employees/detail">
                         <div class="d-flex align-items-center"><span class="nav-link-text ps-1">employee detail</span></div>

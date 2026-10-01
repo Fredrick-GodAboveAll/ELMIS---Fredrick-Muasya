@@ -27,6 +27,7 @@ $router->get('/dashboard/analytics', 'DashboardController@analytics', [AuthMiddl
 $router->get('/employees', 'EmployeeController@index', [AuthMiddleware::class]);
 $router->get('/employees/detail', 'EmployeeController@detail', [AuthMiddleware::class]);
 $router->get('/employees/departments', 'EmployeeController@departments', [AuthMiddleware::class]);
+$router->get('/employee-categories', 'EmployeeController@categories', [AuthMiddleware::class]);
 $router->get('/departments', 'DepartmentController@index', [AuthMiddleware::class]);
 $router->post('/departments', 'DepartmentController@store', [AuthMiddleware::class]);
 $router->post('/departments/delete', 'DepartmentController@delete', [AuthMiddleware::class]);
