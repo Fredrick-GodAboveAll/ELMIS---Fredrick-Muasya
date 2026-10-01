@@ -61,7 +61,6 @@ $router->post('/leave-policies', 'LeaveController@storeLeavePolicy', [AuthMiddle
 // Activate/deactivate policy
 $router->post('/leave-policies/toggle-active', 'LeaveController@togglePolicyActive', [AuthMiddleware::class, [RoleMiddleware::class, 'admin']]);
 $router->get('/holiday-list', 'LeaveController@HolidayList', [AuthMiddleware::class]);
-$router->post('/holiday-list', 'LeaveController@storeHolidayList', [AuthMiddleware::class]);
 $router->post('/holiday-lists', 'LeaveController@storeHolidayList', [AuthMiddleware::class, [RoleMiddleware::class, 'admin']]);
 $router->post('/holiday-lists/toggle-active', 'LeaveController@toggleHolidayListActive', [
     AuthMiddleware::class,
@@ -73,6 +72,8 @@ $router->post('/holiday-lists/delete', 'LeaveController@deleteHolidayList', [
 ]);
 $router->get('/holiday-lists/detail', 'LeaveController@holidayListDetail', [AuthMiddleware::class]);
 $router->post('/holiday-lists/add-holiday', 'LeaveController@storeHoliday', [AuthMiddleware::class]);
+$router->post('/holiday-lists/update-holiday', 'LeaveController@updateHoliday', [AuthMiddleware::class]);
+$router->post('/holiday-lists/delete-holiday', 'LeaveController@deleteHoliday', [AuthMiddleware::class]);
 
 // Policy Assignments (UI)
 $router->get('/policy-assignments', 'LeaveController@policyAssignments', [AuthMiddleware::class, [RoleMiddleware::class, 'admin']]);
@@ -81,13 +82,6 @@ $router->post('/policy-assignments', 'LeaveController@savePolicyAssignment', [Au
 // Tools: Leave Calculator test (isolated)
 $router->get('/tools/leave-calculator', 'ToolsController@leaveCalculator', [AuthMiddleware::class]);
 $router->post('/tools/leave-calculator', 'ToolsController@leaveCalculator', [AuthMiddleware::class]);
-
-// HOLIDAY ROUTES 
-
-$router->get('/holidays', 'HolidaysController@index', [AuthMiddleware::class]);
-$router->get('/holidays/new', 'HolidaysController@newHolidayList', [AuthMiddleware::class]);
-$router->get('/holidays/hout', 'HolidaysController@Hout_list', [AuthMiddleware::class]);
-
 
 // SYTEM TOOLS ROUTES ---- for making work easier and seeing the system clock
 
@@ -117,10 +111,6 @@ $router->get('/user-profiles', 'UserController@index', [AuthMiddleware::class]);
 $router->get('/user/settings', 'UserController@SystemSetting', [AuthMiddleware::class]);
 
 
-
-// LEAVE ROUTES
-
-$router->get('/holidays', 'HolidaysController@index', [AuthMiddleware::class]);
 
 // Admin-only route example
 $router->get('/admin/users', 'AdminController@index',

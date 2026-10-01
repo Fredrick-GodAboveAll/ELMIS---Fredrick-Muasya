@@ -117,7 +117,7 @@ function elmis_initials(string $name): string
           <a href="/leave_management" class="btn btn-falcon-default btn-sm">
             <span class="fas fa-calendar-plus me-1"></span>New Leave Record
           </a>
-          <a href="/holidays/new_holiday_list" class="btn btn-falcon-default btn-sm">
+          <a href="/holiday-list" class="btn btn-falcon-default btn-sm">
             <span class="fas fa-umbrella-beach me-1"></span>New Holiday List
           </a>
           <a href="/employees/add-employee" class="btn btn-falcon-default btn-sm">

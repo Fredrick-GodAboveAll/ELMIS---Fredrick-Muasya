@@ -124,10 +124,10 @@
                   </ul><!-- parent pages-->
 
 
-                  <a class="nav-link <?php echo ($currentPage === 'holidays') ? 'active' : ''; ?>" href="/holidays" role="button">
+                  <a class="nav-link <?php echo in_array($currentPage, ['holiday_list', 'holiday_list_detail'], true) ? 'active' : ''; ?>" href="/holiday-list" role="button">
                     <div class="d-flex align-items-center">
                       <span class="nav-link-icon"><span class="far fa-calendar"></span>
-                    </span><span class="nav-link-text ps-1">Time Off & Holidays</span></div>
+                    </span><span class="nav-link-text ps-1">Holiday List</span></div>
                   </a><!-- parent pages-->
 
                   

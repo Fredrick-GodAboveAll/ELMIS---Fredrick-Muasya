@@ -4,6 +4,10 @@
 /** @var object $holidayList */
 /** @var array  $holidays */
 /** @var string $csrf */
+/** @var array $financialYears */
+/** @var object|null $currentFy */
+/** @var int $currentFyId */
+/** @var object $sourceHolidayList */
 ?>
 
 <?php if ($error = \App\Core\Session::flash('error')): ?>
@@ -28,21 +32,25 @@ $isActive = !empty($holidayList->is_active);
   <ol class="breadcrumb mb-0">
     <li class="breadcrumb-item"><a href="/dashboard">Dash</a></li>
     <li class="breadcrumb-item"><a href="/holiday-list">Holiday Lists</a></li>
-    <li class="breadcrumb-item active" aria-current="page"><?= htmlspecialchars((string) ($holidayList->name ?? 'Holiday List')) ?></li>
+    <li class="breadcrumb-item active" aria-current="page">
+      <?= htmlspecialchars((string) ($holidayList->name ?? ('FY ' . ($currentFy->label ?? '')))) ?>
+    </li>
   </ol>
 </nav>
 
 <div class="row g-3 mb-3 align-items-center">
   <div class="col-lg-8">
     <h4 class="mb-1 d-flex align-items-center flex-wrap gap-2">
-      <?= htmlspecialchars((string) ($holidayList->name ?? 'Holiday List')) ?>
-      <span class="badge rounded-pill badge-subtle-<?= $isActive ? 'success' : 'secondary' ?>">
-        <?= $isActive ? 'Active' : 'Inactive' ?>
-      </span>
+      <?= htmlspecialchars((string) ($holidayList->name ?? 'No holiday list for this Financial Year')) ?>
+      <?php if ($holidayList): ?>
+        <span class="badge rounded-pill badge-subtle-<?= $isActive ? 'success' : 'secondary' ?>">
+          <?= $isActive ? 'Active' : 'Inactive' ?>
+        </span>
+      <?php endif; ?>
     </h4>
     <p class="mb-0 text-600 fs-11">
-      <?php if (!empty($holidayList->financial_year_label)): ?>
-        Financial Year: <strong class="text-900"><?= htmlspecialchars((string) $holidayList->financial_year_label) ?></strong>
+      <?php if ($currentFy): ?>
+        Financial Year: <strong class="text-900"><?= htmlspecialchars((string) $currentFy->label) ?></strong>
         · <span class="text-600"><?= count($holidays) ?> <?= count($holidays) === 1 ? 'holiday' : 'holidays' ?></span>
       <?php else: ?>
         Financial Year: <span class="text-600">Not assigned</span>
@@ -54,17 +62,34 @@ $isActive = !empty($holidayList->is_active);
       <span class="fas fa-arrow-left me-1" data-fa-transform="shrink-3"></span>
       Back to Lists
     </a>
+    <?php if ($holidayList): ?>
     <button class="btn btn-falcon-primary btn-sm" type="button"
             data-bs-toggle="modal" data-bs-target="#addHolidayModal">
       <span class="fas fa-plus me-1" data-fa-transform="shrink-3"></span>
       Add Holiday
     </button>
+    <?php endif; ?>
+  </div>
+</div>
+
+<div class="row g-3 align-items-center mb-3">
+  <div class="col-lg-3">
+    <label for="fySelect" class="form-label">Financial Year Allocation</label>
+    <select class="form-select js-choice shadow-sm" id="fySelect"
+            onchange="window.location.href='/holiday-lists/detail?id=<?= (int) $sourceHolidayList->id ?>&fy=' + this.value;">
+      <?php foreach ($financialYears as $fy): ?>
+        <option value="<?= (int) $fy->id ?>" <?= (int) $fy->id === $currentFyId ? 'selected' : '' ?>>
+          <?= htmlspecialchars((string) $fy->label) ?><?= !empty($fy->is_current) ? ' — Active' : '' ?>
+        </option>
+      <?php endforeach; ?>
+    </select>
   </div>
 </div>
 
 <!-- ============================================================
      HOLIDAY LIST OVERVIEW
      ============================================================ -->
+<?php if ($holidayList): ?>
 <div class="card mb-3">
   <div class="card-header">
     <div class="row flex-between-center">
@@ -104,10 +129,23 @@ $isActive = !empty($holidayList->is_active);
     </div>
   </div>
 </div>
+<?php else: ?>
+<div class="card mb-3">
+  <div class="card-body text-center py-5">
+    <p class="text-700 mb-0">No holiday list has been configured for this Financial Year.</p>
+    <button type="button" class="btn btn-falcon-primary btn-sm mt-3"
+            data-bs-toggle="modal" data-bs-target="#addHolidayModal">
+      <span class="fas fa-plus me-1" data-fa-transform="shrink-3"></span>
+      Add Holiday
+    </button>
+  </div>
+</div>
+<?php endif; ?>
 
 <!-- ============================================================
      HOLIDAYS
      ============================================================ -->
+<?php if ($holidayList): ?>
 <div class="card">
   <div class="card-header">
     <div class="row flex-between-center">
@@ -165,9 +203,23 @@ $isActive = !empty($holidayList->is_active);
                   </button>
                   <div class="dropdown-menu dropdown-menu-end border py-2"
                        aria-labelledby="dropdown-holiday-item-<?= (int) $index ?>">
-                    <a class="dropdown-item" href="#!">Edit</a>
+                    <button class="dropdown-item" type="button"
+                            data-bs-toggle="modal" data-bs-target="#addHolidayModal"
+                            data-holiday-id="<?= (int) ($holiday->id ?? 0) ?>"
+                            data-holiday-name="<?= htmlspecialchars((string) ($holiday->name ?? ''), ENT_QUOTES, 'UTF-8') ?>"
+                            data-holiday-date="<?= htmlspecialchars((string) ($holiday->holiday_date ?? ''), ENT_QUOTES, 'UTF-8') ?>"
+                            data-holiday-weekly-off="<?= !empty($holiday->is_weekly_off) ? '1' : '0' ?>">
+                      Edit
+                    </button>
                     <div class="dropdown-divider"></div>
-                    <a class="dropdown-item text-danger" href="#!">Remove</a>
+                    <form method="POST" action="/holiday-lists/delete-holiday" class="m-0"
+                          onsubmit="return confirm('Delete this holiday? This cannot be undone.');">
+                      <input type="hidden" name="csrf_token" value="<?= htmlspecialchars((string) $csrf, ENT_QUOTES, 'UTF-8') ?>">
+                      <input type="hidden" name="holiday_list_id" value="<?= (int) $holidayList->id ?>">
+                      <input type="hidden" name="financial_year_id" value="<?= (int) $currentFyId ?>">
+                      <input type="hidden" name="holiday_id" value="<?= (int) ($holiday->id ?? 0) ?>">
+                      <button class="dropdown-item text-danger" type="submit">Remove</button>
+                    </form>
                   </div>
                 </div>
               </td>
@@ -178,6 +230,7 @@ $isActive = !empty($holidayList->is_active);
     <?php endif; ?>
   </div>
 </div>
+<?php endif; ?>
 
 <!-- ============================================================
      ADD HOLIDAY — MODAL
@@ -186,14 +239,17 @@ $isActive = !empty($holidayList->is_active);
   <div class="modal-dialog modal-dialog-centered">
     <div class="modal-content">
 
-      <form method="POST" action="/holiday-lists/add-holiday">
+      <form method="POST" action="/holiday-lists/add-holiday" id="holidayForm">
         <input type="hidden" name="csrf_token" value="<?= htmlspecialchars((string) $csrf, ENT_QUOTES, 'UTF-8') ?>">
         <input type="hidden" name="holiday_list_id" value="<?= (int) ($holidayList->id ?? 0) ?>">
+        <input type="hidden" name="financial_year_id" value="<?= (int) $currentFyId ?>">
+        <input type="hidden" name="source_holiday_list_id" value="<?= (int) $sourceHolidayList->id ?>">
+        <input type="hidden" name="holiday_id" id="holidayId" value="">
 
         <div class="modal-header">
           <h5 class="modal-title" id="addHolidayModalLabel">
             <i data-feather="calendar" width="16" height="16" class="me-2 text-500"></i>
-            Add Holiday
+            <span id="holidayModalTitle">Add Holiday</span>
           </h5>
           <button class="btn-close" type="button" data-bs-dismiss="modal" aria-label="Close"></button>
         </div>
@@ -213,7 +269,8 @@ $isActive = !empty($holidayList->is_active);
               Holiday Date <span class="text-danger">*</span>
             </label>
             <input class="form-control form-control-sm" id="holidayDate" name="holiday_date"
-                   type="date" required>
+                   type="date" min="<?= htmlspecialchars((string) ($holidayList->start_date ?? $currentFy->start_date ?? ''), ENT_QUOTES, 'UTF-8') ?>"
+                   max="<?= htmlspecialchars((string) ($holidayList->end_date ?? $currentFy->end_date ?? ''), ENT_QUOTES, 'UTF-8') ?>" required>
           </div>
 
           <div class="form-check form-switch">
@@ -231,7 +288,7 @@ $isActive = !empty($holidayList->is_active);
           <button class="btn btn-falcon-default btn-sm" type="button" data-bs-dismiss="modal">Cancel</button>
           <button class="btn btn-falcon-primary btn-sm" type="submit">
             <span class="fas fa-check me-1" data-fa-transform="shrink-3"></span>
-            Save Holiday
+            <span id="holidayModalSubmitText">Save Holiday</span>
           </button>
         </div>
       </form>
@@ -239,3 +296,28 @@ $isActive = !empty($holidayList->is_active);
     </div>
   </div>
 </div>
+<script>
+  (function () {
+    var modal = document.getElementById('addHolidayModal');
+    var form = document.getElementById('holidayForm');
+    var holidayId = document.getElementById('holidayId');
+    var holidayName = document.getElementById('holidayName');
+    var holidayDate = document.getElementById('holidayDate');
+    var weeklyOff = document.getElementById('holidayWeeklyOff');
+    var title = document.getElementById('holidayModalTitle');
+    var submitText = document.getElementById('holidayModalSubmitText');
+
+    modal.addEventListener('show.bs.modal', function (event) {
+      var trigger = event.relatedTarget;
+      var isEdit = trigger && trigger.hasAttribute('data-holiday-id');
+
+      form.action = isEdit ? '/holiday-lists/update-holiday' : '/holiday-lists/add-holiday';
+      holidayId.value = isEdit ? trigger.dataset.holidayId : '';
+      holidayName.value = isEdit ? trigger.dataset.holidayName : '';
+      holidayDate.value = isEdit ? trigger.dataset.holidayDate : '';
+      weeklyOff.checked = isEdit && trigger.dataset.holidayWeeklyOff === '1';
+      title.textContent = isEdit ? 'Edit Holiday' : 'Add Holiday';
+      submitText.textContent = isEdit ? 'Save Changes' : 'Save Holiday';
+    });
+  })();
+</script>

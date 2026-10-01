@@ -194,7 +194,6 @@
         <script src="../vendors/feather-icons/feather.min.js"></script>
         <script src="../vendors/lodash/lodash.min.js"></script>
         <script src="../vendors/list.js/list.min.js"></script>
-        <script src="../vendors/bootstrap/pages-js/holidays-export.js"></script> 
         <script src="../vendors/bootstrap/xlsx.full.min.js"></script> 
         <script src="../assets/js/theme.js"></script>
           <script>feather.replace();</script>

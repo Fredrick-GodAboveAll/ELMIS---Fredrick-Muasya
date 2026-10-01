@@ -13,11 +13,11 @@
 <div class="row mb-2 justify-content-end align-items-center">
   <div class="col-auto">
 
-      <a class="btn btn-falcon-default btn-sm" href="/holidays/new" type="button">
+      <a class="btn btn-falcon-default btn-sm" href="/employees" type="button">
       <span class="fas fa-undo-alt" data-fa-transform="shrink-3 down-2"></span>
     </a>
 
-    <a class="btn btn-falcon-default btn-sm" href="/holidays/new" type="button">
+    <a class="btn btn-falcon-default btn-sm" href="/employees/departments" type="button">
       <span class="fas fa-plus" data-fa-transform="shrink-3 down-2"></span>
       <span class="d-none d-sm-inline-block ms-1"> Allocate Departements </span>
     </a>
