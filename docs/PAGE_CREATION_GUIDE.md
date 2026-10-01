@@ -1,10 +1,10 @@
 # PHP Page Creation Guide - Leave Management System
 
 ## Overview
-This guide explains how to add new pages, controllers, and set up proper navigation with active/show states in the PHP Leave Management System. This framework uses a custom MVC architecture with Bootstrap 5 UI components.
+This guide explains how to add pages, controllers, and navigation in the PHP Leave Management System. Holiday list management is part of the LeaveController flow at `/holiday-list` and `/holiday-lists/detail`.
 
 ## Quick Pattern for a New Page
-When creating a page like the Holiday List entry screen, use this exact pattern:
+For a new page, use this pattern:
 
 1. Add a controller method for the page.
 2. Register a route in `routes/web.php`.
@@ -15,23 +15,7 @@ When creating a page like the Holiday List entry screen, use this exact pattern:
 
 Example quick flow:
 
-```php
-public function newHolidayList()
-{
-    $title = 'New Holiday List';
-    $currentPage = 'holidays';
-    $content = '../app/Views/holidays/new_holiday_list.php';
-    include '../app/Views/layouts/admin.php';
-}
-```
-
-```php
-$router->get('/holidays/new', 'HolidaysController@newHolidayList', [AuthMiddleware::class]);
-```
-
-```php
-<?php $currentPage = 'holidays'; ?>
-```
+Holiday list pages use the existing views under `app/Views/leave_management/leave_setup/` and routes registered in `routes/web.php`.
 
 ## Table of Contents
 1. [Creating a New Page](#creating-a-new-page)
@@ -81,7 +65,7 @@ Place your view files in the appropriate subdirectories:
 - `app/Views/employees/` - Employee management pages
 - `app/Views/leaves/` - Leave management pages
 - `app/Views/departments/` - Department pages
-- `app/Views/holidays/` - Holiday pages
+- `app/Views/leave_management/leave_setup/` - Leave setup pages, including Holiday Lists
 - `app/Views/leave_types/` - Leave type pages
 
 ## Creating a New Page
@@ -116,7 +100,7 @@ Place your view files in the appropriate subdirectories:
 - `app/Views/employees/` - Employee management pages
 - `app/Views/leaves/` - Leave management pages
 - `app/Views/departments/` - Department pages
-- `app/Views/holidays/` - Holiday pages
+- `app/Views/leave_management/leave_setup/` - Leave setup pages, including Holiday Lists
 - `app/Views/leave_types/` - Leave type pages
 
 ## Creating a Controller

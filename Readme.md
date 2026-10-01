@@ -10,7 +10,6 @@ Table of contents
 	- `app/Views/auth`
 	- `app/Views/dashboard`
 	- `app/Views/leave_management`
-	- `app/Views/holidays`
 	- `app/Views/employees`
 	- `app/Views/departments`
 	- `app/Views/reports`
@@ -50,11 +49,8 @@ app/Views/leave_management (leave workflows)
 - `index.php` — Leave management index (LeaveController::index).
 - `leave_applications.php` — List of leave applications and details.
 - `leave_types.php` — Manage leave categories (LeaveTypeController::index).
-
-app/Views/holidays
-- `index.php` — Holidays list (HolidaysController::index).
-- `new_holiday_list.php` — Create new holiday list form (HolidaysController::newHolidayList).
-- `Hout.php` — Resource listing / special holidays page (HolidaysController::Hout_list).
+- `leave_setup/holiday_list.php` — Holiday lists by financial year (LeaveController::HolidayList).
+- `leave_setup/holiday_list_detail.php` — Holiday list detail and dates (LeaveController::holidayListDetail).
 
 app/Views/employees
 - `index.php` — Employee listing (EmployeeController::index).
@@ -97,9 +93,8 @@ Controllers (key mapping)
 - `app/Controllers/DashboardController.php` — Dashboard, analytics, uses `App/Core/Database` for stats.
 - `app/Controllers/EmployeeController.php` — Employee list and management.
 - `app/Controllers/DepartmentController.php` — Department pages.
-- `app/Controllers/LeaveController.php` — Leave management index and views.
+- `app/Controllers/LeaveController.php` — Leave management, leave policies, and holiday lists.
 - `app/Controllers/LeaveTypeController.php` — Leave type management.
-- `app/Controllers/HolidaysController.php` — Holiday CRUD and special pages.
 - `app/Controllers/ReportsController.php` — Reports dashboard and exports.
 - `app/Controllers/ErrorController.php` — Renders `errors/404.php` and `errors/500.php`.
 

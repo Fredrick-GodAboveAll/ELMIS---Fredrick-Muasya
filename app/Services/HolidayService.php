@@ -30,28 +30,18 @@ class HolidayService
         return $this->holidayModel->getHolidayListDetail($id);
     }
 
-    public function getHolidaysForList(int $holidayListId): array
+    public function getHolidaysForList(int $holidayListId, int $financialYearId): array
     {
-        return $this->holidayModel->getHolidaysForList($holidayListId);
+        return $this->holidayModel->getHolidaysForList($holidayListId, $financialYearId);
     }
 
     public function createHolidayList(array $data): int|false
     {
         $name = trim((string) ($data['name'] ?? ''));
-        $financialYearId = (int) ($data['financial_year_id'] ?? 0);
-        $isDefault = isset($data['is_default']) ? (int) $data['is_default'] : 0;
         $isActive = array_key_exists('is_active', $data) ? (int) $data['is_active'] : 1;
 
         if ($name === '') {
             throw new \InvalidArgumentException('Holiday list name is required.');
-        }
-
-        if ($financialYearId <= 0) {
-            throw new \InvalidArgumentException('Financial year is required.');
-        }
-
-        if (!in_array($isDefault, [0, 1], true)) {
-            throw new \InvalidArgumentException('Default / Primary value is invalid.');
         }
 
         if (!in_array($isActive, [0, 1], true)) {
@@ -60,8 +50,6 @@ class HolidayService
 
         return $this->holidayModel->create([
             'name' => $name,
-            'financial_year_id' => $financialYearId,
-            'is_default' => $isDefault,
             'is_active' => $isActive,
         ]);
     }
@@ -78,28 +66,87 @@ class HolidayService
     public function createHoliday(array $data): int|false
     {
         $holidayListId = (int) ($data['holiday_list_id'] ?? 0);
+        $financialYearId = (int) ($data['financial_year_id'] ?? 0);
         $name = trim((string) ($data['name'] ?? ''));
         $holidayDate = trim((string) ($data['holiday_date'] ?? ''));
         $isWeeklyOff = array_key_exists('is_weekly_off', $data) ? (int) $data['is_weekly_off'] : 0;
+
+        $date = $this->validateHolidayData($holidayListId, $financialYearId, $name, $holidayDate, $isWeeklyOff);
+
+        return $this->holidayModel->createHoliday([
+            'holiday_list_id' => $holidayListId,
+            'financial_year_id' => $financialYearId,
+            'name' => $name,
+            'holiday_date' => $date,
+            'is_weekly_off' => $isWeeklyOff,
+        ]);
+    }
+
+    public function updateHoliday(array $data): bool
+    {
+        $holidayId = (int) ($data['holiday_id'] ?? 0);
+        $holidayListId = (int) ($data['holiday_list_id'] ?? 0);
+        $financialYearId = (int) ($data['financial_year_id'] ?? 0);
+        $name = trim((string) ($data['name'] ?? ''));
+        $holidayDate = trim((string) ($data['holiday_date'] ?? ''));
+        $isWeeklyOff = array_key_exists('is_weekly_off', $data) ? (int) $data['is_weekly_off'] : 0;
+
+        if ($holidayId <= 0 || !$this->holidayModel->findHolidayForList($holidayId, $holidayListId, $financialYearId)) {
+            throw new \InvalidArgumentException('Holiday not found in this list.');
+        }
+
+        $date = $this->validateHolidayData($holidayListId, $financialYearId, $name, $holidayDate, $isWeeklyOff);
+
+        return $this->holidayModel->updateHoliday($holidayId, $holidayListId, $financialYearId, $name, $date, $isWeeklyOff);
+    }
+
+    public function deleteHoliday(int $holidayId, int $holidayListId, int $financialYearId): bool
+    {
+        if ($holidayId <= 0 || $holidayListId <= 0 || $financialYearId <= 0 || !$this->holidayModel->findHolidayForList($holidayId, $holidayListId, $financialYearId)) {
+            throw new \InvalidArgumentException('Holiday not found in this list.');
+        }
+
+        return $this->holidayModel->deleteHoliday($holidayId, $holidayListId, $financialYearId);
+    }
+
+    private function validateHolidayData(int $holidayListId, int $financialYearId, string $name, string $holidayDate, int $isWeeklyOff): string
+    {
+        $date = $this->validateHolidayInput($name, $holidayDate, $isWeeklyOff);
 
         if ($holidayListId <= 0) {
             throw new \InvalidArgumentException('A valid holiday list is required.');
         }
 
+        if ($financialYearId <= 0) {
+            throw new \InvalidArgumentException('A valid financial year is required.');
+        }
+
+        $holidayList = $this->holidayModel->getHolidayListDetail($holidayListId);
+        if (!$holidayList) {
+            throw new \InvalidArgumentException('Holiday list not found.');
+        }
+
+        $financialYear = $this->financialYearModel->find($financialYearId);
+        if (!$financialYear) {
+            throw new \InvalidArgumentException('Financial year not found.');
+        }
+
+        if ($date < $financialYear->start_date || $date > $financialYear->end_date) {
+            throw new \InvalidArgumentException('Holiday date must be within the selected financial year.');
+        }
+
+        return $date;
+    }
+
+    private function validateHolidayInput(string $name, string $holidayDate, int $isWeeklyOff): string
+    {
         if ($name === '') {
             throw new \InvalidArgumentException('Holiday name is required.');
         }
 
-        if ($holidayDate === '') {
-            throw new \InvalidArgumentException('Holiday date is required.');
-        }
-
-        $date = \DateTime::createFromFormat('Y-m-d', $holidayDate);
-        if ($date === false || $date->format('Y-m-d') !== $holidayDate) {
-            $date = new \DateTime($holidayDate);
-        }
-
-        if ($date === false || $date->format('Y-m-d') === '1970-01-01') {
+        $date = \DateTimeImmutable::createFromFormat('!Y-m-d', $holidayDate);
+        $dateErrors = \DateTimeImmutable::getLastErrors();
+        if ($date === false || ($dateErrors !== false && ($dateErrors['warning_count'] > 0 || $dateErrors['error_count'] > 0))) {
             throw new \InvalidArgumentException('Holiday date is invalid.');
         }
 
@@ -107,11 +154,6 @@ class HolidayService
             throw new \InvalidArgumentException('Weekly off flag is invalid.');
         }
 
-        return $this->holidayModel->createHoliday([
-            'holiday_list_id' => $holidayListId,
-            'name' => $name,
-            'holiday_date' => $date->format('Y-m-d'),
-            'is_weekly_off' => $isWeeklyOff,
-        ]);
+        return $date->format('Y-m-d');
     }
 }

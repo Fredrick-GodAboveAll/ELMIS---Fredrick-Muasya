@@ -773,8 +773,6 @@ class LeaveController extends Controller
     public function storeHolidayList()
     {
         $name = trim((string) ($_POST['holiday_list_name'] ?? ''));
-        $financialYearId = (int) ($_POST['financial_year_id'] ?? 0);
-        $isDefault = $this->boolFromCheckbox($_POST, 'is_default');
         $isActive = $this->boolFromCheckbox($_POST, 'is_active');
 
         try {
@@ -790,18 +788,13 @@ class LeaveController extends Controller
                 throw new InvalidArgumentException('Holiday list name is required.');
             }
 
-            if ($financialYearId <= 0) {
-                throw new InvalidArgumentException('Financial year is required.');
-            }
-
-            $financialYear = $this->leaveModel->find($financialYearId);
+            $financialYears = $this->leaveModel->all();
+            $financialYear = $this->leaveModel->getCurrentPeriod() ?: ($financialYears[0] ?? null);
             if (!$financialYear) {
-                throw new InvalidArgumentException('Financial year not found.');
+                throw new InvalidArgumentException('Create a financial year before adding a holiday list.');
             }
 
-            if (!in_array($isDefault, [0, 1], true)) {
-                throw new InvalidArgumentException('Default / Primary value is invalid.');
-            }
+            $financialYearId = (int) $financialYear->id;
 
             if (!in_array($isActive, [0, 1], true)) {
                 throw new InvalidArgumentException('Active / Inactive value is invalid.');
@@ -811,7 +804,6 @@ class LeaveController extends Controller
             $holidayListModel->create([
                 'name' => $name,
                 'financial_year_id' => $financialYearId,
-                'is_default' => $isDefault,
                 'is_active' => $isActive,
             ]);
 
@@ -821,8 +813,6 @@ class LeaveController extends Controller
         } catch (InvalidArgumentException $e) {
             Session::flash('holiday_list_old', [
                 'holiday_list_name' => $name,
-                'financial_year_id' => $financialYearId,
-                'is_default' => $isDefault,
                 'is_active' => $isActive,
             ]);
             Session::flash('error', $e->getMessage());
@@ -831,8 +821,6 @@ class LeaveController extends Controller
         } catch (\PDOException $e) {
             Session::flash('holiday_list_old', [
                 'holiday_list_name' => $name,
-                'financial_year_id' => $financialYearId,
-                'is_default' => $isDefault,
                 'is_active' => $isActive,
             ]);
             Session::flash('error', 'A holiday list with this name already exists for the selected financial year.');
@@ -841,8 +829,6 @@ class LeaveController extends Controller
         } catch (\Throwable $e) {
             Session::flash('holiday_list_old', [
                 'holiday_list_name' => $name,
-                'financial_year_id' => $financialYearId,
-                'is_default' => $isDefault,
                 'is_active' => $isActive,
             ]);
             Session::flash('error', 'Unable to create holiday list. Please try again.');
@@ -934,25 +920,52 @@ class LeaveController extends Controller
             exit;
         }
 
-        $holidayList = $this->holidayService->getHolidayListDetailById($holidayListId);
-
+        $holidayList = (new \App\Models\HolidayListModel())->find($holidayListId);
         if (!$holidayList) {
             Session::flash('error', 'Holiday list not found.');
             header('Location: /holiday-list');
             exit;
         }
 
+        $financialYearModel = new \App\Models\FinancialYear();
+        $financialYears = $financialYearModel->all();
+        $validFinancialYearIds = array_map(static fn($year) => (int) $year->id, $financialYears);
+        $requestedFinancialYearId = isset($_GET['fy']) ? (int) $_GET['fy'] : 0;
+
+        if ($requestedFinancialYearId <= 0 || !in_array($requestedFinancialYearId, $validFinancialYearIds, true)) {
+            $currentPeriod = $financialYearModel->getCurrentPeriod();
+            $requestedFinancialYearId = $currentPeriod ? (int) $currentPeriod->id : ($validFinancialYearIds[0] ?? 0);
+        }
+
+        $currentFy = null;
+        foreach ($financialYears as $financialYear) {
+            if ((int) $financialYear->id === $requestedFinancialYearId) {
+                $currentFy = $financialYear;
+                break;
+            }
+        }
+
+        $holidayList->financial_year_label = $currentFy ? $currentFy->label : 'Not assigned';
+        $holidayList->start_date = $currentFy ? $currentFy->start_date : null;
+        $holidayList->end_date = $currentFy ? $currentFy->end_date : null;
+        $sourceHolidayList = $holidayList;
+
         $title = 'Holiday List Detail';
         $currentPage = 'holiday_list_detail';
         $content = '../app/Views/leave_management/leave_setup/holiday_list_detail.php';
         $csrf = Csrf::generate();
-        $holidays = $this->holidayService->getHolidaysForList($holidayListId);
+        $currentFyId = $requestedFinancialYearId;
+        $holidays = $this->holidayService->getHolidaysForList($holidayListId, $currentFyId);
         include '../app/Views/layouts/admin.php';
     }
 
     public function storeHoliday()
     {
         $holidayListId = (int) ($_POST['holiday_list_id'] ?? 0);
+        $financialYearId = (int) ($_POST['financial_year_id'] ?? 0);
+        $redirectUrl = $holidayListId > 0 && $financialYearId > 0
+            ? '/holiday-lists/detail?id=' . $holidayListId . '&fy=' . $financialYearId
+            : ($holidayListId > 0 ? '/holiday-lists/detail?id=' . $holidayListId : '/holiday-list');
         $name = trim((string) ($_POST['holiday_name'] ?? ''));
         $holidayDate = trim((string) ($_POST['holiday_date'] ?? ''));
         $isWeeklyOff = $this->boolFromCheckbox($_POST, 'is_weekly_off');
@@ -960,14 +973,14 @@ class LeaveController extends Controller
         try {
             if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
                 Session::flash('error', 'Invalid request method.');
-                header('Location: /holiday-lists/detail?id=' . $holidayListId);
+                header('Location: ' . $redirectUrl);
                 exit;
             }
 
             Csrf::validate($_POST['csrf_token'] ?? '');
 
-            if ($holidayListId <= 0) {
-                throw new InvalidArgumentException('Holiday list not found.');
+            if ($holidayListId <= 0 && $financialYearId <= 0) {
+                throw new InvalidArgumentException('A financial year is required.');
             }
 
             if ($name === '') {
@@ -984,6 +997,7 @@ class LeaveController extends Controller
 
             $holiday = $this->holidayService->createHoliday([
                 'holiday_list_id' => $holidayListId,
+                'financial_year_id' => $financialYearId,
                 'name' => $name,
                 'holiday_date' => $holidayDate,
                 'is_weekly_off' => $isWeeklyOff,
@@ -994,11 +1008,11 @@ class LeaveController extends Controller
             }
 
             Session::flash('success', 'Holiday created successfully.');
-            header('Location: /holiday-lists/detail?id=' . $holidayListId);
+            header('Location: /holiday-lists/detail?id=' . $holidayListId . '&fy=' . $financialYearId);
             exit;
         } catch (InvalidArgumentException $e) {
             Session::flash('error', $e->getMessage());
-            header('Location: /holiday-lists/detail?id=' . $holidayListId);
+            header('Location: ' . $redirectUrl);
             exit;
         } catch (\PDOException $e) {
             if ((int) $e->getCode() === 23000 || str_contains($e->getMessage(), 'Duplicate entry') || str_contains($e->getMessage(), 'uq_holiday_list_date')) {
@@ -1006,13 +1020,83 @@ class LeaveController extends Controller
             } else {
                 Session::flash('error', 'Unable to create holiday. Please try again.');
             }
-            header('Location: /holiday-lists/detail?id=' . $holidayListId);
+            header('Location: ' . $redirectUrl);
             exit;
         } catch (\Throwable $e) {
             Session::flash('error', 'Unable to create holiday. Please try again.');
-            header('Location: /holiday-lists/detail?id=' . $holidayListId);
+            header('Location: ' . $redirectUrl);
             exit;
         }
+    }
+
+    public function updateHoliday()
+    {
+        $holidayListId = (int) ($_POST['holiday_list_id'] ?? 0);
+        $holidayId = (int) ($_POST['holiday_id'] ?? 0);
+        $financialYearId = (int) ($_POST['financial_year_id'] ?? 0);
+
+        try {
+            if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+                throw new InvalidArgumentException('Invalid request method.');
+            }
+
+            Csrf::validate($_POST['csrf_token'] ?? '');
+            $this->holidayService->updateHoliday([
+                'holiday_id' => $holidayId,
+                'holiday_list_id' => $holidayListId,
+                'financial_year_id' => $financialYearId,
+                'name' => $_POST['holiday_name'] ?? '',
+                'holiday_date' => $_POST['holiday_date'] ?? '',
+                'is_weekly_off' => $this->boolFromCheckbox($_POST, 'is_weekly_off'),
+            ]);
+
+            Session::flash('success', 'Holiday updated successfully.');
+        } catch (InvalidArgumentException $e) {
+            Session::flash('error', $e->getMessage());
+        } catch (\PDOException $e) {
+            if ((int) $e->getCode() === 23000 || str_contains($e->getMessage(), 'Duplicate entry') || str_contains($e->getMessage(), 'uq_holiday_list_date')) {
+                Session::flash('error', 'A holiday already exists for that date in this holiday list.');
+            } else {
+                Session::flash('error', 'Unable to update holiday. Please try again.');
+            }
+        } catch (\Throwable $e) {
+            Session::flash('error', 'Unable to update holiday. Please try again.');
+        }
+
+        $redirect = '/holiday-lists/detail?id=' . $holidayListId;
+        if ($financialYearId > 0) {
+            $redirect .= '&fy=' . $financialYearId;
+        }
+        header('Location: ' . $redirect);
+        exit;
+    }
+
+    public function deleteHoliday()
+    {
+        $holidayListId = (int) ($_POST['holiday_list_id'] ?? 0);
+        $holidayId = (int) ($_POST['holiday_id'] ?? 0);
+        $financialYearId = (int) ($_POST['financial_year_id'] ?? 0);
+
+        try {
+            if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+                throw new InvalidArgumentException('Invalid request method.');
+            }
+
+            Csrf::validate($_POST['csrf_token'] ?? '');
+            $this->holidayService->deleteHoliday($holidayId, $holidayListId, $financialYearId);
+            Session::flash('success', 'Holiday deleted successfully.');
+        } catch (InvalidArgumentException $e) {
+            Session::flash('error', $e->getMessage());
+        } catch (\Throwable $e) {
+            Session::flash('error', 'Unable to delete holiday. Please try again.');
+        }
+
+        $redirect = '/holiday-lists/detail?id=' . $holidayListId;
+        if ($financialYearId > 0) {
+            $redirect .= '&fy=' . $financialYearId;
+        }
+        header('Location: ' . $redirect);
+        exit;
     }
 }
 

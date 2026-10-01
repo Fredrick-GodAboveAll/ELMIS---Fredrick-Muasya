@@ -133,23 +133,7 @@
                         <div class="col">
                             <div class="d-flex flex-column gap-1">
                                 <div>
-                                    <!-- TODO: replace static links below with a loop over holiday lists once wired to HolidaysController -->
-                                    <a href="#!">New Holiday List</a>
-                                </div>
-                                <div>
-                                    <a href="#!">2026 Holiday List</a>
-                                </div>
-                                <div>
-                                    <a href="#!">2025 Holiday List</a>
-                                </div>
-                                <div>
-                                    <a href="#!">Optional Holidays</a>
-                                </div>
-                                <div>
-                                    <a href="#!">Special/Ad-hoc Holidays</a>
-                                </div>
-                                <div>
-                                    <a href="#!">Archived Holiday Lists</a>
+                                    <a href="/holiday-list">Holiday Lists</a>
                                 </div>
                                 
                             </div>

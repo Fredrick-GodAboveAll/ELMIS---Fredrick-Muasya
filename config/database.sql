@@ -195,32 +195,30 @@ INSERT INTO `leave_types` (`name`, `calculation_method`, `is_active`) VALUES
 
 CREATE TABLE `holiday_lists` (
   `id` INT UNSIGNED NOT NULL AUTO_INCREMENT,
-  `financial_year_id` INT UNSIGNED NOT NULL,
   `name` VARCHAR(100) NOT NULL,
-  `is_default` TINYINT(1) NOT NULL DEFAULT 0,
   `is_active` TINYINT(1) NOT NULL DEFAULT 1,
   `created_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `updated_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`),
-  UNIQUE KEY `uq_holiday_list_name` (`name`),
-  KEY `idx_holiday_lists_financial_year_id` (`financial_year_id`),
-  CONSTRAINT `fk_holiday_lists_financial_year`
-    FOREIGN KEY (`financial_year_id`) REFERENCES `financial_years` (`id`)
-    ON UPDATE CASCADE ON DELETE RESTRICT
+  UNIQUE KEY `uq_holiday_list_name` (`name`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 CREATE TABLE `holidays` (
   `id` INT UNSIGNED NOT NULL AUTO_INCREMENT,
   `holiday_list_id` INT UNSIGNED NOT NULL,
+  `financial_year_id` INT UNSIGNED NOT NULL,
   `holiday_date` DATE NOT NULL,
   `name` VARCHAR(150) NOT NULL,
   `is_weekly_off` TINYINT(1) NOT NULL DEFAULT 0,
   `created_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`),
-  UNIQUE KEY `uq_holiday_list_date` (`holiday_list_id`, `holiday_date`),
+  UNIQUE KEY `uq_holiday_list_financial_year_date` (`holiday_list_id`, `financial_year_id`, `holiday_date`),
   CONSTRAINT `fk_holidays_holiday_list`
     FOREIGN KEY (`holiday_list_id`) REFERENCES `holiday_lists` (`id`)
-    ON UPDATE CASCADE ON DELETE CASCADE
+    ON UPDATE CASCADE ON DELETE CASCADE,
+  CONSTRAINT `fk_holidays_financial_year`
+    FOREIGN KEY (`financial_year_id`) REFERENCES `financial_years` (`id`)
+    ON UPDATE CASCADE ON DELETE RESTRICT
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 CREATE TABLE `leave_entitlements` (
@@ -604,16 +602,16 @@ INSERT INTO `financial_years` (`id`, `label`, `start_date`, `end_date`, `is_curr
 (1, '2025/2026', '2025-07-01', '2026-06-30', 0),
 (2, '2026/2027', '2026-07-01', '2027-06-30', 1);
 
-INSERT INTO `holiday_lists` (`id`, `financial_year_id`, `name`, `is_default`, `is_active`) VALUES
-(1, 2, 'National Holidays 2026', 1, 1),
-(2, 2, 'Regional Holidays 2026', 0, 1);
+INSERT INTO `holiday_lists` (`id`, `name`, `is_active`) VALUES
+(1, 'National Holidays', 1),
+(2, 'Regional Holidays', 1);
 
-INSERT INTO `holidays` (`id`, `holiday_list_id`, `holiday_date`, `name`, `is_weekly_off`) VALUES
-(1, 1, '2026-01-01', 'New Year Day', 0),
-(2, 1, '2026-03-20', 'Good Friday', 0),
-(3, 1, '2026-05-01', 'Labour Day', 0),
-(4, 1, '2026-06-01', 'Madaraka Day', 0),
-(5, 2, '2026-08-15', 'Assumption Day', 0);
+INSERT INTO `holidays` (`id`, `holiday_list_id`, `financial_year_id`, `holiday_date`, `name`, `is_weekly_off`) VALUES
+(1, 1, 2, '2026-01-01', 'New Year Day', 0),
+(2, 1, 2, '2026-03-20', 'Good Friday', 0),
+(3, 1, 2, '2026-05-01', 'Labour Day', 0),
+(4, 1, 2, '2026-06-01', 'Madaraka Day', 0),
+(5, 2, 2, '2026-08-15', 'Assumption Day', 0);
 
 INSERT INTO `leave_entitlements` (`id`, `financial_year_id`, `leave_type_id`, `entitlement`, `pro_rata_allowed`) VALUES
 (1, 2, 1, 30.00, 1),
