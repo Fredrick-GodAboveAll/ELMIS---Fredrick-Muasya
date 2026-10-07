@@ -124,6 +124,12 @@
                   </ul><!-- parent pages-->
 
 
+                  <a class="nav-link <?php echo ($currentPage === 'holidays') ? 'active' : ''; ?>" href="/holidays" role="button">
+                    <div class="d-flex align-items-center">
+                      <span class="nav-link-icon"><span class="far fa-calendar"></span>
+                    </span><span class="nav-link-text ps-1">Time Off & Holidays</span></div>
+                  </a><!-- parent pages-->
+
                   
                 </li>
 
