@@ -32,26 +32,26 @@ class LeaveController extends Controller
     {
         $title = 'Leaves';
         $currentPage = 'leave_management';
-        $content = '../app/Views/leave_management/index.php';
-        include '../app/Views/layouts/admin.php';
+        $content = __DIR__ . '/../Views/leave_management/index.php';
+        include __DIR__ . '/../Views/layouts/admin.php';
     }
 
     public function LeaveType()
     {
         $title = 'Leave Types';
         $currentPage = 'leave_types';
-        $content = '../app/Views/leave_management/leave_setup/leave_types.php';
+        $content = __DIR__ . '/../Views/leave_management/leave_setup/leave_types.php';
         $leaveTypeService = new \App\Services\LeaveTypeService();
         $leaveTypes = $leaveTypeService->all();
-        include '../app/Views/layouts/admin.php';
+        include __DIR__ . '/../Views/layouts/admin.php';
     }
 
     public function leaveApplications()
     {
         $title = 'Leave Applications';
         $currentPage = 'leave_applications';
-        $content = '../app/Views/leave_management/leave_setup/leave_applications.php';
-        include '../app/Views/layouts/admin.php';
+        $content = __DIR__ . '/../Views/leave_management/leave_setup/leave_applications.php';
+        include __DIR__ . '/../Views/layouts/admin.php';
     }
 
     public function LeaveEntitlement()
@@ -64,8 +64,8 @@ class LeaveController extends Controller
         $activeYearCount = count(array_filter($financialYears, fn($year) => isset($year->is_current) && (int) $year->is_current === 1));
         $totalEntitlementRules = array_sum(array_map(fn($year) => (int) ($year->entitlement_rule_count ?? 0), $financialYears));
 
-        $content = '../app/Views/leave_management/leave_setup/leave_entitlement.php';
-        include '../app/Views/layouts/admin.php';
+        $content = __DIR__ . '/../Views/leave_management/leave_setup/leave_entitlement.php';
+        include __DIR__ . '/../Views/layouts/admin.php';
     }
 
     public function LeaveEntitlementDetail()
@@ -105,8 +105,8 @@ class LeaveController extends Controller
         // Provide eligible leave types (active leave types without an entitlement for this FY)
         $eligibleLeaveTypes = $this->leaveEntitlementService->getAvailableLeaveTypesForYear($selectedYear);
 
-        $content = '../app/Views/leave_management/leave_setup/leave_entitlement_detail.php';
-        include '../app/Views/layouts/admin.php';
+        $content = __DIR__ . '/../Views/leave_management/leave_setup/leave_entitlement_detail.php';
+        include __DIR__ . '/../Views/layouts/admin.php';
     }
 
     public function storeLeaveEntitlement()
@@ -229,16 +229,16 @@ class LeaveController extends Controller
         $title = 'Leave Periods';
         $currentPage = 'leave_period';
         $periods = $this->leaveModel->all();
-        $content = '../app/Views/leave_management/leave_setup/leave_period.php';
-        include '../app/Views/layouts/admin.php';
+        $content = __DIR__ . '/../Views/leave_management/leave_setup/leave_period.php';
+        include __DIR__ . '/../Views/layouts/admin.php';
     }
 
     public function NewLeavePeriod()
     {
         $title = 'New Leave Period';
         $currentPage = 'leave_period';
-        $content = '../app/Views/leave_management/leave_setup/new_leave_period.php';
-        include '../app/Views/layouts/admin.php';
+        $content = __DIR__ . '/../Views/leave_management/leave_setup/new_leave_period.php';
+        include __DIR__ . '/../Views/layouts/admin.php';
     }
 
     public function storeLeavePeriod()
@@ -476,8 +476,8 @@ class LeaveController extends Controller
         $activePolicies = count(array_filter($policies, fn($p) => !empty($p->is_active)));
         $inactivePolicies = $totalPolicies - $activePolicies;
 
-        $content = '../app/Views/leave_management/leave_setup/leave_policy.php';
-        include '../app/Views/layouts/admin.php';
+        $content = __DIR__ . '/../Views/leave_management/leave_setup/leave_policy.php';
+        include __DIR__ . '/../Views/layouts/admin.php';
     }
 
     public function togglePolicyActive()
@@ -609,8 +609,8 @@ class LeaveController extends Controller
 
         $rows = $this->leavePolicyService->getEntitlementsWithDetails($policyId, $currentFyId);
 
-        $content = '../app/Views/leave_management/leave_setup/leave_policy_details.php';
-        include '../app/Views/layouts/admin.php';
+        $content = __DIR__ . '/../Views/leave_management/leave_setup/leave_policy_details.php';
+        include __DIR__ . '/../Views/layouts/admin.php';
     }
 
     /**
@@ -626,8 +626,8 @@ class LeaveController extends Controller
         $employees = (new \App\Models\Employee())->all();
         $csrf = Csrf::generate();
 
-        $content = '../app/Views/leave_management/leave_setup/policy_assignments.php';
-        include '../app/Views/layouts/admin.php';
+        $content = __DIR__ . '/../Views/leave_management/leave_setup/policy_assignments.php';
+        include __DIR__ . '/../Views/layouts/admin.php';
     }
 
     public function savePolicyAssignment()
@@ -763,11 +763,11 @@ class LeaveController extends Controller
     {
         $title = 'Holiday Lists';
         $currentPage = 'holiday_list';
-        $content = '../app/Views/leave_management/leave_setup/holiday_list.php';
+        $content = __DIR__ . '/../Views/leave_management/leave_setup/holiday_list.php';
         $financialYears = $this->leaveModel->all();
         $csrf = Csrf::generate();
         $holidayLists = (new \App\Models\HolidayListModel())->allWithFinancialYearAndCount();
-        include '../app/Views/layouts/admin.php';
+        include __DIR__ . '/../Views/layouts/admin.php';
     }
 
     public function storeHolidayList()
@@ -952,11 +952,11 @@ class LeaveController extends Controller
 
         $title = 'Holiday List Detail';
         $currentPage = 'holiday_list_detail';
-        $content = '../app/Views/leave_management/leave_setup/holiday_list_detail.php';
+        $content = __DIR__ . '/../Views/leave_management/leave_setup/holiday_list_detail.php';
         $csrf = Csrf::generate();
         $currentFyId = $requestedFinancialYearId;
         $holidays = $this->holidayService->getHolidaysForList($holidayListId, $currentFyId);
-        include '../app/Views/layouts/admin.php';
+        include __DIR__ . '/../Views/layouts/admin.php';
     }
 
     public function storeHoliday()

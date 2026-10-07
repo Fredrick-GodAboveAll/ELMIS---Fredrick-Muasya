@@ -8,16 +8,16 @@ class UserController extends Controller
     {
         $title = 'profile';
         $currentPage = 'user_profile';
-        $content = '../app/Views/user/index.php';
-        include '../app/Views/layouts/admin.php';
+        $content = __DIR__ . '/../Views/user/index.php';
+        include __DIR__ . '/../Views/layouts/admin.php';
     }
 
     public function SystemSetting() // setting up some universal setting eg user accounts
     {
         $title = 'Sytem Settings';
         $currentPage = 'system_settings';
-        $content = '../app/Views/user/system_settings.php';
-        include '../app/Views/layouts/admin.php';
+        $content = __DIR__ . '/../Views/user/system_settings.php';
+        include __DIR__ . '/../Views/layouts/admin.php';
     }
 
 }

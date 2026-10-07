@@ -16,8 +16,8 @@ class AuthController extends Controller
  public function login()
  {
  $title = 'Login';
- $content = '../app/Views/auth/login.php';
- include '../app/Views/layouts/auth.php';
+ $content = __DIR__ . '/../Views/auth/login.php';
+ include __DIR__ . '/../Views/layouts/auth.php';
  }
  public function doLogin()
  {
@@ -45,8 +45,8 @@ class AuthController extends Controller
  public function register()
  {
      $title = 'Register';
-     $content = '../app/Views/auth/register.php';
-     include '../app/Views/layouts/auth.php';
+     $content = __DIR__ . '/../Views/auth/register.php';
+     include __DIR__ . '/../Views/layouts/auth.php';
  }
  public function doRegister()
  {
@@ -83,8 +83,8 @@ class AuthController extends Controller
  public function forgotPassword()
  {
      $title = 'Forgot Password';
-     $content = '../app/Views/auth/forgot-password.php';
-     include '../app/Views/layouts/auth.php';
+     $content = __DIR__ . '/../Views/auth/forgot-password.php';
+     include __DIR__ . '/../Views/layouts/auth.php';
  }
  public function doForgotPassword()
  {
@@ -109,8 +109,8 @@ class AuthController extends Controller
  public function confirmMail()
  {
  $title = 'Check Your Email';
- $content = '../app/Views/auth/confirm-mail.php';
- include '../app/Views/layouts/auth.php';
+ $content = __DIR__ . '/../Views/auth/confirm-mail.php';
+ include __DIR__ . '/../Views/layouts/auth.php';
  }
  public function resetPassword()
  {
@@ -122,8 +122,8 @@ class AuthController extends Controller
      header('Location: /forgot-password'); exit;
  }
  $title = 'Reset Password';
- $content = '../app/Views/auth/reset-password.php';
- include '../app/Views/layouts/auth.php';
+ $content = __DIR__ . '/../Views/auth/reset-password.php';
+ include __DIR__ . '/../Views/layouts/auth.php';
  }
  
  public function doResetPassword()
@@ -172,15 +172,15 @@ class AuthController extends Controller
  public function logoutPage()
  {
  $title = 'Logged Out';
- $content = '../app/Views/auth/logout.php';
- include '../app/Views/layouts/auth.php';
+ $content = __DIR__ . '/../Views/auth/logout.php';
+ include __DIR__ . '/../Views/layouts/auth.php';
  }
  public function lockScreen()
  {
  if (!$this->authService->check()) { header('Location: /login'); exit; }
  $title = 'Lock Screen';
- $content = '../app/Views/auth/lock-screen.php';
- include '../app/Views/layouts/auth.php';
+ $content = __DIR__ . '/../Views/auth/lock-screen.php';
+ include __DIR__ . '/../Views/layouts/auth.php';
  }
  
  public function verifyEmail()
@@ -217,7 +217,7 @@ class AuthController extends Controller
  public function offline()
  {
  $title = 'You Are Offline';
- $content = '../app/Views/auth/offline.php';
- include '../app/Views/layouts/auth.php';
+ $content = __DIR__ . '/../Views/auth/offline.php';
+ include __DIR__ . '/../Views/layouts/auth.php';
  }
 }

@@ -8,7 +8,7 @@ class ReportsController extends Controller
 
         $title = 'Reports Dashboard';
         $currentPage = 'reports'; // This must match the navigation logic
-        $content = '../app/Views/reports/index.php';
-        include '../app/Views/layouts/admin.php';
+        $content = __DIR__ . '/../Views/reports/index.php';
+        include __DIR__ . '/../Views/layouts/admin.php';
     }
 }

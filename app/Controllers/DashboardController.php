@@ -11,15 +11,15 @@ class DashboardController extends Controller
  $pdo = Database::getInstance();
  $stmt = $pdo->query('SELECT COUNT(*) AS total FROM employees');
  $employeeCount = $stmt->fetch()->total ?? 0;
- $content = '../app/Views/dashboard/index.php';
- include '../app/Views/layouts/admin.php';
+ $content = __DIR__ . '/../Views/dashboard/index.php';
+ include __DIR__ . '/../Views/layouts/admin.php';
  }
 
  public function analytics()
  {
  $title = 'Analytics';
  $currentPage = 'analytics';
- $content = '../app/Views/dashboard/dashboard_analytics.php';
- include '../app/Views/layouts/admin.php';
+ $content = __DIR__ . '/../Views/dashboard/dashboard_analytics.php';
+ include __DIR__ . '/../Views/layouts/admin.php';
  }
 }

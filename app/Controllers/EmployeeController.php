@@ -12,16 +12,16 @@ class EmployeeController extends Controller
 
         $title = 'Employees';
         $currentPage = 'employees';
-        $content = '../app/Views/employees/index.php';
-        include '../app/Views/layouts/admin.php';
+        $content = __DIR__ . '/../Views/employees/index.php';
+        include __DIR__ . '/../Views/layouts/admin.php';
     }
 
     public function categories()
     {
         $title = 'Employee Categories';
         $currentPage = 'employee_categories';
-        $content = '../app/Views/employees/categories.php';
-        include '../app/Views/layouts/admin.php';
+        $content = __DIR__ . '/../Views/employees/categories.php';
+        include __DIR__ . '/../Views/layouts/admin.php';
     }
 }
 

@@ -19,8 +19,8 @@ class DepartmentController extends Controller
 
         $title = 'Departments';
         $currentPage = 'departments';
-        $content = '../app/Views/departments/index.php';
-        include '../app/Views/layouts/admin.php';
+        $content = __DIR__ . '/../Views/departments/index.php';
+        include __DIR__ . '/../Views/layouts/admin.php';
     }
 
     public function deployment()
@@ -30,8 +30,8 @@ class DepartmentController extends Controller
 
         $title = 'Department Deployment';
         $currentPage = 'departments';
-        $content = '../app/Views/departments/deployment.php';
-        include '../app/Views/layouts/admin.php';
+        $content = __DIR__ . '/../Views/departments/deployment.php';
+        include __DIR__ . '/../Views/layouts/admin.php';
     }
 
     public function store()

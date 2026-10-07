@@ -89,7 +89,7 @@ class ToolsController
             $errors[] = $err;
         }
 
-        $content = '../app/Views/tools/leave_calculator.php';
-        include '../app/Views/layouts/admin.php';
+        $content = __DIR__ . '/../Views/tools/leave_calculator.php';
+        include __DIR__ . '/../Views/layouts/admin.php';
     }
 }
