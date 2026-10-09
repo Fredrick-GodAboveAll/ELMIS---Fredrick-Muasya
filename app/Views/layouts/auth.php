@@ -1,3 +1,9 @@
+
+<?php
+/** @var array  $content */
+
+?>
+
 <!DOCTYPE html>
 <html data-bs-theme="light" lang="en-US" dir="ltr">
 <head>
