@@ -25,6 +25,7 @@ $router->get('/dashboard/analytics', 'DashboardController@analytics', [AuthMiddl
 
 // Future HR routes (pages will be added later)
 $router->get('/employees', 'EmployeeController@index', [AuthMiddleware::class]);
+$router->get('/employees/design', 'EmployeeController@design', [AuthMiddleware::class]);
 $router->get('/employees/detail', 'EmployeeController@detail', [AuthMiddleware::class]);
 $router->get('/employees/departments', 'EmployeeController@departments', [AuthMiddleware::class]);
 $router->get('/employee-categories', 'EmployeeCategoryController@index', [AuthMiddleware::class]);
