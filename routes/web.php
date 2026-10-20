@@ -26,9 +26,14 @@ $router->get('/dashboard/analytics', 'DashboardController@analytics', [AuthMiddl
 // Future HR routes (pages will be added later)
 $router->get('/employees', 'EmployeeController@index', [AuthMiddleware::class]);
 $router->get('/employees/design', 'EmployeeController@design', [AuthMiddleware::class]);
+$router->get('/employees/category', 'EmployeeController@category', [AuthMiddleware::class]);
+$router->get('/employees/categories', 'EmployeeController@category', [AuthMiddleware::class]);
+$router->get('/employees/category/view', 'EmployeeController@categoryView', [AuthMiddleware::class]);
+$router->get('/employees/categories/view', 'EmployeeController@categoryView', [AuthMiddleware::class]);
+$router->get('/employees/category/detail', 'EmployeeController@categoryView', [AuthMiddleware::class]);
+$router->get('/employees/categories/detail', 'EmployeeController@categoryView', [AuthMiddleware::class]);
 $router->get('/employees/detail', 'EmployeeController@detail', [AuthMiddleware::class]);
 $router->get('/employees/departments', 'EmployeeController@departments', [AuthMiddleware::class]);
-$router->get('/employee-categories', 'EmployeeCategoryController@index', [AuthMiddleware::class]);
 $router->get('/departments', 'DepartmentController@index', [AuthMiddleware::class]);
 $router->post('/departments', 'DepartmentController@store', [AuthMiddleware::class]);
 $router->post('/departments/delete', 'DepartmentController@delete', [AuthMiddleware::class]);
@@ -47,6 +52,8 @@ $router->get('/leave-entitlements', 'LeaveController@LeaveEntitlement', [AuthMid
 $router->get('/leave-entitlements/detail', 'LeaveController@LeaveEntitlementDetail', [AuthMiddleware::class, [RoleMiddleware::class, 'admin']]);
 $router->post('/leave-entitlements', 'LeaveController@storeLeaveEntitlement', [AuthMiddleware::class, [RoleMiddleware::class, 'admin']]);
 $router->get('/leave-applications', 'LeaveController@leaveApplications', [AuthMiddleware::class]);
+$router->get('/leave-applications/create', 'LeaveController@createLeaveApplication', [AuthMiddleware::class]);
+$router->post('/leave-applications/create', 'LeaveController@storeLeaveApplication', [AuthMiddleware::class]);
 $router->post('/leave-types', 'LeaveController@storeLeaveType', [AuthMiddleware::class]);
 $router->get('/leave-periods', 'LeaveController@LeavePeriod', [AuthMiddleware::class]);
 $router->post('/leave-periods/update', 'LeaveController@updateLeavePeriodStatus', [AuthMiddleware::class]);

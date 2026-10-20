@@ -20,36 +20,36 @@
         <!-- ===============================================-->
         <!--    Favicons-->
         <!-- ===============================================-->
-        <link rel="apple-touch-icon" sizes="180x180" href="../assets/img/favicons/apple-touch-icon.png">
-        <link rel="icon" type="image/png" sizes="32x32" href="../assets/img/favicons/favicon-32x32.png">
-        <link rel="icon" type="image/png" sizes="16x16" href="../assets/img/favicons/favicon-16x16.png">
-        <link rel="shortcut icon" type="image/x-icon" href="../assets/img/favicons/favicon.ico">
-        <link rel="manifest" href="../assets/img/favicons/manifest.json">
-        <meta name="msapplication-TileImage" content="../assets/img/favicons/mstile-150x150.png">
+        <link rel="apple-touch-icon" sizes="180x180" href="/assets/img/favicons/apple-touch-icon.png">
+        <link rel="icon" type="image/png" sizes="32x32" href="/assets/img/favicons/favicon-32x32.png">
+        <link rel="icon" type="image/png" sizes="16x16" href="/assets/img/favicons/favicon-16x16.png">
+        <link rel="shortcut icon" type="image/x-icon" href="/assets/img/favicons/favicon.ico">
+        <link rel="manifest" href="/assets/img/favicons/manifest.json">
+        <meta name="msapplication-TileImage" content="/assets/img/favicons/mstile-150x150.png">
         <meta name="theme-color" content="#ffffff">
-        <script src="../assets/js/config.js"></script>
-        <script src="../vendors/simplebar/simplebar.min.js"></script>
+        <script src="/assets/js/config.js"></script>
+        <script src="/vendors/simplebar/simplebar.min.js"></script>
         <!-- ===============================================-->
         <!--    Stylesheets-->
         <!-- ===============================================-->
-        <link href="../vendors/select2/select2.min.css" rel="stylesheet">
-        <link href="../vendors/select2-bootstrap-5-theme/select2-bootstrap-5-theme.min.css" rel="stylesheet">
-        <link href="../vendors/datatables.net-bs5/dataTables.bootstrap5.min.css" rel="stylesheet">
-        <link href="../vendors/prism/prism-okaidia.css" rel="stylesheet">
-        <link href="../vendors/prism/prism-okaidia.css" rel="stylesheet">
-        <link href="../vendors/leaflet/leaflet.css" rel="stylesheet">
-        <link href="../vendors/leaflet.markercluster/MarkerCluster.css" rel="stylesheet">
-        <link href="../vendors/leaflet.markercluster/MarkerCluster.Default.css" rel="stylesheet">
-        <link href="../vendors/flatpickr/flatpickr.min.css" rel="stylesheet">
+        <link href="/vendors/select2/select2.min.css" rel="stylesheet">
+        <link href="/vendors/select2-bootstrap-5-theme/select2-bootstrap-5-theme.min.css" rel="stylesheet">
+        <link href="/vendors/datatables.net-bs5/dataTables.bootstrap5.min.css" rel="stylesheet">
+        <link href="/vendors/prism/prism-okaidia.css" rel="stylesheet">
+        <link href="/vendors/prism/prism-okaidia.css" rel="stylesheet">
+        <link href="/vendors/leaflet/leaflet.css" rel="stylesheet">
+        <link href="/vendors/leaflet.markercluster/MarkerCluster.css" rel="stylesheet">
+        <link href="/vendors/leaflet.markercluster/MarkerCluster.Default.css" rel="stylesheet">
+        <link href="/vendors/flatpickr/flatpickr.min.css" rel="stylesheet">
         <link rel="preconnect" href="https://fonts.gstatic.com">
         <link href="https://fonts.googleapis.com/css?family=Open+Sans:300,400,500,600,700%7cPoppins:300,400,500,600,700,800,900&amp;display=swap" rel="stylesheet">
-        <link href="../vendors/simplebar/simplebar.min.css" rel="stylesheet">
-        <link href="../vendors/choices/choices.min.css" rel="stylesheet" />
-        <link href="../assets/css/theme-rtl.min.css" rel="stylesheet" id="style-rtl">
-        <link href="../assets/css/theme.min.css" rel="stylesheet" id="style-default">
-        <link href="../assets/css/user-rtl.min.css" rel="stylesheet" id="user-style-rtl">
-        <link href="../assets/css/user.min.css" rel="stylesheet" id="user-style-default">
-          <script src="../vendors/jquery/jquery.min.js"> </script>
+        <link href="/vendors/simplebar/simplebar.min.css" rel="stylesheet">
+        <link href="/vendors/choices/choices.min.css" rel="stylesheet" />
+        <link href="/assets/css/theme-rtl.min.css" rel="stylesheet" id="style-rtl">
+        <link href="/assets/css/theme.min.css" rel="stylesheet" id="style-default">
+        <link href="/assets/css/user-rtl.min.css" rel="stylesheet" id="user-style-rtl">
+        <link href="/assets/css/user.min.css" rel="stylesheet" id="user-style-default">
+          <script src="/vendors/jquery/jquery.min.js"> </script>
         <script>
             var isRTL = JSON.parse(localStorage.getItem('isRTL'));
             if (isRTL) {
@@ -168,34 +168,34 @@
     <?php include __DIR__ . '/partials/_offcanvas.php'; ?>
 
     <!-- ===============================================--><!--    JavaScripts--><!-- ===============================================-->
-        <script src="../vendors/popper/popper.min.js"></script>
-        <script src="../vendors/bootstrap/bootstrap.min.js"></script>
-        <script src="../vendors/anchorjs/anchor.min.js"></script>
-        <script src="../vendors/is/is.min.js"></script>
+        <script src="/vendors/popper/popper.min.js"></script>
+        <script src="/vendors/bootstrap/bootstrap.min.js"></script>
+        <script src="/vendors/anchorjs/anchor.min.js"></script>
+        <script src="/vendors/is/is.min.js"></script>
       
-        <script src="../vendors/prism/prism.js"></script>
-        <script src="../vendors/select2/select2.min.js"> </script>
-        <script src="../vendors/select2/select2.full.min.js"> </script>
-        <script src="../vendors/datatables.net/dataTables.min.js"></script>
-        <script src="../vendors/datatables.net-bs5/dataTables.bootstrap5.min.js"> </script>
-        <script src="../vendors/datatables.net-fixedcolumns/dataTables.fixedColumns.min.js"> </script>
-        <script src="../vendors/prism/prism.js"></script>
-        <script src="../vendors/chart/chart.umd.js"></script>
-        <script src="../vendors/leaflet/leaflet.js"></script>
-        <script src="../vendors/leaflet.markercluster/leaflet.markercluster.js"></script>
-        <script src="../vendors/leaflet.tilelayer.colorfilter/leaflet-tilelayer-colorfilter.min.js"></script>
-        <script src="../vendors/countup/countUp.umd.js"></script>
-        <script src="../vendors/echarts/echarts.min.js"></script>
-        <script src="../vendors/fullcalendar/index.global.min.js"></script>
-        <script src="../vendors/choices/choices.min.js"></script>
-        <script src="../vendors/flatpickr/flatpickr.min.js"></script>
-        <script src="../vendors/dayjs/dayjs.min.js"></script>
-        <script src="../vendors/fontawesome/all.min.js"></script>
-        <script src="../vendors/feather-icons/feather.min.js"></script>
-        <script src="../vendors/lodash/lodash.min.js"></script>
-        <script src="../vendors/list.js/list.min.js"></script>
-        <script src="../vendors/bootstrap/xlsx.full.min.js"></script> 
-        <script src="../assets/js/theme.js"></script>
+        <script src="/vendors/prism/prism.js"></script>
+        <script src="/vendors/select2/select2.min.js"> </script>
+        <script src="/vendors/select2/select2.full.min.js"> </script>
+        <script src="/vendors/datatables.net/dataTables.min.js"></script>
+        <script src="/vendors/datatables.net-bs5/dataTables.bootstrap5.min.js"> </script>
+        <script src="/vendors/datatables.net-fixedcolumns/dataTables.fixedColumns.min.js"> </script>
+        <script src="/vendors/prism/prism.js"></script>
+        <script src="/vendors/chart/chart.umd.js"></script>
+        <script src="/vendors/leaflet/leaflet.js"></script>
+        <script src="/vendors/leaflet.markercluster/leaflet.markercluster.js"></script>
+        <script src="/vendors/leaflet.tilelayer.colorfilter/leaflet-tilelayer-colorfilter.min.js"></script>
+        <script src="/vendors/countup/countUp.umd.js"></script>
+        <script src="/vendors/echarts/echarts.min.js"></script>
+        <script src="/vendors/fullcalendar/index.global.min.js"></script>
+        <script src="/vendors/choices/choices.min.js"></script>
+        <script src="/vendors/flatpickr/flatpickr.min.js"></script>
+        <script src="/vendors/dayjs/dayjs.min.js"></script>
+        <script src="/vendors/fontawesome/all.min.js"></script>
+        <script src="/vendors/feather-icons/feather.min.js"></script>
+        <script src="/vendors/lodash/lodash.min.js"></script>
+        <script src="/vendors/list.js/list.min.js"></script>
+        <script src="/vendors/bootstrap/xlsx.full.min.js"></script> 
+        <script src="/assets/js/theme.js"></script>
           <script>feather.replace();</script>
   </body>
 

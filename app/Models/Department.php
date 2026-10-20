@@ -13,13 +13,10 @@ class Department extends Model
                     d.id,
                     d.name,
                     d.code,
-                    d.head_of_department,
-                    hod.full_name AS hod_name,
                     COUNT(emp.payroll_number) AS employee_count
                 FROM {$this->table} d
                 LEFT JOIN employees emp ON emp.department_id = d.id
-                LEFT JOIN employees hod ON hod.payroll_number = d.head_of_department
-                GROUP BY d.id, d.name, d.code, d.head_of_department, hod.full_name
+                GROUP BY d.id, d.name, d.code
                 ORDER BY d.name ASC";
 
         $stmt = $this->db->prepare($sql);
@@ -62,12 +59,11 @@ class Department extends Model
 
     public function create(array $data)
     {
-        $sql = "INSERT INTO {$this->table} (name, code, head_of_department, created_at) VALUES (:name, :code, :head, CURRENT_TIMESTAMP)";
+        $sql = "INSERT INTO {$this->table} (name, code, created_at) VALUES (:name, :code, CURRENT_TIMESTAMP)";
         $stmt = $this->db->prepare($sql);
         $res = $stmt->execute([
             'name' => $data['name'],
             'code' => $data['code'],
-            'head' => $data['head_of_department'] ?? null,
         ]);
 
         if ($res) {

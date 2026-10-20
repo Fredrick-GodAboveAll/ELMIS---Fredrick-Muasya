@@ -94,7 +94,6 @@ foreach ($flashMap as $key => $meta) {
               <th class="text-900 sort pe-1 align-middle white-space-nowrap">Department Name</th>
               <th class="text-900 sort pe-1 align-middle white-space-nowrap text-start">Employees</th>
               <th class="text-900 sort pe-1 align-middle white-space-nowrap">Department Code</th>
-              <th class="text-900 sort pe-1 align-middle white-space-nowrap">Head of Department</th>
               <th class="text-900 no-sort pe-1 align-middle data-table-row-action" data-orderable="false"></th>
             </tr>
           </thead>
@@ -113,7 +112,6 @@ foreach ($flashMap as $key => $meta) {
                   </td>
                   <td class="align-middle amount text-start"><?= htmlspecialchars((string) ($department->employee_count ?? 0), ENT_QUOTES, 'UTF-8'); ?></td>
                   <td class="align-middle amount"><?= htmlspecialchars((string) ($department->code ?? 'N/A'), ENT_QUOTES, 'UTF-8'); ?></td>
-                  <td class="align-middle white-space-nowrap email"><?= htmlspecialchars((string) ($department->hod_name ?? 'Not assigned'), ENT_QUOTES, 'UTF-8'); ?></td>
                   <td class="align-middle white-space-nowrap text-end">
                     <div class="dropstart font-sans-serif position-static d-inline-block">
                       <button class="btn btn-link text-600 btn-sm dropdown-toggle btn-reveal float-end" type="button" id="dropdown-simple-pagination-table-item-<?= (int) ($department->id ?? 0); ?>" data-bs-toggle="dropdown" data-boundary="window" aria-haspopup="true" aria-expanded="false" data-bs-reference="parent">
@@ -193,21 +191,9 @@ foreach ($flashMap as $key => $meta) {
             <input class="form-control" id="departmentCode" name="department_code" type="text" readonly placeholder="Auto-generated">
           </div>
 
-          <div class="mb-3">
-            <label class="form-label fs--1 mb-1" for="headOfDepartment">Head of Department</label>
-            <select class="form-select js-choice" id="headOfDepartment" name="head_of_department" size="1" data-options='{"removeItemButton": true, "placeholder": true, "searchEnabled": true, "duplicateItemsAllowed": false}'>
-              <option value="">Select head of department...</option>
-              <?php if (!empty($employees)): ?>
-                <?php foreach ($employees as $empOpt): ?>
-                  <option value="<?= htmlspecialchars((string) ($empOpt->payroll_number ?? ''), ENT_QUOTES, 'UTF-8'); ?>"><?= htmlspecialchars((string) ($empOpt->full_name ?? $empOpt->payroll_number), ENT_QUOTES, 'UTF-8'); ?></option>
-                <?php endforeach; ?>
-              <?php endif; ?>
-            </select>
-          </div>
-
           <input type="hidden" name="csrf_token" value="<?= htmlspecialchars($csrf, ENT_QUOTES, 'UTF-8'); ?>" />
 
-          <p class="text-600 mb-0">Add the basic information for the department and select the employee responsible for leading the department.</p>
+          <p class="text-600 mb-0">Add the basic information for the department.</p>
 
         </div>
 

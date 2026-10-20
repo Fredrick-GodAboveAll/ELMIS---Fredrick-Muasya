@@ -179,6 +179,33 @@ This project is a custom implementation rather than a framework-based app. The m
 - Middleware for auth and access checks
 - View templates under the app/Views folder
 
+## Layout and Asset Path Rule
+
+This project uses a custom admin layout in [app/Views/layouts/admin.php](app/Views/layouts/admin.php). A major issue appeared when nested routes were added under employee category pages, such as `/employees/category/detail`.
+
+When CSS and JS paths were written with relative URLs like:
+
+- `../assets/css/theme.min.css`
+- `../vendors/bootstrap/bootstrap.min.js`
+
+the browser resolved them relative to the current route instead of the app root. That caused the page to lose styling when opened from nested URLs.
+
+The fix is to use root-relative paths instead:
+
+- `/assets/css/theme.min.css`
+- `/vendors/bootstrap/bootstrap.min.js`
+
+This rule applies to all layout assets, including:
+
+- CSS files
+- JS files
+- favicon and image assets
+- vendor script and stylesheet directories
+
+In short: nested routes must still resolve all layout assets from `/`, not from the current URL depth.
+
+This is important for any future nested page under employee, leave, report, user, or admin modules. Always keep layout asset URLs root-relative so the theme renders correctly regardless of the URL depth.
+
 ## Documentation Folder
 
 The project includes several guides under:

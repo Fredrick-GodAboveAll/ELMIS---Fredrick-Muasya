@@ -1,4 +1,4 @@
-<?php $currentPage = 'employee_categories'; ?>
+<?php $currentPage = 'employee_design'; ?>
 
 <nav aria-label="breadcrumb" class="mb-3">
   <ol class="breadcrumb mb-0">

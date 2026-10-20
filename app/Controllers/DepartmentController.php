@@ -41,7 +41,6 @@ class DepartmentController extends Controller
             Csrf::validate($_POST['csrf_token'] ?? '');
 
             $name = trim((string) ($_POST['department_name'] ?? ''));
-            $head = $_POST['head_of_department'] ?? null;
             $code = trim((string) ($_POST['department_code'] ?? ''));
 
             if ($name === '') {
@@ -59,7 +58,6 @@ class DepartmentController extends Controller
             $newId = $departmentModel->create([
                 'name' => $name,
                 'code' => $code !== '' ? $code : null,
-                'head_of_department' => $head ?: null,
             ]);
 
             if ($newId) {

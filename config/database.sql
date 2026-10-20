@@ -71,29 +71,125 @@ INSERT INTO `users` (`name`, `email`, `password`, `role`, `email_verified`) VALU
 
 
 -- -----------------------------------------------------------
--- Departments table (future linking)
+-- Departments table
 -- -----------------------------------------------------------
 
 CREATE TABLE `departments` (
-  `id` INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
-  `name` VARCHAR(150) NOT NULL UNIQUE,
-  `code` VARCHAR(10) UNIQUE, -- short code, e.g. 'ADMIN', 'ENG'
-  `head_of_department` INT UNSIGNED DEFAULT NULL,
-  `created_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+  `id` INT UNSIGNED NOT NULL AUTO_INCREMENT,
+  `code` VARCHAR(10) NOT NULL,
+  `name` VARCHAR(150) NOT NULL,
+  `is_active` TINYINT(1) NOT NULL DEFAULT 1,
+  `created_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `updated_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `uq_departments_code` (`code`),
+  UNIQUE KEY `uq_departments_name` (`name`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
 -- -----------------------------------------------------------
 -- Sample departments
 -- -----------------------------------------------------------
-INSERT INTO `departments` (`name`, `code`, `head_of_department`) VALUES
-('Human Resources', 'HRM', NULL),
-('Finance', 'FCE', NULL),
-('Energy', 'ENG', NULL),
-('Operations', 'OPS', NULL);
-
+INSERT INTO `departments` (`code`, `name`, `is_active`) VALUES
+('HRM', 'Human Resources', 1),
+('FCE', 'Finance', 1),
+('ENG', 'Energy', 1),
+('OPS', 'Operations', 1);
 
 -- -----------------------------------------------------------
--- Employees table (flat, CSV-ready)
+-- Typed lookup tables for employee classification
+-- -----------------------------------------------------------
+
+CREATE TABLE `genders` (
+  `id` INT UNSIGNED NOT NULL AUTO_INCREMENT,
+  `code` VARCHAR(10) NOT NULL,
+  `label` VARCHAR(100) NOT NULL,
+  `is_active` TINYINT(1) NOT NULL DEFAULT 1,
+  `created_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `updated_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `uq_genders_code` (`code`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+CREATE TABLE `employment_terms` (
+  `id` INT UNSIGNED NOT NULL AUTO_INCREMENT,
+  `code` VARCHAR(20) NOT NULL,
+  `label` VARCHAR(100) NOT NULL,
+  `is_active` TINYINT(1) NOT NULL DEFAULT 1,
+  `created_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `updated_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `uq_employment_terms_code` (`code`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+CREATE TABLE `employment_statuses` (
+  `id` INT UNSIGNED NOT NULL AUTO_INCREMENT,
+  `code` VARCHAR(20) NOT NULL,
+  `label` VARCHAR(100) NOT NULL,
+  `description` VARCHAR(255) DEFAULT NULL,
+  `is_active` TINYINT(1) NOT NULL DEFAULT 1,
+  `created_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `updated_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `uq_employment_statuses_code` (`code`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+CREATE TABLE `job_groups` (
+  `id` INT UNSIGNED NOT NULL AUTO_INCREMENT,
+  `code` VARCHAR(10) NOT NULL,
+  `label` VARCHAR(100) NOT NULL,
+  `is_active` TINYINT(1) NOT NULL DEFAULT 1,
+  `created_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `updated_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `uq_job_groups_code` (`code`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+CREATE TABLE `special_needs` (
+  `id` INT UNSIGNED NOT NULL AUTO_INCREMENT,
+  `code` VARCHAR(20) NOT NULL,
+  `label` VARCHAR(100) NOT NULL,
+  `is_active` TINYINT(1) NOT NULL DEFAULT 1,
+  `created_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `updated_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `uq_special_needs_code` (`code`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+INSERT INTO `genders` (`code`, `label`, `is_active`) VALUES
+('M', 'Male', 1),
+('F', 'Female', 1);
+
+INSERT INTO `employment_terms` (`code`, `label`, `is_active`) VALUES
+('Permanent', 'Permanent', 1),
+('Contract', 'Contract', 1),
+('Intern', 'Intern', 1);
+
+INSERT INTO `employment_statuses` (`code`, `label`, `description`, `is_active`) VALUES
+('probation', 'Probation', 'Employee is on probation', 1),
+('permanent', 'Confirmed (P&P)', 'Permanent and pensionable employee', 1),
+('contract', 'Contract', 'Fixed-term contract employee', 1),
+('suspended', 'Suspended', 'Suspended from active service', 1),
+('resigned', 'Resigned', 'Employee has resigned', 1),
+('retiring', 'Retiring', 'Employee is approaching retirement', 1),
+('retired', 'Retired', 'Employee has retired', 1);
+
+INSERT INTO `job_groups` (`code`, `label`, `is_active`) VALUES
+('H', 'H', 1),
+('J', 'J', 1),
+('K', 'K', 1),
+('L', 'L', 1),
+('M', 'M', 1),
+('N', 'N', 1),
+('P', 'P', 1),
+('Q', 'Q', 1),
+('R', 'R', 1);
+
+INSERT INTO `special_needs` (`code`, `label`, `is_active`) VALUES
+('none', 'None', 1),
+('pwd', 'PWD', 1);
+
+-- -----------------------------------------------------------
+-- Employees table
 -- -----------------------------------------------------------
 
 CREATE TABLE `employees` (
@@ -101,59 +197,95 @@ CREATE TABLE `employees` (
   `payroll_number` VARCHAR(20) NOT NULL,
   `full_name` VARCHAR(150) NOT NULL,
   `id_number` VARCHAR(30) NOT NULL,
-  `gender` ENUM('M','F') NOT NULL,
-  `age` TINYINT UNSIGNED NOT NULL,
-  `date_of_birth` DATE DEFAULT NULL,
+  `date_of_birth` DATE NOT NULL,
   `designation` VARCHAR(150) NOT NULL,
-  `job_group` VARCHAR(10) NOT NULL,
-  `employment_status` VARCHAR(20) DEFAULT NULL,
-  `engagement_type` VARCHAR(50) NOT NULL,
+  `gender_id` INT UNSIGNED NOT NULL,
+  `employment_term_id` INT UNSIGNED NOT NULL,
+  `employment_status_id` INT UNSIGNED NOT NULL,
+  `job_group_id` INT UNSIGNED NOT NULL,
+  `special_need_id` INT UNSIGNED DEFAULT NULL,
+  `department_id` INT UNSIGNED NOT NULL,
   `rod_date` DATE DEFAULT NULL,
-  `special_need` TINYINT UNSIGNED DEFAULT 0 COMMENT '0 = no disability, 4 = disability',
-  `department_id` INT UNSIGNED DEFAULT NULL,
-  `created_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-  `updated_at` TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-
+  `created_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `updated_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`),
   UNIQUE KEY `uq_employees_payroll_number` (`payroll_number`),
+  UNIQUE KEY `uq_employees_id_number` (`id_number`),
+  KEY `idx_employees_gender_id` (`gender_id`),
+  KEY `idx_employees_employment_term_id` (`employment_term_id`),
+  KEY `idx_employees_employment_status_id` (`employment_status_id`),
+  KEY `idx_employees_job_group_id` (`job_group_id`),
+  KEY `idx_employees_special_need_id` (`special_need_id`),
   KEY `idx_employees_department_id` (`department_id`),
-
+  CONSTRAINT `fk_employees_gender`
+    FOREIGN KEY (`gender_id`) REFERENCES `genders` (`id`)
+    ON UPDATE CASCADE ON DELETE RESTRICT,
+  CONSTRAINT `fk_employees_employment_term`
+    FOREIGN KEY (`employment_term_id`) REFERENCES `employment_terms` (`id`)
+    ON UPDATE CASCADE ON DELETE RESTRICT,
+  CONSTRAINT `fk_employees_employment_status`
+    FOREIGN KEY (`employment_status_id`) REFERENCES `employment_statuses` (`id`)
+    ON UPDATE CASCADE ON DELETE RESTRICT,
+  CONSTRAINT `fk_employees_job_group`
+    FOREIGN KEY (`job_group_id`) REFERENCES `job_groups` (`id`)
+    ON UPDATE CASCADE ON DELETE RESTRICT,
+  CONSTRAINT `fk_employees_special_need`
+    FOREIGN KEY (`special_need_id`) REFERENCES `special_needs` (`id`)
+    ON UPDATE CASCADE ON DELETE RESTRICT,
   CONSTRAINT `fk_employees_department`
-    FOREIGN KEY (`department_id`)
-    REFERENCES `departments`(`id`)
-    ON UPDATE CASCADE
-    ON DELETE SET NULL
+    FOREIGN KEY (`department_id`) REFERENCES `departments` (`id`)
+    ON UPDATE CASCADE ON DELETE RESTRICT
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
--- -----------------------------------------------------------
--- Sample employees
--- -----------------------------------------------------------
-
 INSERT INTO `employees` (
-  payroll_number, full_name, id_number, gender, age,
-  date_of_birth, designation, job_group, employment_status,
-  engagement_type, rod_date, special_need, department_id
+  `payroll_number`, `full_name`, `id_number`, `date_of_birth`, `designation`,
+  `gender_id`, `employment_term_id`, `employment_status_id`, `job_group_id`,
+  `special_need_id`, `department_id`, `rod_date`
 ) VALUES
-('20001', 'MS AMINA HASSAN', '11111111', 'F', 35,
-  '1990-03-10', 'HR Officer', 'J', 'permanent',
-  'Permanent', '2045-01-01', 0, 1),
+('20001', 'MS AMINA HASSAN', '11111111', '1990-03-10', 'HR Officer',
+  (SELECT `id` FROM `genders` WHERE `code` = 'F'),
+  (SELECT `id` FROM `employment_terms` WHERE `code` = 'Permanent'),
+  (SELECT `id` FROM `employment_statuses` WHERE `code` = 'permanent'),
+  (SELECT `id` FROM `job_groups` WHERE `code` = 'J'),
+  (SELECT `id` FROM `special_needs` WHERE `code` = 'none'),
+  1,
+  '2045-01-01'),
 
-('20002', 'MR JOHN OTIENO', '22222222', 'M', 24,
-  '2001-06-15', 'Intern', 'H', 'probation',
-  'Intern', '2027-06-15', 0, 2),
+('20002', 'MR JOHN OTIENO', '22222222', '2001-06-15', 'Intern',
+  (SELECT `id` FROM `genders` WHERE `code` = 'M'),
+  (SELECT `id` FROM `employment_terms` WHERE `code` = 'Intern'),
+  (SELECT `id` FROM `employment_statuses` WHERE `code` = 'probation'),
+  (SELECT `id` FROM `job_groups` WHERE `code` = 'H'),
+  (SELECT `id` FROM `special_needs` WHERE `code` = 'none'),
+  2,
+  '2027-06-15'),
 
-('20003', 'MS GRACE MWANGI', '33333333', 'F', 58,
-  '1967-11-20', 'Energy Analyst', 'K', 'retiring',
-  'Permanent', '2026-12-31', 4, 3),
+('20003', 'MS GRACE MWANGI', '33333333', '1967-11-20', 'Energy Analyst',
+  (SELECT `id` FROM `genders` WHERE `code` = 'F'),
+  (SELECT `id` FROM `employment_terms` WHERE `code` = 'Permanent'),
+  (SELECT `id` FROM `employment_statuses` WHERE `code` = 'retiring'),
+  (SELECT `id` FROM `job_groups` WHERE `code` = 'K'),
+  (SELECT `id` FROM `special_needs` WHERE `code` = 'pwd'),
+  3,
+  '2026-12-31'),
 
-('20004', 'MR PETER KAMAU', '44444444', 'M', 32,
-  '1993-08-05', 'Operations Officer', 'L', 'contract',
-  'Contract', '2027-08-05', 0, 4),
+('20004', 'MR PETER KAMAU', '44444444', '1993-08-05', 'Operations Officer',
+  (SELECT `id` FROM `genders` WHERE `code` = 'M'),
+  (SELECT `id` FROM `employment_terms` WHERE `code` = 'Contract'),
+  (SELECT `id` FROM `employment_statuses` WHERE `code` = 'contract'),
+  (SELECT `id` FROM `job_groups` WHERE `code` = 'L'),
+  (SELECT `id` FROM `special_needs` WHERE `code` = 'none'),
+  4,
+  '2027-08-05'),
 
-('20005', 'MS MARY WANJIKU', '55555555', 'F', 29,
-  '1996-04-25', 'HR Assistant', 'J', 'permanent',
-  'Permanent', '2045-04-25', 0, 1);
-
+('20005', 'MS MARY WANJIKU', '55555555', '1996-04-25', 'HR Assistant',
+  (SELECT `id` FROM `genders` WHERE `code` = 'F'),
+  (SELECT `id` FROM `employment_terms` WHERE `code` = 'Permanent'),
+  (SELECT `id` FROM `employment_statuses` WHERE `code` = 'permanent'),
+  (SELECT `id` FROM `job_groups` WHERE `code` = 'J'),
+  (SELECT `id` FROM `special_needs` WHERE `code` = 'none'),
+  1,
+  '2045-04-25');
 
 -- -----------------------------------------------------------
 -- Financial Years (1 July to 30 June)
@@ -496,328 +628,6 @@ CREATE TABLE `leave_carry_forwards` (
     ON UPDATE CASCADE ON DELETE RESTRICT
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
-CREATE TABLE `employee_categories` (
-  `id` INT UNSIGNED NOT NULL AUTO_INCREMENT,
-  `slug` VARCHAR(50) NOT NULL,
-  `title` VARCHAR(100) NOT NULL,
-  `icon` VARCHAR(50) NOT NULL DEFAULT 'tag',
-  `color` VARCHAR(20) NOT NULL DEFAULT 'primary',
-  `role` VARCHAR(30) NOT NULL,
-  `description` VARCHAR(255) NULL,
-  `field` VARCHAR(50) NOT NULL,
-  `layout` VARCHAR(20) NOT NULL DEFAULT 'box',
-  `sort_order` INT UNSIGNED NOT NULL DEFAULT 0,
-  `is_active` TINYINT(1) NOT NULL DEFAULT 1,
-  `created_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  `updated_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-  PRIMARY KEY (`id`),
-  UNIQUE KEY `uq_employee_categories_slug` (`slug`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
-
-CREATE TABLE `employee_category_values` (
-  `id` INT UNSIGNED NOT NULL AUTO_INCREMENT,
-  `category_id` INT UNSIGNED NOT NULL,
-  `label` VARCHAR(100) NOT NULL,
-  `employee_value` VARCHAR(50) NOT NULL,
-  `effect` VARCHAR(255) NULL,
-  `sort_order` INT UNSIGNED NOT NULL DEFAULT 0,
-  `is_active` TINYINT(1) NOT NULL DEFAULT 1,
-  `created_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  `updated_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-  PRIMARY KEY (`id`),
-  UNIQUE KEY `uq_ecv_category_value` (`category_id`, `employee_value`),
-  CONSTRAINT `fk_ecv_category`
-    FOREIGN KEY (`category_id`) REFERENCES `employee_categories` (`id`)
-    ON UPDATE CASCADE
-    ON DELETE CASCADE
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
-
-INSERT INTO `employee_categories` (
-  `slug`, `title`, `icon`, `color`, `role`, `description`, `field`, `layout`, `sort_order`, `is_active`
-) VALUES
-  ('terms', 'Employment Terms', 'file-text', 'primary', 'base', 'Assigns the base policy package.', 'engagement_type', 'arrow', 1, 1),
-  ('status', 'Employment Status', 'clock', 'warning', 'impact', 'Adjusts the base policy. Most values change nothing on their own.', 'employment_status', 'impact', 2, 1),
-  ('gender', 'Gender', 'users', 'danger', 'impact', 'Maternity / paternity condition inside the policy.', 'gender', 'impact', 3, 1),
-  ('need', 'Special Need', 'user', 'info', 'filter', 'Filtering and reporting only.', 'special_need', 'box', 4, 1),
-  ('job', 'Job Group', 'git-branch', 'success', 'filter', 'Reporting and grouping only.', 'job_group', 'table', 5, 1),
-  ('dept', 'Department', 'briefcase', 'primary', 'filter', 'Reporting and grouping only.', 'department_id', 'box', 6, 1)
-ON DUPLICATE KEY UPDATE
-  `title` = VALUES(`title`),
-  `icon` = VALUES(`icon`),
-  `color` = VALUES(`color`),
-  `role` = VALUES(`role`),
-  `description` = VALUES(`description`),
-  `field` = VALUES(`field`),
-  `layout` = VALUES(`layout`),
-  `sort_order` = VALUES(`sort_order`),
-  `is_active` = VALUES(`is_active`);
-
-INSERT INTO `employee_category_values` (`category_id`, `label`, `employee_value`, `effect`, `sort_order`, `is_active`)
-SELECT `ec`.`id`, 'Permanent', 'Permanent', 'General Staff Policy', 1, 1
-FROM `employee_categories` `ec`
-WHERE `ec`.`slug` = 'terms'
-ON DUPLICATE KEY UPDATE
-  `label` = VALUES(`label`),
-  `employee_value` = VALUES(`employee_value`),
-  `effect` = VALUES(`effect`),
-  `sort_order` = VALUES(`sort_order`),
-  `is_active` = VALUES(`is_active`);
-
-INSERT INTO `employee_category_values` (`category_id`, `label`, `employee_value`, `effect`, `sort_order`, `is_active`)
-SELECT `ec`.`id`, 'Contract', 'Contract', 'Contract Staff Policy', 2, 1
-FROM `employee_categories` `ec`
-WHERE `ec`.`slug` = 'terms'
-ON DUPLICATE KEY UPDATE
-  `label` = VALUES(`label`),
-  `employee_value` = VALUES(`employee_value`),
-  `effect` = VALUES(`effect`),
-  `sort_order` = VALUES(`sort_order`),
-  `is_active` = VALUES(`is_active`);
-
-INSERT INTO `employee_category_values` (`category_id`, `label`, `employee_value`, `effect`, `sort_order`, `is_active`)
-SELECT `ec`.`id`, 'Intern', 'Intern', 'Intern Policy', 3, 1
-FROM `employee_categories` `ec`
-WHERE `ec`.`slug` = 'terms'
-ON DUPLICATE KEY UPDATE
-  `label` = VALUES(`label`),
-  `employee_value` = VALUES(`employee_value`),
-  `effect` = VALUES(`effect`),
-  `sort_order` = VALUES(`sort_order`),
-  `is_active` = VALUES(`is_active`);
-
-INSERT INTO `employee_category_values` (`category_id`, `label`, `employee_value`, `effect`, `sort_order`, `is_active`)
-SELECT `ec`.`id`, 'Casual', 'Casual', 'Casual Policy', 4, 1
-FROM `employee_categories` `ec`
-WHERE `ec`.`slug` = 'terms'
-ON DUPLICATE KEY UPDATE
-  `label` = VALUES(`label`),
-  `employee_value` = VALUES(`employee_value`),
-  `effect` = VALUES(`effect`),
-  `sort_order` = VALUES(`sort_order`),
-  `is_active` = VALUES(`is_active`);
-
-INSERT INTO `employee_category_values` (`category_id`, `label`, `employee_value`, `effect`, `sort_order`, `is_active`)
-SELECT `ec`.`id`, 'Probation', 'probation', NULL, 1, 1
-FROM `employee_categories` `ec`
-WHERE `ec`.`slug` = 'status'
-ON DUPLICATE KEY UPDATE
-  `label` = VALUES(`label`),
-  `employee_value` = VALUES(`employee_value`),
-  `effect` = VALUES(`effect`),
-  `sort_order` = VALUES(`sort_order`),
-  `is_active` = VALUES(`is_active`);
-
-INSERT INTO `employee_category_values` (`category_id`, `label`, `employee_value`, `effect`, `sort_order`, `is_active`)
-SELECT `ec`.`id`, 'Confirmed', 'permanent', NULL, 2, 1
-FROM `employee_categories` `ec`
-WHERE `ec`.`slug` = 'status'
-ON DUPLICATE KEY UPDATE
-  `label` = VALUES(`label`),
-  `employee_value` = VALUES(`employee_value`),
-  `effect` = VALUES(`effect`),
-  `sort_order` = VALUES(`sort_order`),
-  `is_active` = VALUES(`is_active`);
-
-INSERT INTO `employee_category_values` (`category_id`, `label`, `employee_value`, `effect`, `sort_order`, `is_active`)
-SELECT `ec`.`id`, 'Confirmed', 'contract', NULL, 3, 1
-FROM `employee_categories` `ec`
-WHERE `ec`.`slug` = 'status'
-ON DUPLICATE KEY UPDATE
-  `label` = VALUES(`label`),
-  `employee_value` = VALUES(`employee_value`),
-  `effect` = VALUES(`effect`),
-  `sort_order` = VALUES(`sort_order`),
-  `is_active` = VALUES(`is_active`);
-
-INSERT INTO `employee_category_values` (`category_id`, `label`, `employee_value`, `effect`, `sort_order`, `is_active`)
-SELECT `ec`.`id`, 'Suspended', 'suspended', NULL, 4, 1
-FROM `employee_categories` `ec`
-WHERE `ec`.`slug` = 'status'
-ON DUPLICATE KEY UPDATE
-  `label` = VALUES(`label`),
-  `employee_value` = VALUES(`employee_value`),
-  `effect` = VALUES(`effect`),
-  `sort_order` = VALUES(`sort_order`),
-  `is_active` = VALUES(`is_active`);
-
-INSERT INTO `employee_category_values` (`category_id`, `label`, `employee_value`, `effect`, `sort_order`, `is_active`)
-SELECT `ec`.`id`, 'Resigned', 'resigned', NULL, 5, 1
-FROM `employee_categories` `ec`
-WHERE `ec`.`slug` = 'status'
-ON DUPLICATE KEY UPDATE
-  `label` = VALUES(`label`),
-  `employee_value` = VALUES(`employee_value`),
-  `effect` = VALUES(`effect`),
-  `sort_order` = VALUES(`sort_order`),
-  `is_active` = VALUES(`is_active`);
-
-INSERT INTO `employee_category_values` (`category_id`, `label`, `employee_value`, `effect`, `sort_order`, `is_active`)
-SELECT `ec`.`id`, 'Retiring', 'retiring', 'Terminal leave unlocked', 6, 1
-FROM `employee_categories` `ec`
-WHERE `ec`.`slug` = 'status'
-ON DUPLICATE KEY UPDATE
-  `label` = VALUES(`label`),
-  `employee_value` = VALUES(`employee_value`),
-  `effect` = VALUES(`effect`),
-  `sort_order` = VALUES(`sort_order`),
-  `is_active` = VALUES(`is_active`);
-
-INSERT INTO `employee_category_values` (`category_id`, `label`, `employee_value`, `effect`, `sort_order`, `is_active`)
-SELECT `ec`.`id`, 'Male', 'M', 'Paternity leave applies', 1, 1
-FROM `employee_categories` `ec`
-WHERE `ec`.`slug` = 'gender'
-ON DUPLICATE KEY UPDATE
-  `label` = VALUES(`label`),
-  `employee_value` = VALUES(`employee_value`),
-  `effect` = VALUES(`effect`),
-  `sort_order` = VALUES(`sort_order`),
-  `is_active` = VALUES(`is_active`);
-
-INSERT INTO `employee_category_values` (`category_id`, `label`, `employee_value`, `effect`, `sort_order`, `is_active`)
-SELECT `ec`.`id`, 'Female', 'F', 'Maternity leave applies', 2, 1
-FROM `employee_categories` `ec`
-WHERE `ec`.`slug` = 'gender'
-ON DUPLICATE KEY UPDATE
-  `label` = VALUES(`label`),
-  `employee_value` = VALUES(`employee_value`),
-  `effect` = VALUES(`effect`),
-  `sort_order` = VALUES(`sort_order`),
-  `is_active` = VALUES(`is_active`);
-
-INSERT INTO `employee_category_values` (`category_id`, `label`, `employee_value`, `effect`, `sort_order`, `is_active`)
-SELECT `ec`.`id`, 'PWD', '4', NULL, 1, 1
-FROM `employee_categories` `ec`
-WHERE `ec`.`slug` = 'need'
-ON DUPLICATE KEY UPDATE
-  `label` = VALUES(`label`),
-  `employee_value` = VALUES(`employee_value`),
-  `effect` = VALUES(`effect`),
-  `sort_order` = VALUES(`sort_order`),
-  `is_active` = VALUES(`is_active`);
-
-INSERT INTO `employee_category_values` (`category_id`, `label`, `employee_value`, `effect`, `sort_order`, `is_active`)
-SELECT `ec`.`id`, 'None', '0', NULL, 2, 1
-FROM `employee_categories` `ec`
-WHERE `ec`.`slug` = 'need'
-ON DUPLICATE KEY UPDATE
-  `label` = VALUES(`label`),
-  `employee_value` = VALUES(`employee_value`),
-  `effect` = VALUES(`effect`),
-  `sort_order` = VALUES(`sort_order`),
-  `is_active` = VALUES(`is_active`);
-
-INSERT INTO `employee_category_values` (`category_id`, `label`, `employee_value`, `effect`, `sort_order`, `is_active`)
-SELECT `ec`.`id`, 'H', 'H', NULL, 1, 1
-FROM `employee_categories` `ec`
-WHERE `ec`.`slug` = 'job'
-ON DUPLICATE KEY UPDATE
-  `label` = VALUES(`label`),
-  `employee_value` = VALUES(`employee_value`),
-  `effect` = VALUES(`effect`),
-  `sort_order` = VALUES(`sort_order`),
-  `is_active` = VALUES(`is_active`);
-
-INSERT INTO `employee_category_values` (`category_id`, `label`, `employee_value`, `effect`, `sort_order`, `is_active`)
-SELECT `ec`.`id`, 'J', 'J', NULL, 2, 1
-FROM `employee_categories` `ec`
-WHERE `ec`.`slug` = 'job'
-ON DUPLICATE KEY UPDATE
-  `label` = VALUES(`label`),
-  `employee_value` = VALUES(`employee_value`),
-  `effect` = VALUES(`effect`),
-  `sort_order` = VALUES(`sort_order`),
-  `is_active` = VALUES(`is_active`);
-
-INSERT INTO `employee_category_values` (`category_id`, `label`, `employee_value`, `effect`, `sort_order`, `is_active`)
-SELECT `ec`.`id`, 'K', 'K', NULL, 3, 1
-FROM `employee_categories` `ec`
-WHERE `ec`.`slug` = 'job'
-ON DUPLICATE KEY UPDATE
-  `label` = VALUES(`label`),
-  `employee_value` = VALUES(`employee_value`),
-  `effect` = VALUES(`effect`),
-  `sort_order` = VALUES(`sort_order`),
-  `is_active` = VALUES(`is_active`);
-
-INSERT INTO `employee_category_values` (`category_id`, `label`, `employee_value`, `effect`, `sort_order`, `is_active`)
-SELECT `ec`.`id`, 'L', 'L', NULL, 4, 1
-FROM `employee_categories` `ec`
-WHERE `ec`.`slug` = 'job'
-ON DUPLICATE KEY UPDATE
-  `label` = VALUES(`label`),
-  `employee_value` = VALUES(`employee_value`),
-  `effect` = VALUES(`effect`),
-  `sort_order` = VALUES(`sort_order`),
-  `is_active` = VALUES(`is_active`);
-
-INSERT INTO `employee_category_values` (`category_id`, `label`, `employee_value`, `effect`, `sort_order`, `is_active`)
-SELECT `ec`.`id`, 'M', 'M', NULL, 5, 1
-FROM `employee_categories` `ec`
-WHERE `ec`.`slug` = 'job'
-ON DUPLICATE KEY UPDATE
-  `label` = VALUES(`label`),
-  `employee_value` = VALUES(`employee_value`),
-  `effect` = VALUES(`effect`),
-  `sort_order` = VALUES(`sort_order`),
-  `is_active` = VALUES(`is_active`);
-
-INSERT INTO `employee_category_values` (`category_id`, `label`, `employee_value`, `effect`, `sort_order`, `is_active`)
-SELECT `ec`.`id`, 'N', 'N', NULL, 6, 1
-FROM `employee_categories` `ec`
-WHERE `ec`.`slug` = 'job'
-ON DUPLICATE KEY UPDATE
-  `label` = VALUES(`label`),
-  `employee_value` = VALUES(`employee_value`),
-  `effect` = VALUES(`effect`),
-  `sort_order` = VALUES(`sort_order`),
-  `is_active` = VALUES(`is_active`);
-
-INSERT INTO `employee_category_values` (`category_id`, `label`, `employee_value`, `effect`, `sort_order`, `is_active`)
-SELECT `ec`.`id`, 'P', 'P', NULL, 7, 1
-FROM `employee_categories` `ec`
-WHERE `ec`.`slug` = 'job'
-ON DUPLICATE KEY UPDATE
-  `label` = VALUES(`label`),
-  `employee_value` = VALUES(`employee_value`),
-  `effect` = VALUES(`effect`),
-  `sort_order` = VALUES(`sort_order`),
-  `is_active` = VALUES(`is_active`);
-
-INSERT INTO `employee_category_values` (`category_id`, `label`, `employee_value`, `effect`, `sort_order`, `is_active`)
-SELECT `ec`.`id`, 'Q', 'Q', NULL, 8, 1
-FROM `employee_categories` `ec`
-WHERE `ec`.`slug` = 'job'
-ON DUPLICATE KEY UPDATE
-  `label` = VALUES(`label`),
-  `employee_value` = VALUES(`employee_value`),
-  `effect` = VALUES(`effect`),
-  `sort_order` = VALUES(`sort_order`),
-  `is_active` = VALUES(`is_active`);
-
-INSERT INTO `employee_category_values` (`category_id`, `label`, `employee_value`, `effect`, `sort_order`, `is_active`)
-SELECT `ec`.`id`, 'R', 'R', NULL, 9, 1
-FROM `employee_categories` `ec`
-WHERE `ec`.`slug` = 'job'
-ON DUPLICATE KEY UPDATE
-  `label` = VALUES(`label`),
-  `employee_value` = VALUES(`employee_value`),
-  `effect` = VALUES(`effect`),
-  `sort_order` = VALUES(`sort_order`),
-  `is_active` = VALUES(`is_active`);
-
-INSERT INTO `employee_category_values` (`category_id`, `label`, `employee_value`, `effect`, `sort_order`, `is_active`)
-SELECT `ec`.`id`, `d`.`name`, CAST(`d`.`id` AS CHAR), NULL, `d`.`id`, 1
-FROM `departments` `d`
-CROSS JOIN `employee_categories` `ec`
-WHERE `ec`.`slug` = 'dept'
-ON DUPLICATE KEY UPDATE
-  `label` = VALUES(`label`),
-  `employee_value` = VALUES(`employee_value`),
-  `effect` = VALUES(`effect`),
-  `sort_order` = VALUES(`sort_order`),
-  `is_active` = VALUES(`is_active`);
-
--- -----------------------------------------------------------
 -- Developer Guide: Adding Tables, Columns, and Inserts
 -- -----------------------------------------------------------
 -- This section provides conventions, examples, and best practices

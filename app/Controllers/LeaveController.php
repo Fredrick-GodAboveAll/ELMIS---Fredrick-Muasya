@@ -54,6 +54,48 @@ class LeaveController extends Controller
         include '../app/Views/layouts/admin.php';
     }
 
+    public function createLeaveApplication()
+    {
+        $title = 'Create Leave Application';
+        $currentPage = 'leave_applications';
+        $content = '../app/Views/leave_management/leave_setup/leave_application_create.php';
+        include '../app/Views/layouts/admin.php';
+    }
+
+    public function storeLeaveApplication()
+    {
+        try {
+            if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+                Session::flash('error', 'Invalid request method.');
+                header('Location: /leave-applications');
+                exit;
+            }
+
+            Csrf::validate($_POST['csrf_token'] ?? '');
+
+            $employee = trim((string) ($_POST['employee'] ?? ''));
+            $leaveType = trim((string) ($_POST['leave_type'] ?? ''));
+            $startDate = trim((string) ($_POST['start_date'] ?? ''));
+            $endDate = trim((string) ($_POST['end_date'] ?? ''));
+
+            if ($employee === '' || $leaveType === '' || $startDate === '' || $endDate === '') {
+                throw new InvalidArgumentException('Please complete all required leave application fields.');
+            }
+
+            Session::flash('success', 'Leave application created successfully.');
+            header('Location: /leave-applications');
+            exit;
+        } catch (InvalidArgumentException $e) {
+            Session::flash('error', $e->getMessage());
+            header('Location: /leave-applications/create');
+            exit;
+        } catch (\Exception $e) {
+            Session::flash('error', 'Unable to save leave application. Please try again.');
+            header('Location: /leave-applications/create');
+            exit;
+        }
+    }
+
     public function LeaveEntitlement()
     {
         $title = 'Leave Entitlement';

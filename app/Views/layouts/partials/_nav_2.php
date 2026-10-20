@@ -136,17 +136,17 @@
                     </div>
                   </div><!-- parent pages-->
                   
-                  <a class="nav-link dropdown-indicator <?php echo (in_array($currentPage, ['employees', 'employee_design'])) ? '' : 'collapsed'; ?>" href="#employees" role="button" data-bs-toggle="collapse" aria-expanded="<?php echo (in_array($currentPage, ['employees', 'employee_design'])) ? 'true' : 'false'; ?>" aria-controls="user">
+                  <a class="nav-link dropdown-indicator <?php echo (in_array($currentPage, ['employees', 'employee_design', 'employee_categories', 'employee_category_view'])) ? '' : 'collapsed'; ?>" href="#employees" role="button" data-bs-toggle="collapse" aria-expanded="<?php echo (in_array($currentPage, ['employees', 'employee_design', 'employee_categories', 'employee_category_view'])) ? 'true' : 'false'; ?>" aria-controls="user">
                     <div class="d-flex align-items-center"><span class="nav-link-icon">
                       <span class="fas fa-users"></span></span><span class="nav-link-text ps-1"> Employees </span></div>
                   </a>
-                  <ul class="nav collapse <?php echo (in_array($currentPage, ['employees', 'employee_categories', 'employee_design'])) ? 'show' : ''; ?>" id="employees">
+                  <ul class="nav collapse <?php echo (in_array($currentPage, ['employees', 'employee_design', 'employee_categories', 'employee_category_view'])) ? 'show' : ''; ?>" id="employees">
                     <li class="nav-item"><a class="nav-link <?php echo ($currentPage === 'employees') ? 'active' : ''; ?>" href="/employees">
                         <div class="d-flex align-items-center"><span class="nav-link-text ps-1">employee list</span></div>
                       </a><!-- more inner pages--></li>
 
-                    <li class="nav-item"><a class="nav-link <?php echo ($currentPage === 'employee_categories') ? 'active' : ''; ?>" href="/employee-categories">
-                        <div class="d-flex align-items-center"><span class="nav-link-text ps-1">Employee categories</span></div>
+                    <li class="nav-item"><a class="nav-link <?php echo ($currentPage === 'employee_categories') || ($currentPage === 'employee_category_view') ? 'active' : ''; ?>" href="/employees/category">
+                        <div class="d-flex align-items-center"><span class="nav-link-text ps-1">employee categories</span></div>
                       </a></li>
 
                     <li class="nav-item"><a class="nav-link <?php echo ($currentPage === 'employee_design') ? 'active' : ''; ?>" href="/employees/design">

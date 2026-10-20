@@ -97,7 +97,7 @@
                   <td class="align-middle white-space-nowrap email"><?= htmlspecialchars((string) ($employee->id_number ?? 'N/A'), ENT_QUOTES, 'UTF-8'); ?></td>
                   <td class="align-middle white-space-nowrap email"><?= htmlspecialchars((string) ($employee->designation ?? 'N/A'), ENT_QUOTES, 'UTF-8'); ?></td>
                   <td class="align-middle text-end amount"><?= htmlspecialchars((string) ($employee->job_group ?? 'N/A'), ENT_QUOTES, 'UTF-8'); ?></td>
-                  <td class="align-middle text-end amount"><?= htmlspecialchars((string) ($employee->employment_status ?? 'N/A'), ENT_QUOTES, 'UTF-8'); ?></td>
+                  <td class="align-middle text-end amount"><?= htmlspecialchars((string) ($employee->employment_term ?? 'N/A'), ENT_QUOTES, 'UTF-8'); ?></td>
                   <td class="align-middle text-center fs-9 white-space-nowrap payment">
                     <span class="badge rounded-pill <?= $hasDisability ? 'badge-subtle-success' : 'badge-subtle-secondary'; ?>">
                       <?= $hasDisability ? 'YES' : 'NO'; ?>
