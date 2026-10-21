@@ -125,6 +125,7 @@ CREATE TABLE `employment_statuses` (
   `id` INT UNSIGNED NOT NULL AUTO_INCREMENT,
   `code` VARCHAR(20) NOT NULL,
   `label` VARCHAR(100) NOT NULL,
+  `sort_order` INT NOT NULL DEFAULT 0,
   `description` VARCHAR(255) DEFAULT NULL,
   `is_active` TINYINT(1) NOT NULL DEFAULT 1,
   `created_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
@@ -164,14 +165,43 @@ INSERT INTO `employment_terms` (`code`, `label`, `is_active`) VALUES
 ('Contract', 'Contract', 1),
 ('Intern', 'Intern', 1);
 
-INSERT INTO `employment_statuses` (`code`, `label`, `description`, `is_active`) VALUES
-('probation', 'Probation', 'Employee is on probation', 1),
-('permanent', 'Confirmed (P&P)', 'Permanent and pensionable employee', 1),
-('contract', 'Contract', 'Fixed-term contract employee', 1),
-('suspended', 'Suspended', 'Suspended from active service', 1),
-('resigned', 'Resigned', 'Employee has resigned', 1),
-('retiring', 'Retiring', 'Employee is approaching retirement', 1),
-('retired', 'Retired', 'Employee has retired', 1);
+INSERT INTO `employment_statuses` (`code`, `label`, `sort_order`, `description`, `is_active`) VALUES
+('active', 'Active (In Service)', 1, 'Intern employee currently active in service', 1),
+('probation', 'Probation', 2, 'Employee is on probation', 1),
+('permanent', 'Confirmed (P&P)', 3, 'Permanent and pensionable employee', 1),
+('contract', 'Contract', 4, 'Fixed-term contract employee', 1),
+('suspended', 'Suspended', 5, 'Suspended from active service', 1),
+('resigned', 'Resigned', 6, 'Employee has resigned', 1),
+('retiring', 'Retiring', 7, 'Employee is approaching retirement', 1),
+('retired', 'Retired', 8, 'Employee has retired', 1);
+
+CREATE TABLE `employment_term_status_validity` (
+  `term_id` INT UNSIGNED NOT NULL,
+  `status_id` INT UNSIGNED NOT NULL,
+  `created_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`term_id`, `status_id`),
+  KEY `idx_term_status_validity_status_id` (`status_id`),
+  CONSTRAINT `fk_term_status_validity_term`
+    FOREIGN KEY (`term_id`) REFERENCES `employment_terms` (`id`)
+    ON UPDATE CASCADE ON DELETE CASCADE,
+  CONSTRAINT `fk_term_status_validity_status`
+    FOREIGN KEY (`status_id`) REFERENCES `employment_statuses` (`id`)
+    ON UPDATE CASCADE ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+-- IMPORTANT: This rule is duplicated in app/Models/Employee.php.
+-- Update BOTH files when the validity rule changes.
+INSERT INTO `employment_term_status_validity` (`term_id`, `status_id`)
+SELECT et.id, es.id
+FROM `employment_terms` et
+JOIN `employment_statuses` es
+  ON (
+    (et.code = 'Permanent' AND es.code IN ('probation','permanent','retiring','retired','suspended','resigned'))
+    OR
+    (et.code = 'Contract' AND es.code IN ('contract','suspended','resigned'))
+    OR
+    (et.code = 'Intern' AND es.code IN ('active','suspended','resigned'))
+  );
 
 INSERT INTO `job_groups` (`code`, `label`, `is_active`) VALUES
 ('H', 'H', 1),
@@ -226,6 +256,10 @@ CREATE TABLE `employees` (
   CONSTRAINT `fk_employees_employment_status`
     FOREIGN KEY (`employment_status_id`) REFERENCES `employment_statuses` (`id`)
     ON UPDATE CASCADE ON DELETE RESTRICT,
+  CONSTRAINT `fk_employees_term_status_validity`
+    FOREIGN KEY (`employment_term_id`, `employment_status_id`)
+    REFERENCES `employment_term_status_validity` (`term_id`, `status_id`)
+    ON UPDATE CASCADE ON DELETE RESTRICT,
   CONSTRAINT `fk_employees_job_group`
     FOREIGN KEY (`job_group_id`) REFERENCES `job_groups` (`id`)
     ON UPDATE CASCADE ON DELETE RESTRICT,
@@ -254,7 +288,7 @@ INSERT INTO `employees` (
 ('20002', 'MR JOHN OTIENO', '22222222', '2001-06-15', 'Intern',
   (SELECT `id` FROM `genders` WHERE `code` = 'M'),
   (SELECT `id` FROM `employment_terms` WHERE `code` = 'Intern'),
-  (SELECT `id` FROM `employment_statuses` WHERE `code` = 'probation'),
+  (SELECT `id` FROM `employment_statuses` WHERE `code` = 'active'),
   (SELECT `id` FROM `job_groups` WHERE `code` = 'H'),
   (SELECT `id` FROM `special_needs` WHERE `code` = 'none'),
   2,

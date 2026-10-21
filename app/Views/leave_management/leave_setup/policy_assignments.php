@@ -8,9 +8,19 @@
   </ol>
 </nav>
 
-<div class="mb-2">
-  <h3 class="fw-bold mb-1">Policy Assignments</h3>
-  <div class="text-600">Leave policy coverage for financial year 2026/27</div>
+<div class="d-flex justify-content-between align-items-center gap-2 mb-3">
+  <div class="mb-0">
+    <h3 class="fw-bold mb-1">Policy Assignments</h3>
+    <div class="text-600">Leave policy coverage for financial year 2026/27</div>
+  </div>
+  <div class="d-flex gap-2">
+    <a href="/policy-assignments/create" class="btn btn-outline-primary btn-sm">
+      <span class="fas fa-plus me-1"></span>Create assignment
+    </a>
+    <a href="/policy-assignments/detail" class="btn btn-primary btn-sm">
+      <span class="fas fa-eye me-1"></span>Open assignment
+    </a>
+  </div>
 </div>
 
 <div class="alert alert-warning border-0 d-flex align-items-center fs-10 py-2 mb-3" role="alert">

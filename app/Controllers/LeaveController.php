@@ -518,7 +518,7 @@ class LeaveController extends Controller
         $activePolicies = count(array_filter($policies, fn($p) => !empty($p->is_active)));
         $inactivePolicies = $totalPolicies - $activePolicies;
 
-        $content = '../app/Views/leave_management/leave_setup/leave_policy.php';
+        $content = '../app/Views/leave_management/leave_setup/leave_policy/index.php';
         include '../app/Views/layouts/admin.php';
     }
 
@@ -651,7 +651,37 @@ class LeaveController extends Controller
 
         $rows = $this->leavePolicyService->getEntitlementsWithDetails($policyId, $currentFyId);
 
-        $content = '../app/Views/leave_management/leave_setup/leave_policy_details.php';
+        $content = '../app/Views/leave_management/leave_setup/leave_policy/detail.php';
+        include '../app/Views/layouts/admin.php';
+    }
+
+    public function createPolicyAssignment()
+    {
+        $title = 'Create Policy Assignment';
+        $currentPage = 'policy_assignments_create';
+        $policies = $this->leavePolicyService->all();
+        $departments = (new \App\Models\Department())->all();
+        $employees = (new \App\Models\Employee())->all();
+        $financialYearModel = new \App\Models\FinancialYear();
+        $financialYears = $financialYearModel->all();
+        $csrf = Csrf::generate();
+
+        $content = '../app/Views/leave_management/leave_setup/leave_policy/assignments/create.php';
+        include '../app/Views/layouts/admin.php';
+    }
+
+    public function policyAssignmentDetail()
+    {
+        $title = 'Policy Assignment Detail';
+        $currentPage = 'policy_assignment_detail';
+        $policies = $this->leavePolicyService->all();
+        $departments = (new \App\Models\Department())->all();
+        $employees = (new \App\Models\Employee())->all();
+        $financialYearModel = new \App\Models\FinancialYear();
+        $financialYears = $financialYearModel->all();
+        $csrf = Csrf::generate();
+
+        $content = '../app/Views/leave_management/leave_setup/leave_policy/assignments/detail.php';
         include '../app/Views/layouts/admin.php';
     }
 
@@ -668,7 +698,7 @@ class LeaveController extends Controller
         $employees = (new \App\Models\Employee())->all();
         $csrf = Csrf::generate();
 
-        $content = '../app/Views/leave_management/leave_setup/policy_assignments.php';
+        $content = '../app/Views/leave_management/leave_setup/leave_policy/assignments/index.php';
         include '../app/Views/layouts/admin.php';
     }
 

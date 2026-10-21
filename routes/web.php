@@ -85,6 +85,8 @@ $router->post('/holiday-lists/delete-holiday', 'LeaveController@deleteHoliday', 
 
 // Policy Assignments (UI)
 $router->get('/policy-assignments', 'LeaveController@policyAssignments', [AuthMiddleware::class, [RoleMiddleware::class, 'admin']]);
+$router->get('/policy-assignments/create', 'LeaveController@createPolicyAssignment', [AuthMiddleware::class, [RoleMiddleware::class, 'admin']]);
+$router->get('/policy-assignments/detail', 'LeaveController@policyAssignmentDetail', [AuthMiddleware::class, [RoleMiddleware::class, 'admin']]);
 $router->post('/policy-assignments', 'LeaveController@savePolicyAssignment', [AuthMiddleware::class, [RoleMiddleware::class, 'admin']]);
 
 // Tools: Leave Calculator test (isolated)
