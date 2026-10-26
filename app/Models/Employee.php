@@ -72,6 +72,7 @@ class Employee extends Model
         $genderId = $this->resolveLookupId('genders', $data['gender'] ?? $data['gender_id'] ?? null, 'code', 'label');
         $employmentTermId = $this->resolveLookupId('employment_terms', $data['employment_term'] ?? $data['employment_term_id'] ?? null, 'code', 'label');
         $employmentStatusId = $this->resolveLookupId('employment_statuses', $data['employment_status'] ?? $data['employment_status_id'] ?? null, 'code', 'label');
+        $confirmationStatusId = $this->resolveLookupId('confirmation_statuses', $data['confirmation_status'] ?? $data['confirmation_status_id'] ?? null, 'code', 'label');
         $jobGroupId = $this->resolveLookupId('job_groups', $data['job_group'] ?? $data['job_group_id'] ?? null, 'code', 'label');
         $specialNeedId = $this->resolveLookupId('special_needs', $data['special_need'] ?? $data['special_need_id'] ?? null, 'code', 'label');
         $departmentId = (int) ($data['department_id'] ?? 0);
@@ -80,12 +81,12 @@ class Employee extends Model
 
         $sql = "INSERT INTO {$this->table} (
                     payroll_number, full_name, id_number, date_of_birth,
-                    designation, gender_id, employment_term_id, employment_status_id,
+                    designation, gender_id, employment_term_id, employment_status_id, confirmation_status_id,
                     job_group_id, special_need_id, department_id, rod_date,
                     created_at, updated_at
                 ) VALUES (
                     :payroll_number, :full_name, :id_number, :date_of_birth,
-                    :designation, :gender_id, :employment_term_id, :employment_status_id,
+                    :designation, :gender_id, :employment_term_id, :employment_status_id, :confirmation_status_id,
                     :job_group_id, :special_need_id, :department_id, :rod_date,
                     CURRENT_TIMESTAMP, CURRENT_TIMESTAMP
                 )";
@@ -101,6 +102,7 @@ class Employee extends Model
             'gender_id' => $genderId,
             'employment_term_id' => $employmentTermId,
             'employment_status_id' => $employmentStatusId,
+            'confirmation_status_id' => $confirmationStatusId,
             'job_group_id' => $jobGroupId,
             'special_need_id' => $specialNeedId,
             'department_id' => $departmentId,
@@ -138,6 +140,7 @@ class Employee extends Model
         $genderId = $this->resolveLookupId('genders', $data['gender'] ?? $data['gender_id'] ?? $employee->gender_id ?? null, 'code', 'label');
         $employmentTermId = $this->resolveLookupId('employment_terms', $data['employment_term'] ?? $data['employment_term_id'] ?? $employee->employment_term_id ?? null, 'code', 'label');
         $employmentStatusId = $this->resolveLookupId('employment_statuses', $data['employment_status'] ?? $data['employment_status_id'] ?? $employee->employment_status_id ?? null, 'code', 'label');
+        $confirmationStatusId = $this->resolveLookupId('confirmation_statuses', $data['confirmation_status'] ?? $data['confirmation_status_id'] ?? $employee->confirmation_status_id ?? null, 'code', 'label');
         $jobGroupId = $this->resolveLookupId('job_groups', $data['job_group'] ?? $data['job_group_id'] ?? $employee->job_group_id ?? null, 'code', 'label');
         $specialNeedId = $this->resolveLookupId('special_needs', $data['special_need'] ?? $data['special_need_id'] ?? $employee->special_need_id ?? null, 'code', 'label');
         $departmentId = (int) ($data['department_id'] ?? $employee->department_id ?? 0);
@@ -153,6 +156,7 @@ class Employee extends Model
                     gender_id = :gender_id,
                     employment_term_id = :employment_term_id,
                     employment_status_id = :employment_status_id,
+                    confirmation_status_id = :confirmation_status_id,
                     job_group_id = :job_group_id,
                     special_need_id = :special_need_id,
                     department_id = :department_id,
@@ -172,6 +176,7 @@ class Employee extends Model
             'gender_id' => $genderId,
             'employment_term_id' => $employmentTermId,
             'employment_status_id' => $employmentStatusId,
+            'confirmation_status_id' => $confirmationStatusId,
             'job_group_id' => $jobGroupId,
             'special_need_id' => $specialNeedId,
             'department_id' => $departmentId,
@@ -188,9 +193,10 @@ class Employee extends Model
         }
 
         $validPairs = [
-            'Permanent' => ['probation', 'permanent', 'retiring', 'retired', 'suspended', 'resigned'],
-            'Contract' => ['contract', 'suspended', 'resigned'],
-            'Intern' => ['active', 'suspended', 'resigned'],
+            'Permanent' => ['active', 'suspended', 'resigned', 'retired'],
+            'Contract' => ['active', 'suspended', 'resigned', 'retired'],
+            'Intern' => ['active', 'suspended', 'resigned', 'retired'],
+            'Casual' => ['active', 'suspended', 'resigned', 'retired'],
         ];
 
         $termSql = 'SELECT code FROM employment_terms WHERE id = :id LIMIT 1';

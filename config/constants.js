@@ -24,8 +24,13 @@ module.exports = {
   MIN_LEAVE_NOTICE_DAYS: 3,
   
   // Employee settings
-  EMPLOYMENT_STATUSES: ['Permanent', 'Contract', 'Probation', 'Intern'],
-  JOB_GROUPS: ['A', 'B', 'C', 'D', 'E'],
+  EMPLOYMENT_TERMS: ['Permanent', 'Contract', 'Intern', 'Casual'],
+  EMPLOYMENT_STATUSES: ['Active', 'Suspended', 'Resigned', 'Retired'],
+  CONFIRMATION_STATUSES: ['Probation', 'Confirmed (P&P)', 'Not Applicable'],
+  GENDERS: ['Male', 'Female'],
+  SPECIAL_NEEDS: ['PWD', 'None'],
+  JOB_GROUPS: ['H', 'J', 'K', 'L', 'M', 'N', 'P', 'Q', 'R'],
+  DEPARTMENTS: ['Human Resources', 'Finance', 'Energy', 'Operations'],
   
   // File upload settings
   MAX_FILE_SIZE: 5 * 1024 * 1024, // 5MB

@@ -42,6 +42,7 @@ $currentPage = 'employee_categories';
                   <option value="">All Categories</option>
                   <option>Employment Terms</option>
                   <option>Employment Status</option>
+                  <option>Confirmation Status</option>
                   <option>Gender</option>
                   <option>Special Need</option>
                   <option>Job Group</option>
@@ -82,21 +83,27 @@ $currentPage = 'employee_categories';
               <div class="col-sm-6 col-lg-4 app-card" data-name="<?= htmlspecialchars($category['title']); ?>">
                 <div class="card h-100 border">
                   <div class="card-body p-3 d-flex flex-column">
+                    
+                    <!-- Top Icon & Action -->
                     <div class="d-flex align-items-center justify-content-between mb-3">
                       <div class="d-flex align-items-center justify-content-center text-body" style="width: 36px; height: 36px;">
                         <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>
                       </div>
                       <a href="/employees/category/view?category=<?= urlencode($category['slug']); ?>" class="btn btn-sm btn-falcon-default rounded-1 me-1 mb-1" type="button">View</a>
                     </div>
+
+                    <!-- Title & Description -->
                     <h6 class="fw-bold mb-1"><?= htmlspecialchars($category['title']); ?></h6>
                     <p class="text-500 fs--3 lh-base mb-0"><?= htmlspecialchars($category['description']); ?></p>
 
-                    <div class="d-flex align-items-center justify-content-between mt-auto pt-3">
+                    <!-- Bottom Count & Link -->
+                    <div class="d-flex align-items-center justify-content-between mt-auto pt-3 border-top">
                       <span class="badge badge-subtle-info fw-normal"><?= (int) $category['count']; ?> records</span>
                       <a href="/employees/category/view?category=<?= urlencode($category['slug']); ?>" class="btn border-0 p-0 text-body-secondary" aria-label="Open category details">
                         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path><polyline points="15 3 21 3 21 9"></polyline><line x1="10" y1="14" x2="21" y2="3"></line></svg>
                       </a>
                     </div>
+                    
                   </div>
                 </div>
               </div>
@@ -192,7 +199,7 @@ $currentPage = 'employee_categories';
     const listViewContainer = document.getElementById('listViewContainer');
     const listViewBody = document.getElementById('listViewBody');
 
-    // Build List from Cards (Exactly like the screenshot)
+    // Build List from Cards
     function buildList() {
       listViewBody.innerHTML = '';
       const visibleCards = document.querySelectorAll('.app-card:not(.d-none)');
@@ -202,7 +209,7 @@ $currentPage = 'employee_categories';
         const name = card.querySelector('h6').textContent;
         const desc = card.querySelector('p').textContent;
         const empBadge = card.querySelector('.badge-subtle-info');
-        const statusBtn = card.querySelector('button.btn-sm'); // Configure/Configured
+        const statusBtn = card.querySelector('button.btn-sm');
 
         const li = document.createElement('li');
         li.className = 'list-group-item d-flex justify-content-between align-items-center px-0 py-3 border-bottom';
@@ -216,7 +223,7 @@ $currentPage = 'employee_categories';
             </div>
           </div>
           <div class="d-flex align-items-center gap-3">
-            <span class="badge badge-subtle-info fw-normal">${empBadge ? empBadge.textContent : '0 employees'}</span>
+            <span class="badge badge-subtle-info fw-normal">${empBadge ? empBadge.textContent : '0 records'}</span>
             <span>${statusBtn ? statusBtn.outerHTML : ''}</span>
             <a href="#" class="text-body-secondary" data-bs-toggle="modal" data-bs-target="#staticBackdrop">
               <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"></polyline></svg>

@@ -39,6 +39,7 @@
                   <option value="">All Categories</option>
                   <option>Employment Terms</option>
                   <option>Employment Status</option>
+                  <option>Confirmation Status</option>
                   <option>Gender</option>
                   <option>Special Need</option>
                   <option>Job Group</option>

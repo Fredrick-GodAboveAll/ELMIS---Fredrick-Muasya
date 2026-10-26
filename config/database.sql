@@ -134,6 +134,19 @@ CREATE TABLE `employment_statuses` (
   UNIQUE KEY `uq_employment_statuses_code` (`code`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
+CREATE TABLE `confirmation_statuses` (
+  `id` INT UNSIGNED NOT NULL AUTO_INCREMENT,
+  `code` VARCHAR(20) NOT NULL,
+  `label` VARCHAR(100) NOT NULL,
+  `sort_order` INT NOT NULL DEFAULT 0,
+  `description` VARCHAR(255) DEFAULT NULL,
+  `is_active` TINYINT(1) NOT NULL DEFAULT 1,
+  `created_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  `updated_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `uq_confirmation_statuses_code` (`code`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
 CREATE TABLE `job_groups` (
   `id` INT UNSIGNED NOT NULL AUTO_INCREMENT,
   `code` VARCHAR(10) NOT NULL,
@@ -163,17 +176,19 @@ INSERT INTO `genders` (`code`, `label`, `is_active`) VALUES
 INSERT INTO `employment_terms` (`code`, `label`, `is_active`) VALUES
 ('Permanent', 'Permanent', 1),
 ('Contract', 'Contract', 1),
-('Intern', 'Intern', 1);
+('Intern', 'Intern', 1),
+('Casual', 'Casual', 1);
 
 INSERT INTO `employment_statuses` (`code`, `label`, `sort_order`, `description`, `is_active`) VALUES
-('active', 'Active (In Service)', 1, 'Intern employee currently active in service', 1),
-('probation', 'Probation', 2, 'Employee is on probation', 1),
-('permanent', 'Confirmed (P&P)', 3, 'Permanent and pensionable employee', 1),
-('contract', 'Contract', 4, 'Fixed-term contract employee', 1),
-('suspended', 'Suspended', 5, 'Suspended from active service', 1),
-('resigned', 'Resigned', 6, 'Employee has resigned', 1),
-('retiring', 'Retiring', 7, 'Employee is approaching retirement', 1),
-('retired', 'Retired', 8, 'Employee has retired', 1);
+('active', 'Active', 1, 'Employee is active in service', 1),
+('suspended', 'Suspended', 2, 'Employee is suspended', 1),
+('resigned', 'Resigned', 3, 'Employee has resigned', 1),
+('retired', 'Retired', 4, 'Employee has retired', 1);
+
+INSERT INTO `confirmation_statuses` (`code`, `label`, `sort_order`, `description`, `is_active`) VALUES
+('probation', 'Probation', 1, 'Employee is on probation', 1),
+('confirmed', 'Confirmed (P&P)', 2, 'Employee has been confirmed', 1),
+('not_applicable', 'Not Applicable', 3, 'Confirmation status does not apply', 1);
 
 CREATE TABLE `employment_term_status_validity` (
   `term_id` INT UNSIGNED NOT NULL,
@@ -189,6 +204,20 @@ CREATE TABLE `employment_term_status_validity` (
     ON UPDATE CASCADE ON DELETE CASCADE
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
 
+CREATE TABLE `employment_term_confirmation_validity` (
+  `term_id` INT UNSIGNED NOT NULL,
+  `confirmation_status_id` INT UNSIGNED NOT NULL,
+  `created_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`term_id`, `confirmation_status_id`),
+  KEY `idx_term_confirmation_validity_status_id` (`confirmation_status_id`),
+  CONSTRAINT `fk_term_confirmation_validity_term`
+    FOREIGN KEY (`term_id`) REFERENCES `employment_terms` (`id`)
+    ON UPDATE CASCADE ON DELETE CASCADE,
+  CONSTRAINT `fk_term_confirmation_validity_status`
+    FOREIGN KEY (`confirmation_status_id`) REFERENCES `confirmation_statuses` (`id`)
+    ON UPDATE CASCADE ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
 -- IMPORTANT: This rule is duplicated in app/Models/Employee.php.
 -- Update BOTH files when the validity rule changes.
 INSERT INTO `employment_term_status_validity` (`term_id`, `status_id`)
@@ -196,11 +225,18 @@ SELECT et.id, es.id
 FROM `employment_terms` et
 JOIN `employment_statuses` es
   ON (
-    (et.code = 'Permanent' AND es.code IN ('probation','permanent','retiring','retired','suspended','resigned'))
+    et.code IN ('Permanent', 'Contract', 'Intern', 'Casual')
+    AND es.code IN ('active', 'suspended', 'resigned', 'retired')
+  );
+
+INSERT INTO `employment_term_confirmation_validity` (`term_id`, `confirmation_status_id`)
+SELECT et.id, cs.id
+FROM `employment_terms` et
+JOIN `confirmation_statuses` cs
+  ON (
+    (et.code = 'Permanent' AND cs.code IN ('probation', 'confirmed'))
     OR
-    (et.code = 'Contract' AND es.code IN ('contract','suspended','resigned'))
-    OR
-    (et.code = 'Intern' AND es.code IN ('active','suspended','resigned'))
+    (et.code IN ('Contract', 'Intern', 'Casual') AND cs.code = 'not_applicable')
   );
 
 INSERT INTO `job_groups` (`code`, `label`, `is_active`) VALUES
@@ -232,8 +268,9 @@ CREATE TABLE `employees` (
   `gender_id` INT UNSIGNED NOT NULL,
   `employment_term_id` INT UNSIGNED NOT NULL,
   `employment_status_id` INT UNSIGNED NOT NULL,
+  `confirmation_status_id` INT UNSIGNED NOT NULL,
   `job_group_id` INT UNSIGNED NOT NULL,
-  `special_need_id` INT UNSIGNED DEFAULT NULL,
+  `special_need_id` INT UNSIGNED NOT NULL,
   `department_id` INT UNSIGNED NOT NULL,
   `rod_date` DATE DEFAULT NULL,
   `created_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
@@ -244,6 +281,7 @@ CREATE TABLE `employees` (
   KEY `idx_employees_gender_id` (`gender_id`),
   KEY `idx_employees_employment_term_id` (`employment_term_id`),
   KEY `idx_employees_employment_status_id` (`employment_status_id`),
+  KEY `idx_employees_confirmation_status_id` (`confirmation_status_id`),
   KEY `idx_employees_job_group_id` (`job_group_id`),
   KEY `idx_employees_special_need_id` (`special_need_id`),
   KEY `idx_employees_department_id` (`department_id`),
@@ -256,9 +294,16 @@ CREATE TABLE `employees` (
   CONSTRAINT `fk_employees_employment_status`
     FOREIGN KEY (`employment_status_id`) REFERENCES `employment_statuses` (`id`)
     ON UPDATE CASCADE ON DELETE RESTRICT,
+  CONSTRAINT `fk_employees_confirmation_status`
+    FOREIGN KEY (`confirmation_status_id`) REFERENCES `confirmation_statuses` (`id`)
+    ON UPDATE CASCADE ON DELETE RESTRICT,
   CONSTRAINT `fk_employees_term_status_validity`
     FOREIGN KEY (`employment_term_id`, `employment_status_id`)
     REFERENCES `employment_term_status_validity` (`term_id`, `status_id`)
+    ON UPDATE CASCADE ON DELETE RESTRICT,
+  CONSTRAINT `fk_employees_term_confirmation_validity`
+    FOREIGN KEY (`employment_term_id`, `confirmation_status_id`)
+    REFERENCES `employment_term_confirmation_validity` (`term_id`, `confirmation_status_id`)
     ON UPDATE CASCADE ON DELETE RESTRICT,
   CONSTRAINT `fk_employees_job_group`
     FOREIGN KEY (`job_group_id`) REFERENCES `job_groups` (`id`)
@@ -273,22 +318,24 @@ CREATE TABLE `employees` (
 
 INSERT INTO `employees` (
   `payroll_number`, `full_name`, `id_number`, `date_of_birth`, `designation`,
-  `gender_id`, `employment_term_id`, `employment_status_id`, `job_group_id`,
+  `gender_id`, `employment_term_id`, `employment_status_id`, `confirmation_status_id`, `job_group_id`,
   `special_need_id`, `department_id`, `rod_date`
 ) VALUES
 ('20001', 'MS AMINA HASSAN', '11111111', '1990-03-10', 'HR Officer',
   (SELECT `id` FROM `genders` WHERE `code` = 'F'),
   (SELECT `id` FROM `employment_terms` WHERE `code` = 'Permanent'),
-  (SELECT `id` FROM `employment_statuses` WHERE `code` = 'permanent'),
+  (SELECT `id` FROM `employment_statuses` WHERE `code` = 'active'),
+  (SELECT `id` FROM `confirmation_statuses` WHERE `code` = 'confirmed'),
   (SELECT `id` FROM `job_groups` WHERE `code` = 'J'),
   (SELECT `id` FROM `special_needs` WHERE `code` = 'none'),
   1,
   '2045-01-01'),
 
-('20002', 'MR JOHN OTIENO', '22222222', '2001-06-15', 'Intern',
+('20002', 'MR JOHN OTIENO', '22222222', '2001-06-15', 'Junior Officer',
   (SELECT `id` FROM `genders` WHERE `code` = 'M'),
-  (SELECT `id` FROM `employment_terms` WHERE `code` = 'Intern'),
+  (SELECT `id` FROM `employment_terms` WHERE `code` = 'Permanent'),
   (SELECT `id` FROM `employment_statuses` WHERE `code` = 'active'),
+  (SELECT `id` FROM `confirmation_statuses` WHERE `code` = 'probation'),
   (SELECT `id` FROM `job_groups` WHERE `code` = 'H'),
   (SELECT `id` FROM `special_needs` WHERE `code` = 'none'),
   2,
@@ -297,7 +344,8 @@ INSERT INTO `employees` (
 ('20003', 'MS GRACE MWANGI', '33333333', '1967-11-20', 'Energy Analyst',
   (SELECT `id` FROM `genders` WHERE `code` = 'F'),
   (SELECT `id` FROM `employment_terms` WHERE `code` = 'Permanent'),
-  (SELECT `id` FROM `employment_statuses` WHERE `code` = 'retiring'),
+  (SELECT `id` FROM `employment_statuses` WHERE `code` = 'retired'),
+  (SELECT `id` FROM `confirmation_statuses` WHERE `code` = 'confirmed'),
   (SELECT `id` FROM `job_groups` WHERE `code` = 'K'),
   (SELECT `id` FROM `special_needs` WHERE `code` = 'pwd'),
   3,
@@ -306,7 +354,8 @@ INSERT INTO `employees` (
 ('20004', 'MR PETER KAMAU', '44444444', '1993-08-05', 'Operations Officer',
   (SELECT `id` FROM `genders` WHERE `code` = 'M'),
   (SELECT `id` FROM `employment_terms` WHERE `code` = 'Contract'),
-  (SELECT `id` FROM `employment_statuses` WHERE `code` = 'contract'),
+  (SELECT `id` FROM `employment_statuses` WHERE `code` = 'resigned'),
+  (SELECT `id` FROM `confirmation_statuses` WHERE `code` = 'not_applicable'),
   (SELECT `id` FROM `job_groups` WHERE `code` = 'L'),
   (SELECT `id` FROM `special_needs` WHERE `code` = 'none'),
   4,
@@ -315,7 +364,8 @@ INSERT INTO `employees` (
 ('20005', 'MS MARY WANJIKU', '55555555', '1996-04-25', 'HR Assistant',
   (SELECT `id` FROM `genders` WHERE `code` = 'F'),
   (SELECT `id` FROM `employment_terms` WHERE `code` = 'Permanent'),
-  (SELECT `id` FROM `employment_statuses` WHERE `code` = 'permanent'),
+  (SELECT `id` FROM `employment_statuses` WHERE `code` = 'active'),
+  (SELECT `id` FROM `confirmation_statuses` WHERE `code` = 'confirmed'),
   (SELECT `id` FROM `job_groups` WHERE `code` = 'J'),
   (SELECT `id` FROM `special_needs` WHERE `code` = 'none'),
   1,
@@ -453,15 +503,9 @@ CREATE TABLE `leave_policy_assignments` (
   `effective_from` DATE NULL,
   `effective_to` DATE NULL,
   `status` ENUM('active', 'cancelled') NOT NULL DEFAULT 'active',
-  `active_key` VARCHAR(64) GENERATED ALWAYS AS (
-    CASE WHEN `status` = 'active'
-      THEN CONCAT(`employee_id`, '-', `financial_year_id`)
-      ELSE NULL
-    END
-  ) STORED,
   `assigned_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`),
-  UNIQUE KEY `uq_active_employee_year` (`active_key`),
+  UNIQUE KEY `uq_active_employee_year` (`employee_id`, `financial_year_id`, `status`),
   KEY `idx_policy_assignments_employee_id` (`employee_id`),
   KEY `idx_policy_assignments_policy` (`leave_policy_id`),
   KEY `idx_policy_assignments_year` (`financial_year_id`),
@@ -489,16 +533,10 @@ CREATE TABLE `leave_allocations` (
   `allocated_from` DATE NOT NULL,
   `allocated_to` DATE NOT NULL,
   `status` ENUM('active', 'cancelled') NOT NULL DEFAULT 'active',
-  `active_key` VARCHAR(64) GENERATED ALWAYS AS (
-    CASE WHEN `status` = 'active'
-      THEN CONCAT(`employee_id`, '-', `financial_year_id`, '-', `leave_type_id`)
-      ELSE NULL
-    END
-  ) STORED,
   `created_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `updated_at` TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`),
-  UNIQUE KEY `uq_active_employee_year_type` (`active_key`),
+  UNIQUE KEY `uq_active_employee_year_type` (`employee_id`, `financial_year_id`, `leave_type_id`, `status`),
   KEY `idx_allocations_employee_id` (`employee_id`),
   KEY `idx_allocations_year` (`financial_year_id`),
   KEY `idx_allocations_type` (`leave_type_id`),
