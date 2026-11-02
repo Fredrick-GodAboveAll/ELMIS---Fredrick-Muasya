@@ -52,6 +52,8 @@ $router->get('/leave-entitlements', 'LeaveController@LeaveEntitlement', [AuthMid
 $router->get('/leave-entitlements/detail', 'LeaveController@LeaveEntitlementDetail', [AuthMiddleware::class, [RoleMiddleware::class, 'admin']]);
 $router->post('/leave-entitlements', 'LeaveController@storeLeaveEntitlement', [AuthMiddleware::class, [RoleMiddleware::class, 'admin']]);
 $router->get('/leave-applications', 'LeaveController@leaveApplications', [AuthMiddleware::class]);
+$router->get('/leave-applications/design', 'LeaveController@designLeaveApplications', [AuthMiddleware::class]);
+$router->get('/leave-setup/design', 'LeaveController@designLeaveApplications', [AuthMiddleware::class]);
 $router->get('/leave-applications/create', 'LeaveController@createLeaveApplication', [AuthMiddleware::class]);
 $router->post('/leave-applications/create', 'LeaveController@storeLeaveApplication', [AuthMiddleware::class]);
 $router->post('/leave-types', 'LeaveController@storeLeaveType', [AuthMiddleware::class]);

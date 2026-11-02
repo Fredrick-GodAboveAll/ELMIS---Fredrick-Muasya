@@ -54,6 +54,14 @@ class LeaveController extends Controller
         include '../app/Views/layouts/admin.php';
     }
 
+    public function designLeaveApplications()
+    {
+        $title = 'Leave Applications Design';
+        $currentPage = 'leave_applications_design';
+        $content = '../app/Views/leave_management/leave_setup/design.php';
+        include '../app/Views/layouts/admin.php';
+    }
+
     public function createLeaveApplication()
     {
         $title = 'Create Leave Application';
